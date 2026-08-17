@@ -1,0 +1,6 @@
+{
+  "name": "Maryam OS",
+  "description": "Interactive OS-style portfolio for Maryam Yahaya, product designer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
