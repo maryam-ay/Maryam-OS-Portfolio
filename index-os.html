@@ -2032,13 +2032,57 @@ body.dark .hlp-project-summary strong { color: var(--rose); }
   border-bottom: 1px dashed var(--bev-lo);
   font-size: 12.5px;
 }
+/* File rows, not chapter buttons: a small doc glyph then the filename. */
 .rail-section-item {
-  min-height: 32px;
-  padding: 7px 8px 7px 39px !important;
+  min-height: 30px;
+  padding: 6px 8px 6px 26px !important;
   border-radius: 6px;
-  font-size: 10.5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
-.rail-section-item::before { display: none; }
+.rail-section-item::before {
+  content: '\ea7b';
+  display: block;
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'tabler-icons';
+  font-size: 12px;
+  color: var(--muted);
+  opacity: .75;
+}
+.rail-section-item.active-rose::before { color: var(--rose); opacity: 1; }
+/* Info card under the file list */
+.cs-rail-info {
+  margin: 16px 3px 4px;
+  padding: 12px 12px 10px;
+  border: 1px solid var(--bev-lo);
+  border-radius: 8px;
+  background: var(--tint);
+}
+.cs-rail-info-title {
+  margin-bottom: 9px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.cs-rail-info-row {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 6px;
+  padding: 3px 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.45;
+}
+.cs-rail-info-row .k { color: var(--muted); }
+.cs-rail-info-row .v { color: var(--ink); }
+.rail-section-item .rn { display: none; }
+.rail-section-item .rf { letter-spacing: .01em; }
 .rail-section-item .rn {
   position: absolute;
   left: 8px;
@@ -2078,68 +2122,201 @@ body.dark .hlp-project-summary strong { color: var(--rose); }
 .reading-container {
   --cs-measure: 640px;
   --cs-measure-wide: 100%;
-  --cs-gap: 46px;
-  max-width: 900px;
-  padding: clamp(30px, 4vw, 52px);
+  --cs-gap: 34px;
+  --cs-pad: clamp(30px, 4vw, 52px);
+  max-width: 980px;
+  padding: var(--cs-pad);
+}
+/* Sections are full-width bands: the rule between them runs the whole sheet,
+   edge to edge, instead of stopping at the text column. */
+.reading-container .cs-block {
+  padding: 0 var(--cs-pad) var(--cs-gap);
+  margin: 0 calc(-1 * var(--cs-pad)) var(--cs-gap);
+  border-bottom: 1px solid var(--bev-lo);
+}
+.reading-container .cs-block:last-of-type { border-bottom: 0; }
+.reading-container .cs-cover {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 /* Cover */
 .reading-container .cs-cover {
   max-width: none;
-  padding: clamp(26px, 4vw, 44px);
-  grid-template-columns: minmax(0, 1.05fr) minmax(260px, .95fr);
-  gap: clamp(24px, 4vw, 48px);
-  align-items: center;
-  overflow: hidden;
+  padding: 0 0 clamp(22px, 3vw, 34px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr);
+  gap: clamp(22px, 4vw, 44px);
+  align-items: start;
   position: relative;
-  color: #fff;
-  background:
-    radial-gradient(circle at 86% 16%, rgba(255,255,255,.16) 0 4px, transparent 5px),
-    radial-gradient(circle at 91% 23%, rgba(255,255,255,.12) 0 2px, transparent 3px),
-    linear-gradient(135deg, var(--rose), var(--rose-dark));
-  border: 2px solid;
-  border-color: #ffeef3 var(--rose-dark) var(--rose-dark) #ffeef3;
-  border-radius: 14px;
-  box-shadow: 5px 6px 0 var(--soft-sh);
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
-.reading-container .cs-cover::after {
-  content: '♡';
-  position: absolute;
-  right: 18px;
-  bottom: -30px;
-  color: rgba(255,255,255,.09);
-  font-family: 'Playfair Display', serif;
-  font-size: 150px;
-  line-height: 1;
-  pointer-events: none;
-}
+.reading-container .cs-cover::after { content: none; }
 .cs-cover-text { gap: 12px; position: relative; z-index: 1; }
-.cs-cover .cs-kicker { color: #fff; opacity: .76; }
+.cs-cover .cs-kicker { color: var(--rose); opacity: 1; }
 .cs-cover .cs-title,
 body.dark .cs-cover .cs-title {
-  color: #fff;
-  font-size: clamp(44px, 5vw, 68px);
-  line-height: .94;
+  color: var(--rose-dark);
+  font-size: clamp(40px, 4.6vw, 60px);
+  line-height: .96;
   text-wrap: balance;
 }
-.cs-cover .cs-meta {
-  gap: 1px;
-  margin-top: 8px;
-  border-color: rgba(255,255,255,.35);
-  background: rgba(255,255,255,.22);
+.cs-standfirst {
+  margin: 4px 0 0;
+  max-width: 46ch;
+  color: var(--ink-soft);
+  font-family: Tahoma, Verdana, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
 }
-.cs-cover .cs-meta > div { background: rgba(255,255,255,.10); }
-.cs-cover .cs-meta .k { color: rgba(255,255,255,.66); }
-.cs-cover .cs-meta .val { color: #fff; }
+/* The claim is type on the page, not a panel. The tinted band was the last
+   filled surface competing with the prose. */
+.reading-container .cs-statement,
+.reading-container .cs-lead {
+  padding: 0;
+  border: 0;
+  border-left: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.reading-container .cs-statement .lab,
+.reading-container .cs-lead .lab {
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.reading-container .cs-statement .big,
+.reading-container .cs-lead .big {
+  margin-top: 10px;
+  color: var(--rose-dark);
+  font-size: 25px;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+.reading-container .cs-statement .sub,
+.reading-container .cs-lead .sub {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-family: Tahoma, Verdana, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+/* Claim on the left, the section's evidence on the right. */
+.reading-container .cs-block--split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  column-gap: clamp(26px, 4vw, 52px);
+  row-gap: 18px;
+  align-items: start;
+}
+.reading-container .cs-block--split > .cs-head { grid-column: 1 / -1; }
+.reading-container .cs-block--split > .cs-statement,
+.reading-container .cs-block--split > .cs-lead { grid-column: 1; max-width: none; }
+.reading-container .cs-block--split > *:not(.cs-head):not(.cs-statement):not(.cs-lead) {
+  grid-column: 2;
+  max-width: none;
+}
+/* The stat aside loses its box too. */
+.reading-container .cs-aside {
+  padding: 0;
+  border: 0;
+  border-left: 2px solid var(--btn-on);
+  border-radius: 0;
+  background: none;
+  padding-left: 16px;
+}
+.reading-container .cs-stat { background: none; border: 0; padding: 0; }
+/* Cards lose their boxes and become hairline-divided columns. */
+.reading-container .cs-story-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--bev-lo);
+}
+.reading-container .cs-story-card {
+  padding: 16px 20px 18px 0;
+  border: 0;
+  border-bottom: 1px solid var(--bev-lo);
+  border-radius: 0;
+  background: none;
+}
+.reading-container .cs-story-card:nth-child(odd) { padding-right: 24px; }
+.reading-container .cs-story-card:nth-child(even) {
+  padding-left: 24px;
+  border-left: 1px solid var(--bev-lo);
+}
+.reading-container .cs-story-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+/* The note loses its fill; the ✦ and label carry it. */
+.reading-container .cs-inline-note {
+  padding: 14px 0 14px 0;
+  border: 0;
+  border-top: 1px solid var(--bev-lo);
+  border-radius: 0;
+  background: none;
+}
+.reading-container .cs-inline-note .note-mark { color: var(--rose); }
+.reading-container .cs-inline-note .note-label { color: var(--rose); }
+/* Footer: back · end-of-file line · next */
+.reading-container .cs-footer {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding-top: 22px;
+  border-top: 1px solid var(--bev-lo);
+  background: none;
+}
+.reading-container .cs-footer .cs-eof {
+  justify-self: center;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+}
+
+/* Metadata as a full-width strip under the cover, hairline-divided. */
+.cs-metastrip {
+  width: 100%;
+  max-width: none !important;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0 0 6px;
+  padding: 16px 0 18px;
+  border-top: 1px solid var(--bev-lo);
+  border-bottom: 1px solid var(--bev-lo);
+}
+.cs-metastrip > div { padding: 0 18px; border-left: 1px solid var(--bev-lo); background: none; }
+.cs-metastrip > div:first-child { padding-left: 0; border-left: 0; }
+.cs-metastrip .k {
+  margin-bottom: 5px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.cs-metastrip .val {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+}
 .cs-cover .cs-frame {
-  min-height: 220px;
-  border-color: rgba(255,255,255,.45);
-  background-color: rgba(255,255,255,.11);
-  background-image: radial-gradient(rgba(255,255,255,.28) 1.5px, transparent 1.5px);
+  min-height: 200px;
+  border-color: var(--bev-lo);
+  background-color: var(--tint);
 }
-.cs-cover .cs-frame-fallback,
-.cs-cover .cs-frame-fallback span,
-.cs-cover .cs-frame-fallback small { color: #fff; }
 
 /* At-a-glance story map */
 .cs-overview {
@@ -2250,26 +2427,76 @@ body.dark .cs-cover .cs-title {
 }
 /* The section heading should be the largest thing in its own section. It was
    losing to the statement, the stat and the decision numeral. */
+/* "01 / THE CONTEXT" over a file path, in the OS voice — the section reads as a
+   file in the project rather than a chapter title. */
 .cs-head {
-  padding-bottom: 14px;
-  margin-bottom: 4px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 9px;
+  row-gap: 2px;
+  align-items: baseline;
+  padding-bottom: 13px;
+  margin-bottom: 6px;
   border-bottom: 1px solid var(--bev-lo);
-  font-size: 27px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 .cs-head .num {
-  display: inline-grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--btn-on);
-  border-radius: 50%;
-  background: var(--tint);
+  grid-column: 1;
+  grid-row: 1;
+  display: inline;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: none;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 13px;
   font-style: normal;
+  color: var(--rose);
   opacity: 1;
 }
+.cs-head .num::after { content: ' /'; color: var(--muted); }
+.cs-head .cs-head-label { grid-column: 2; grid-row: 1; color: var(--rose); }
+.cs-head .cs-head-path {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
 .cs-head .rule { display: none; }
+/* "case study · <timeline> ●" pinned right on the opening section, as in the ref. */
+.cs-head .cs-head-stamp {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .1em;
+}
+.cs-head .cs-head-stamp b { color: var(--ink); font-weight: 700; }
+.cs-head .cs-head-stamp i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rose);
+}
+.cs-head:has(.cs-head-stamp) { grid-template-columns: auto 1fr auto; }
 .cs-prose { font-size: 13.5px; line-height: 1.82; }
 .cs-lead {
   gap: 9px;
@@ -2428,20 +2655,20 @@ body.dark .cs-story-card strong { color: var(--rose); }
   line-height: 1.6;
 }
 
-/* A list, not a tile grid. Two columns orphaned the 7th item every time, and
-   seven bordered tiles were seven more boxes on a page that already had too many. */
+/* Numbered rows: "01 →  the point". Counter-driven so the numbers can't drift. */
 .cs-checklist {
   display: flex;
   flex-direction: column;
   gap: 0;
-  border-top: 1px solid var(--bev-lo);
+  border-top: 0;
+  counter-reset: csitem;
 }
 .cs-check-item {
   position: relative;
   min-height: 0;
-  padding: 11px 4px 11px 30px;
+  padding: 9px 4px 9px 58px;
   border: 0;
-  border-bottom: 1px solid var(--bev-lo);
+  border-bottom: 0;
   border-radius: 0;
   background: transparent;
   color: var(--ink-soft);
@@ -2449,21 +2676,34 @@ body.dark .cs-story-card strong { color: var(--rose); }
   font-size: 11.5px;
   line-height: 1.55;
 }
+/* Default: a filled check, for lists of things that are true. */
+.cs-check-item { padding-left: 28px; }
 .cs-check-item::before {
-  content: '✓';
+  content: '\ea5e';
   position: absolute;
-  left: 2px;
-  top: 11px;
-  display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--btn-on);
-  color: var(--rose-dark);
+  left: 0;
+  top: 8px;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  color: var(--rose);
+  font-family: 'tabler-icons';
+  font-size: 15px;
+  font-weight: normal;
+}
+/* Numbered variant: for lists of problems, "01 →  the point". */
+.cs-checklist.numbered .cs-check-item { padding-left: 58px; }
+.cs-checklist.numbered .cs-check-item::before {
+  counter-increment: csitem;
+  content: counter(csitem, decimal-leading-zero) '  \2192';
+  top: 9px;
+  color: var(--rose);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: bold;
+  letter-spacing: .04em;
+  white-space: pre;
 }
 
 .cs-inline-note {
@@ -2872,6 +3112,1395 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #about .split-view > div { width: 100% !important; overflow: visible !important; }
   
   .hlp-layout { display: flex; flex-direction: column !important; height: 100% !important; }
+}
+
+/* ============================================================
+   CASE STUDY READER — REFERENCE-LED DOCUMENT LAYOUT
+   The screenshot supplies the composition. Maryam OS supplies the
+   type, colour, chrome and authored project content.
+   ============================================================ */
+:root {
+  --ease-snap: cubic-bezier(.2, .9, .3, 1.4);
+  --ease-out-soft: cubic-bezier(.25, .8, .3, 1);
+}
+.progress-bar { transition: none !important; }
+@media (min-width: 769px) {
+  .hlp-toolbar {
+    height: 30px;
+    padding: 0 14px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--bev-lo);
+    box-shadow: none;
+  }
+  .hlp-rail {
+    width: 194px;
+    flex: 0 0 194px;
+    padding: 18px 11px 20px;
+    background: color-mix(in srgb, var(--tint) 62%, var(--paper));
+    border-right: 1px solid var(--bev-lo);
+  }
+  .hlp-project-summary {
+    margin: 0 4px 15px;
+    padding: 0 0 13px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--bev-lo);
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .hlp-project-summary .overline { color: var(--rose); }
+  .hlp-project-summary strong {
+    margin-top: 3px;
+    font-size: 20px;
+    line-height: 1.05;
+  }
+  .hlp-project-summary small { margin-top: 6px; line-height: 1.4; }
+  .hlp-rail-title {
+    margin-bottom: 5px;
+    padding: 0 5px 6px;
+    color: var(--rose);
+  }
+  .rail-chapter {
+    margin: 11px 5px 4px;
+    padding-top: 8px;
+    border-top: 1px solid var(--bev-lo);
+    color: var(--muted);
+    font-size: 8.5px;
+  }
+  .rail-section-item {
+    min-height: 28px;
+    margin: 1px 0;
+    padding: 5px 20px 5px 8px;
+    border: 1px solid transparent !important;
+    border-radius: 4px;
+    transition: transform 150ms var(--ease-snap);
+  }
+  .rail-section-item:hover { transform: translateX(2px); }
+  .rail-section-item.active-rose {
+    background: var(--btn-hi) !important;
+    border-color: var(--bev-lo) !important;
+    box-shadow: none;
+  }
+  .rail-section-item.active-rose::after {
+    content: '';
+    position: absolute;
+    right: 7px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--rose);
+    transform: translateY(-50%);
+  }
+  .cs-rail-info {
+    margin: 16px 3px 4px;
+    padding: 10px;
+    background: var(--paper);
+    border: 1px solid var(--bev-lo);
+    border-radius: 4px;
+    box-shadow: none;
+  }
+  .cs-rail-info-row {
+    grid-template-columns: 52px minmax(0, 1fr);
+    font-size: 9px;
+  }
+
+  .hlp-reading-pane {
+    padding: 0;
+    background: var(--paper);
+    background-image: none;
+  }
+  .reading-container {
+    --cs-pad: clamp(28px, 3.5vw, 48px);
+    --cs-gap: 0px;
+    width: 100%;
+    max-width: none;
+    min-height: 100%;
+    margin: 0;
+    gap: 0 !important;
+    padding: 0;
+    background: var(--paper);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .reading-container > * { margin: 0; }
+
+  /* 01 / overview */
+  .reading-container .cs-cover {
+    min-height: 365px;
+    display: grid;
+    grid-template-columns: minmax(260px, .82fr) minmax(350px, 1.18fr);
+    gap: clamp(28px, 4vw, 62px);
+    align-items: center;
+    padding: 34px var(--cs-pad) 30px;
+    border-bottom: 1px solid var(--bev-lo);
+  }
+  .cs-cover-text { align-self: center; }
+  .cs-cover .cs-kicker {
+    color: var(--rose);
+    font-size: 10px;
+    letter-spacing: .08em;
+  }
+  .cs-cover .cs-title,
+  body.dark .cs-cover .cs-title {
+    margin: 10px 0 15px;
+    color: var(--rose-dark);
+    font-size: clamp(50px, 5.4vw, 76px);
+    line-height: .94;
+  }
+  .cs-standfirst {
+    max-width: 39ch;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.62;
+  }
+  .cs-cover .cs-figure { width: 100%; margin: 0; }
+  .cs-cover .cs-frame {
+    width: 100%;
+    height: 292px;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .cs-cover .cs-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 7px;
+  }
+  .cs-metastrip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0 var(--cs-pad);
+    border: 0;
+    border-bottom: 1px solid var(--bev-lo);
+    background: var(--paper);
+  }
+  .cs-metastrip > div {
+    min-width: 0;
+    padding: 17px 18px 18px;
+    border: 0;
+    border-left: 1px solid var(--bev-lo);
+    background: transparent;
+  }
+  .cs-metastrip > div:first-child { padding-left: 0; border-left: 0; }
+  .cs-metastrip .k { color: var(--rose); font-size: 9px; }
+  .cs-metastrip .val { font-size: 11px; line-height: 1.45; }
+
+  /* Section bands */
+  .cs-chapter-divider { display: none; }
+  .reading-container .cs-block {
+    width: 100%;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin: 0;
+    padding: 27px var(--cs-pad) 31px;
+    border: 0;
+    border-bottom: 1px solid var(--bev-lo);
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+  .reading-container .cs-block > * { width: 100%; max-width: none; }
+  .reading-container .cs-block > .cs-prose { max-width: 78ch; }
+  .reading-container .cs-block + .cs-block::before { display: none; }
+  .reading-container .cs-block--split {
+    display: grid;
+    grid-template-columns: minmax(245px, .78fr) minmax(0, 1.22fr);
+    column-gap: clamp(34px, 4.4vw, 66px);
+    row-gap: 18px;
+    align-items: start;
+  }
+  .reading-container .cs-block--split > .cs-head { grid-column: 1 / -1; }
+  .reading-container .cs-block--split > .cs-statement,
+  .reading-container .cs-block--split > .cs-lead { grid-column: 1; }
+  .reading-container .cs-block--split > *:not(.cs-head):not(.cs-statement):not(.cs-lead) {
+    grid-column: 2;
+  }
+  .cs-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    column-gap: 8px;
+    align-items: baseline;
+    margin: 0 0 2px;
+    padding: 0;
+    border: 0;
+    color: var(--rose);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .cs-head .num { color: var(--rose); font-size: 10px; }
+  .cs-head .cs-head-path {
+    grid-column: 1 / 3;
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 8.5px;
+    letter-spacing: 0;
+    text-transform: lowercase;
+  }
+  .cs-head .cs-head-stamp { align-self: start; font-size: 8.5px; }
+  .cs-prose {
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    line-height: 1.7;
+  }
+  .reading-container .cs-statement,
+  .reading-container .cs-lead {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  .reading-container .cs-statement .lab,
+  .reading-container .cs-lead .lab { color: var(--rose); font-size: 9px; }
+  .reading-container .cs-statement .big,
+  .reading-container .cs-lead .big {
+    margin-top: 8px;
+    color: var(--rose-dark);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(23px, 2.35vw, 31px);
+    font-weight: 600;
+    line-height: 1.17;
+  }
+  .reading-container .cs-statement .sub,
+  .reading-container .cs-lead .sub {
+    margin-top: 11px;
+    color: var(--ink-soft);
+    font-size: 12px;
+    line-height: 1.58;
+  }
+  .cs-hook {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  .cs-hook .lab { color: var(--rose); }
+  .cs-hook p {
+    max-width: 31ch;
+    color: var(--rose-dark);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(24px, 2.5vw, 33px);
+    font-weight: 600;
+    line-height: 1.16;
+  }
+
+  /* Dense visual rows, like the reference's research and solution bands. */
+  .cs-figs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+  }
+  .cs-figure { min-width: 0; margin: 0; }
+  .cs-frame,
+  .cs-frame.tall,
+  .cs-frame.bleed,
+  .cs-frame.empty {
+    width: 100%;
+    max-width: none;
+    min-height: 182px;
+    aspect-ratio: 4 / 3;
+    margin: 0;
+    padding: 8px;
+    background: var(--tint);
+    border: 1px solid var(--bev-lo);
+    border-radius: 7px;
+    box-shadow: 2px 3px 0 var(--soft-sh);
+  }
+  .cs-frame.tall { min-height: 270px; aspect-ratio: 9 / 14; }
+  .cs-frame.bleed { min-height: 255px; aspect-ratio: 3 / 2; }
+  .cs-frame img { object-fit: contain; border-radius: 4px; }
+  .cs-frame.bleed img { object-fit: cover; }
+  .cs-frame.empty .cs-frame-fallback {
+    display: flex;
+    padding: 14px;
+    text-align: center;
+  }
+  .cs-frame.empty .cs-frame-fallback strong { color: var(--rose-dark); }
+  .cs-caption { margin-top: 7px; color: var(--muted); font-size: 9.5px; }
+
+  .reading-container .cs-story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--bev-lo);
+    border-bottom: 1px solid var(--bev-lo);
+  }
+  .reading-container .cs-story-card,
+  .reading-container .cs-story-card:nth-child(odd),
+  .reading-container .cs-story-card:nth-child(even),
+  .reading-container .cs-story-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    min-height: 0;
+    padding: 15px 17px;
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--bev-lo);
+    border-radius: 0;
+  }
+  .reading-container .cs-story-card:first-child { border-left: 0; }
+  .cs-story-card .eyebrow { margin-bottom: 6px; color: var(--rose); }
+  .cs-story-card strong { color: var(--rose-dark); font-size: 11.5px; }
+  .cs-story-card p { font-size: 10.5px; line-height: 1.5; }
+  .cs-process {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--bev-lo);
+    border-bottom: 1px solid var(--bev-lo);
+  }
+  .cs-process-step {
+    min-width: 0;
+    padding: 15px;
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--bev-lo);
+    border-radius: 0;
+  }
+  .cs-process-step:first-child { border-left: 0; }
+  .cs-checklist.numbered {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 28px;
+    row-gap: 0;
+    border-top: 1px solid var(--bev-lo);
+  }
+  .cs-checklist.numbered .cs-check-item {
+    padding: 12px 4px 12px 48px;
+    border-bottom: 1px solid var(--bev-lo);
+  }
+  .reading-container .cs-inline-note {
+    padding: 12px 0;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid var(--bev-lo);
+    border-radius: 0;
+  }
+  .cs-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--bev-lo);
+    border-bottom: 1px solid var(--bev-lo);
+  }
+  .cs-stats .cs-stat {
+    padding: 15px 17px;
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--bev-lo);
+    border-radius: 0;
+  }
+  .cs-stats .cs-stat:first-child { border-left: 0; }
+  .reading-container .cs-footer {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    margin: 0;
+    padding: 18px var(--cs-pad) 20px;
+    border: 0;
+    background: var(--paper);
+  }
+  .reading-container .cs-footer .cs-eof { justify-self: center; }
+}
+
+/* Baby Steps is composed section by section to mirror the supplied reference.
+   The generic renderer still supplies the content; these rules give every band
+   a specific editorial job instead of repeating one article layout. */
+@media (min-width: 769px) {
+  .case-baby-steps .cs-cover {
+    grid-template-columns: minmax(290px, .86fr) minmax(390px, 1.14fr);
+    min-height: 390px;
+  }
+  .case-baby-steps .cs-cover .cs-frame { height: 316px; }
+  .case-baby-steps .cs-cover .cs-frame img {
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid var(--bev-lo);
+    box-shadow: 3px 4px 0 var(--soft-sh);
+  }
+
+  /* 02 / the context — claim and generated story image on the left,
+     evidence and project setup on the right. */
+  .case-baby-steps .cs-block--context {
+    grid-template-columns: minmax(285px, .88fr) minmax(0, 1.12fr);
+    grid-template-rows: auto auto auto;
+    column-gap: clamp(38px, 4.8vw, 72px);
+    min-height: 530px;
+  }
+  .case-baby-steps .cs-block--context > .cs-head {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  .case-baby-steps .cs-block--context > .cs-lead,
+  .case-baby-steps .cs-block--context > .cs-statement {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .case-baby-steps .cs-block--context > .cs-row {
+    grid-column: 2;
+    grid-row: 2;
+    grid-template-columns: minmax(0, 1fr) 175px;
+    gap: 24px;
+    align-items: start;
+  }
+  .reading-container.case-baby-steps .cs-block--split.cs-block--context > .cs-figure {
+    grid-column: 1 !important;
+    grid-row: 3;
+    align-self: end;
+  }
+  .case-baby-steps .cs-block--context > .cs-prose {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: center;
+    max-width: 56ch;
+  }
+  .case-baby-steps .cs-block--context > .cs-figure .cs-frame {
+    min-height: 0;
+    aspect-ratio: 3 / 2;
+    padding: 0;
+    background: var(--tint);
+    border: 0;
+    border-radius: 3px;
+    box-shadow: none;
+  }
+  .case-baby-steps .cs-block--context > .cs-figure img {
+    object-fit: cover;
+    object-position: center;
+    border-radius: 3px;
+  }
+  .case-baby-steps .cs-block--context > .cs-figure .cs-caption {
+    display: block;
+    margin-top: 6px;
+  }
+  .case-baby-steps .cs-block--context .cs-aside {
+    padding-left: 14px;
+    border-left: 2px solid var(--btn-on);
+  }
+
+  /* 03 / approach — a compact five-part research strip. */
+  .case-baby-steps .cs-block--process { padding-bottom: 27px; }
+  .case-baby-steps .cs-block--process .cs-process {
+    background: color-mix(in srgb, var(--tint) 70%, var(--paper));
+  }
+  .case-baby-steps .cs-block--process .cs-process-step {
+    min-height: 142px;
+    padding: 18px 16px 16px;
+  }
+  .case-baby-steps .cs-block--process .step-num {
+    width: 31px;
+    height: 31px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 11px;
+    color: var(--rose-dark);
+    background: var(--btn-hi);
+    border: 1px solid var(--bev-lo);
+    border-radius: 50%;
+  }
+
+  /* 04 / research — the argument on the left, numbered evidence on the right,
+     then the five feature responses across one row. */
+  .case-baby-steps .cs-block--research {
+    display: grid;
+    grid-template-columns: minmax(230px, .7fr) minmax(0, 1.3fr);
+    grid-template-rows: auto auto auto auto auto;
+    column-gap: clamp(34px, 4.6vw, 68px);
+    row-gap: 16px;
+  }
+  .case-baby-steps .cs-block--research > .cs-head {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  .case-baby-steps .cs-block--research > .cs-prose:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 2;
+    color: var(--rose-dark);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.28;
+  }
+  .case-baby-steps .cs-block--research > .cs-prose:nth-of-type(2) {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .case-baby-steps .cs-block--research > .cs-checklist {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: start;
+  }
+  .case-baby-steps .cs-block--research > .cs-prose:nth-of-type(4) {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    margin-top: 6px;
+    color: var(--rose);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+  .case-baby-steps .cs-block--research > .cs-story-grid {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .case-baby-steps .cs-block--research .cs-story-card::before,
+  .case-baby-steps .cs-block--benchmark .cs-story-card::before,
+  .case-baby-steps .cs-block--persona .cs-story-card::before {
+    content: '♡';
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 10px;
+    color: var(--rose);
+    background: var(--btn-hi);
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 15px;
+  }
+
+  /* 05 + 06 — paired comparison/persona compositions, not loose cards. */
+  .case-baby-steps .cs-block--benchmark .cs-story-grid,
+  .case-baby-steps .cs-block--persona .cs-story-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .case-baby-steps .cs-block--benchmark .cs-story-card,
+  .case-baby-steps .cs-block--persona .cs-story-card {
+    min-height: 154px;
+    padding: 18px 20px;
+  }
+  .case-baby-steps .cs-block--persona .cs-row {
+    grid-template-columns: minmax(0, 1.15fr) minmax(220px, .85fr);
+    align-items: center;
+  }
+
+  /* 07 / work — honest phone-shaped placeholders where the UI exports belong. */
+  .case-baby-steps .cs-block--work { padding-top: 29px; padding-bottom: 34px; }
+  .case-baby-steps .cs-block--work > .cs-prose {
+    max-width: 58ch;
+    color: var(--rose-dark);
+    font-size: 13px;
+  }
+  .case-baby-steps .cs-block--work .cs-figs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 38px);
+    align-items: end;
+  }
+  .case-baby-steps .cs-block--work .cs-figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .case-baby-steps .cs-block--work .cs-frame,
+  .case-baby-steps .cs-block--work .cs-frame.empty {
+    width: min(100%, 224px);
+    min-height: 0;
+    aspect-ratio: 9 / 17;
+    padding: 12px 9px 10px;
+    background: var(--tint);
+    border: 2px solid var(--ink);
+    border-radius: 25px;
+    box-shadow: 4px 5px 0 var(--soft-sh);
+  }
+  .case-baby-steps .cs-block--work .cs-frame::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 34%;
+    height: 5px;
+    border-radius: 5px;
+    background: var(--ink);
+    transform: translateX(-50%);
+    opacity: .85;
+  }
+  .case-baby-steps .cs-block--work .cs-frame-fallback {
+    inset: 18px 8px 9px;
+    padding: 18px 12px;
+    background: color-mix(in srgb, var(--btn-hi) 64%, var(--paper));
+    border: 1px solid var(--bev-lo);
+    border-radius: 16px;
+  }
+  .case-baby-steps .cs-block--work .cs-frame-fallback i {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    color: var(--rose);
+    background: var(--paper);
+    border: 1px solid var(--bev-lo);
+    border-radius: 50%;
+  }
+  .case-baby-steps .cs-block--work .cs-frame-fallback strong {
+    max-width: 17ch;
+    color: var(--rose-dark);
+    font-size: 15px;
+    line-height: 1.2;
+  }
+  .case-baby-steps .cs-block--work .cs-frame-fallback small {
+    max-width: 18ch;
+    line-height: 1.35;
+  }
+
+  /* 08 + 09 — outcome and learning blocks close the page like the reference. */
+  .case-baby-steps .cs-block--impact .cs-row {
+    grid-template-columns: minmax(0, 1.2fr) minmax(250px, .8fr);
+    gap: clamp(34px, 4vw, 60px);
+    align-items: center;
+  }
+  .case-baby-steps .cs-block--impact .cs-aside {
+    padding: 18px 0 18px 22px;
+    border-left: 1px solid var(--bev-lo);
+  }
+  .case-baby-steps .cs-block--reflection .cs-note {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  .case-baby-steps .cs-block--reflection .cs-note .mark { display: none; }
+  .case-baby-steps .cs-block--reflection .cs-note .body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--bev-lo);
+    border-bottom: 1px solid var(--bev-lo);
+  }
+  .case-baby-steps .cs-block--reflection .cs-note p {
+    min-height: 132px;
+    margin: 0;
+    padding: 18px 22px;
+    border-left: 1px solid var(--bev-lo);
+    font-size: 11.5px;
+    line-height: 1.65;
+  }
+  .case-baby-steps .cs-block--reflection .cs-note p:first-child { border-left: 0; }
+  .case-baby-steps .cs-block--reflection .cs-note p:last-child {
+    grid-column: 1 / -1;
+    min-height: 0;
+    border-top: 1px solid var(--bev-lo);
+    border-left: 0;
+    color: var(--rose-dark);
+    font-family: var(--font-mono);
+  }
+}
+
+/* Baby Steps reference template. This is intentionally one-off: the supplied
+   layout is the source of truth, while the rest of the portfolio keeps the
+   reusable case-study renderer. */
+.bs-reference-page {
+  --bs-pad: clamp(28px, 3.45vw, 48px);
+  display: block !important;
+  padding: 0 !important;
+}
+.bs-reference-page .bs-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 20px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  line-height: 1.2;
+}
+.bs-reference-page .bs-section-head small {
+  color: var(--muted);
+  font-size: 8.5px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+.bs-reference-page .bs-ref-overview {
+  min-height: 390px;
+  display: grid;
+  grid-template-columns: minmax(300px, .95fr) minmax(310px, 1.05fr);
+  gap: clamp(32px, 5vw, 78px);
+  align-items: center;
+  padding: 30px var(--bs-pad) 26px;
+  border-bottom: 1px solid var(--bev-lo);
+}
+.bs-overview-copy { align-self: center; }
+.bs-reference-page .bs-overview-copy .bs-section-head { margin-bottom: 36px; }
+.bs-reference-page .bs-overview-copy .cs-title {
+  margin: 0 0 13px;
+  font-size: clamp(54px, 5.3vw, 76px);
+  line-height: .94;
+}
+.bs-tagline {
+  max-width: 24ch;
+  color: var(--rose);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.28;
+}
+.bs-summary {
+  max-width: 39ch;
+  margin-top: 16px;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  line-height: 1.62;
+}
+.bs-discipline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.bs-discipline i {
+  width: 7px;
+  height: 7px;
+  background: var(--rose);
+  border-radius: 50%;
+}
+.bs-overview-device { display: grid; place-items: center; min-height: 330px; }
+.bs-phone-placeholder {
+  width: min(100%, 215px);
+  aspect-ratio: 9 / 17.7;
+  position: relative;
+  padding: 11px 8px 8px;
+  overflow: hidden;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 27px;
+  box-shadow: 4px 5px 0 var(--soft-sh);
+}
+.bs-phone-placeholder--hero {
+  width: 190px;
+  transform: rotate(-1.2deg);
+}
+.bs-phone-notch {
+  position: absolute;
+  z-index: 2;
+  top: 7px;
+  left: 50%;
+  width: 34%;
+  height: 5px;
+  border-radius: 5px;
+  background: var(--ink);
+  transform: translateX(-50%);
+}
+.bs-phone-screen {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 20px 11px 12px;
+  overflow: hidden;
+  background: var(--tint);
+  border: 1px solid var(--bev-lo);
+  border-radius: 18px;
+}
+.bs-phone-time {
+  position: absolute;
+  top: 6px;
+  left: 11px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--ink);
+}
+.bs-phone-status {
+  position: absolute;
+  top: 8px;
+  right: 11px;
+  width: 18px;
+  height: 3px;
+  border-top: 2px dotted var(--ink-soft);
+}
+.bs-phone-copy small {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.bs-phone-copy strong {
+  display: block;
+  color: var(--rose-dark);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.05;
+}
+.bs-phone-copy p {
+  margin-top: 7px;
+  color: var(--ink-soft);
+  font-size: 8px;
+  line-height: 1.45;
+}
+.bs-phone-focus {
+  display: grid;
+  gap: 5px;
+  margin-top: 15px;
+  padding: 11px;
+  background: var(--btn);
+  border: 1px solid var(--bev-lo);
+  border-radius: 8px;
+}
+.bs-phone-focus span {
+  display: block;
+  height: 5px;
+  background: var(--paper);
+  border-radius: 4px;
+}
+.bs-phone-focus span:nth-child(2) { width: 76%; }
+.bs-phone-focus span:nth-child(3) { width: 48%; }
+.bs-phone-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  margin-top: 14px;
+}
+.bs-phone-actions i {
+  aspect-ratio: 1;
+  background: var(--btn-hi);
+  border: 1px solid var(--bev-lo);
+  border-radius: 50%;
+}
+.bs-phone-nav {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  left: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--bev-lo);
+}
+.bs-phone-nav i {
+  width: 11px;
+  height: 4px;
+  justify-self: center;
+  background: var(--btn-on);
+  border-radius: 4px;
+}
+.bs-meta-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0 var(--bs-pad);
+  border-bottom: 1px solid var(--bev-lo);
+}
+.bs-meta-strip > div {
+  min-width: 0;
+  padding: 16px 20px 18px;
+  border-left: 1px solid var(--bev-lo);
+}
+.bs-meta-strip > div:first-child { padding-left: 0; border-left: 0; }
+.bs-meta-strip span,
+.bs-meta-strip strong { display: block; }
+.bs-meta-strip span {
+  margin-bottom: 6px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.bs-meta-strip strong {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+.bs-ref-section {
+  width: 100%;
+  margin: 0;
+  padding: 27px var(--bs-pad) 31px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--bev-lo);
+}
+.bs-ref-section h2 {
+  color: var(--rose-dark);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(23px, 2.3vw, 31px);
+  font-weight: 600;
+  line-height: 1.16;
+}
+.bs-ref-problem {
+  display: grid;
+  grid-template-columns: minmax(340px, .95fr) minmax(0, 1.05fr);
+  column-gap: clamp(44px, 5.5vw, 82px);
+  align-items: start;
+}
+.bs-ref-problem > .bs-section-head { grid-column: 1 / -1; }
+.bs-problem-intro {
+  max-width: 48ch;
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.bs-problem-left img {
+  width: 100%;
+  height: 225px;
+  display: block;
+  margin-top: 18px;
+  object-fit: cover;
+  object-position: center 62%;
+  border-radius: 4px;
+}
+.bs-number-list {
+  margin: 25px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.bs-number-list li {
+  display: grid;
+  grid-template-columns: 27px 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  padding: 9px 0;
+}
+.bs-number-list li::before {
+  content: '→';
+  grid-column: 2;
+  grid-row: 1;
+  color: var(--rose);
+  font-family: var(--font-mono);
+}
+.bs-number-list span {
+  grid-column: 1;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+.bs-number-list p {
+  grid-column: 3;
+  color: var(--ink);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+.bs-research-lead {
+  display: grid;
+  grid-template-columns: minmax(300px, .9fr) minmax(360px, 1.1fr);
+  gap: clamp(28px, 4vw, 58px);
+  align-items: stretch;
+  margin-bottom: 23px;
+}
+.bs-research-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.bs-research-copy p {
+  max-width: 53ch;
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.58;
+}
+.bs-research-note {
+  margin-top: 16px;
+  padding: 12px 14px;
+  color: var(--ink);
+  background: var(--tint);
+  border: 1px solid var(--bev-lo);
+  border-radius: 7px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  line-height: 1.45;
+}
+.bs-research-image {
+  min-height: 220px;
+  overflow: hidden;
+  background: var(--tint);
+  border: 1px solid var(--bev-lo);
+  border-radius: 8px;
+}
+.bs-research-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 46%;
+}
+.bs-insight-grid,
+.bs-outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--bev-lo);
+  border-bottom: 1px solid var(--bev-lo);
+}
+.bs-insight-grid article,
+.bs-outcome-grid article {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 11px;
+  padding: 17px 17px;
+  border-left: 1px solid var(--bev-lo);
+}
+.bs-insight-grid article:first-child,
+.bs-outcome-grid article:first-child { border-left: 0; }
+.bs-insight-grid i,
+.bs-outcome-grid i {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--rose);
+  background: var(--btn-hi);
+  border-radius: 50%;
+  font-size: 17px;
+}
+.bs-insight-grid strong,
+.bs-outcome-grid strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--rose-dark);
+  font-size: 10.5px;
+}
+.bs-insight-grid p,
+.bs-outcome-grid p {
+  color: var(--ink-soft);
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+.bs-ref-solution {
+  display: grid;
+  grid-template-columns: minmax(250px, .65fr) minmax(0, 1.35fr);
+  gap: 0 clamp(38px, 5vw, 76px);
+  align-items: center;
+}
+.bs-ref-solution > .bs-section-head,
+.bs-ref-solution > .bs-process-strip { grid-column: 1 / -1; }
+.bs-process-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0 0 28px;
+  border-top: 1px solid var(--bev-lo);
+  border-bottom: 1px solid var(--bev-lo);
+}
+.bs-process-strip div {
+  position: relative;
+  min-width: 0;
+  padding: 12px 14px 13px;
+  border-left: 1px solid var(--bev-lo);
+}
+.bs-process-strip div:first-child { border-left: 0; }
+.bs-process-strip span,
+.bs-process-strip strong { display: block; }
+.bs-process-strip span {
+  margin-bottom: 5px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 8px;
+}
+.bs-process-strip strong {
+  color: var(--ink);
+  font-size: 9.5px;
+  line-height: 1.3;
+}
+.bs-solution-note {
+  margin-top: 14px;
+  padding: 11px 13px;
+  color: var(--ink-soft);
+  background: var(--tint);
+  border-left: 3px solid var(--rose);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.5;
+}
+.bs-solution-copy ul,
+.bs-visual-intro ul,
+.bs-ref-learning ul,
+.bs-ref-next ul {
+  margin: 15px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.bs-solution-copy li,
+.bs-visual-intro li,
+.bs-ref-learning li,
+.bs-ref-next li {
+  position: relative;
+  padding: 4px 0 4px 17px;
+  color: var(--ink-soft);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+.bs-solution-copy li::before,
+.bs-visual-intro li::before,
+.bs-ref-learning li::before,
+.bs-ref-next li::before {
+  content: '♡';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  color: var(--rose);
+  font-family: var(--font-mono);
+}
+.bs-phone-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.5vw, 34px);
+  align-items: end;
+}
+.bs-phone-row .bs-phone-placeholder {
+  width: 100%;
+  max-width: 185px;
+  justify-self: center;
+}
+.bs-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid var(--bev-lo);
+  border-bottom: 1px solid var(--bev-lo);
+}
+.bs-feature-grid article {
+  min-width: 0;
+  padding: 16px 16px 18px;
+  border-left: 1px solid var(--bev-lo);
+}
+.bs-feature-grid article:first-child { border-left: 0; }
+.bs-feature-grid i {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 9px;
+  color: var(--rose);
+  background: var(--btn-hi);
+  border-radius: 50%;
+  font-size: 15px;
+}
+.bs-feature-grid strong {
+  display: block;
+  min-height: 28px;
+  color: var(--rose-dark);
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+.bs-feature-grid p {
+  margin-top: 6px;
+  color: var(--ink-soft);
+  font-size: 9.5px;
+  line-height: 1.45;
+}
+.bs-ref-visuals {
+  display: grid;
+  grid-template-columns: minmax(220px, .7fr) minmax(320px, 1.15fr) minmax(220px, .85fr);
+  gap: clamp(22px, 3vw, 42px);
+  align-items: stretch;
+}
+.bs-ref-visuals > .bs-section-head { grid-column: 1 / -1; }
+.bs-visual-image {
+  min-height: 230px;
+  overflow: hidden;
+  background: var(--tint);
+  border: 1px solid var(--bev-lo);
+  border-radius: 8px;
+}
+.bs-visual-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 52% center;
+}
+.bs-visual-intro > p {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+.bs-direction-board {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 9px;
+}
+.bs-direction-card {
+  padding: 13px 14px;
+  background: var(--tint);
+  border: 1px solid var(--bev-lo);
+  border-radius: 7px;
+}
+.bs-direction-card span,
+.bs-direction-card strong,
+.bs-direction-card p { display: block; }
+.bs-direction-card span {
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.bs-direction-card strong {
+  margin-top: 5px;
+  color: var(--rose-dark);
+  font-size: 10.5px;
+}
+.bs-direction-card p {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 8.8px;
+  line-height: 1.42;
+}
+.bs-style-board {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+.bs-tip-card,
+.bs-type-card,
+.bs-palette {
+  background: var(--tint);
+  border: 1px solid var(--bev-lo);
+  border-radius: 7px;
+}
+.bs-tip-card { padding: 14px; }
+.bs-tip-card--warm { grid-column: 1; grid-row: 2; background: var(--btn-hi); }
+.bs-tip-card span {
+  display: block;
+  color: var(--rose);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+.bs-tip-card strong { display: block; margin-top: 7px; color: var(--rose-dark); font-size: 11px; }
+.bs-tip-card p { margin-top: 5px; color: var(--ink-soft); font-size: 8.5px; line-height: 1.4; }
+.bs-type-card {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 15px;
+}
+.bs-type-card > b {
+  color: var(--rose-dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 44px;
+  font-weight: 600;
+}
+.bs-type-card strong,
+.bs-type-card span { display: block; }
+.bs-type-card strong { margin-top: 7px; color: var(--ink); font-size: 9px; }
+.bs-type-card span { color: var(--muted); font-family: var(--font-mono); font-size: 7.5px; }
+.bs-palette {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  padding: 11px 13px;
+}
+.bs-palette i { aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--bev-lo); }
+.bs-palette i:nth-child(1) { background: var(--rose); }
+.bs-palette i:nth-child(2) { background: var(--btn-on); }
+.bs-palette i:nth-child(3) { background: var(--btn); }
+.bs-palette i:nth-child(4) { background: var(--btn-hi); }
+.bs-palette i:nth-child(5) { background: var(--rose-dark); }
+.bs-palette i:nth-child(6) { background: var(--muted); }
+.bs-palette i:nth-child(7) { background: var(--tint); }
+.bs-palette i:nth-child(8) { background: var(--ink); }
+.bs-outcome-intro {
+  max-width: 70ch;
+  margin: -4px 0 20px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.bs-closing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-bottom: 1px solid var(--bev-lo);
+}
+.bs-closing-grid .bs-ref-section {
+  position: relative;
+  min-height: 220px;
+  border-bottom: 0;
+}
+.bs-closing-grid .bs-ref-section + .bs-ref-section { border-left: 1px solid var(--bev-lo); }
+.bs-ref-learning ul,
+.bs-ref-next ul { max-width: calc(100% - 115px); }
+.bs-closing-icon {
+  position: absolute;
+  right: 36px;
+  bottom: 45px;
+  color: var(--rose);
+  font-size: 58px;
+  filter: drop-shadow(3px 3px 0 var(--btn-on));
+}
+.bs-ref-footer {
+  margin: 0 !important;
+  padding: 16px var(--bs-pad) 18px !important;
+  border: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .bs-reference-page { --bs-pad: 18px; }
+  .bs-reference-page .bs-ref-overview,
+  .bs-ref-problem,
+  .bs-research-lead,
+  .bs-ref-solution,
+  .bs-ref-visuals { grid-template-columns: 1fr; }
+  .bs-reference-page .bs-ref-overview { min-height: 0; gap: 24px; }
+  .bs-reference-page .bs-overview-copy .bs-section-head { margin-bottom: 20px; }
+  .bs-overview-device { min-height: 0; }
+  .bs-meta-strip { grid-template-columns: 1fr 1fr; }
+  .bs-meta-strip > div:nth-child(3) { border-left: 0; border-top: 1px solid var(--bev-lo); }
+  .bs-meta-strip > div:nth-child(4) { border-top: 1px solid var(--bev-lo); }
+  .bs-insight-grid,
+  .bs-outcome-grid,
+  .bs-feature-grid { grid-template-columns: 1fr 1fr; }
+  .bs-insight-grid article:nth-child(3),
+  .bs-outcome-grid article:nth-child(3),
+  .bs-feature-grid article:nth-child(odd):not(:first-child) { border-left: 0; }
+  .bs-phone-row { margin-top: 24px; gap: 12px; }
+  .bs-phone-row .bs-phone-placeholder { max-width: 150px; }
+  .bs-process-strip { grid-template-columns: 1fr 1fr; }
+  .bs-process-strip div:nth-child(odd):not(:first-child) { border-left: 0; }
+  .bs-process-strip div:nth-child(n+3) { border-top: 1px solid var(--bev-lo); }
+  .bs-ref-visuals { gap: 18px; }
+  .bs-direction-board { grid-template-rows: none; }
+  .bs-closing-grid { grid-template-columns: 1fr; }
+  .bs-closing-grid .bs-ref-section + .bs-ref-section { border-top: 1px solid var(--bev-lo); border-left: 0; }
+  .bs-ref-footer { grid-template-columns: 1fr !important; justify-items: stretch; }
+  .bs-ref-footer .cs-eof { order: -1; justify-self: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail-section-item,
+  .cs-btn,
+  .progress-bar { transition: none !important; }
+  .rail-section-item:hover { transform: none; }
 }
 </style>
 
@@ -4654,7 +6283,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
             <div class="builds-feature-copy">
               <div class="builds-feature-overline">
                 <span>selected build</span>
-                <span class="builds-feature-index" id="buildsFeatureIndex">01 / 10</span>
+                <span class="builds-feature-index" id="buildsFeatureIndex">01 / 12</span>
               </div>
               <h2 class="builds-feature-title" id="buildsPreviewTitle">silk loop</h2>
               <div class="builds-feature-meta">
@@ -4780,33 +6409,6 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     </div>
   </section>
 
-  <!-- ============ APP: GYMNG ============ -->
-  <section class="window pout" id="app-gymng" style="top:120px;left:280px;width:min(420px, calc(100vw - 40px))">
-    <div class="tbar"><span class="tt"><i class="ti ti-barbell" aria-hidden="true"></i>gymng</span>
-      <span class="tctl"><button class="pout mn" aria-label="Minimize"><i class="ti ti-minus"></i></button><button class="pout mx" aria-label="Maximize"><i class="ti ti-square"></i></button><button class="pout cl" aria-label="Close"><i class="ti ti-x"></i></button></span></div>
-    <div class="wpad wbody" style="display:flex; flex-direction:column; min-height:0;">
-      <div style="display:flex; justify-content:center; margin-bottom:12px;">
-        <div class="pins" style="width:130px; height:210px; background:var(--ink); border-radius:18px; padding:6px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border:2px solid var(--bev-lo); display:flex; flex-direction:column; position:relative;">
-          <div style="width:40px; height:6px; background:var(--card); border-radius:3px; align-self:center; margin-bottom:6px;"></div>
-          <div class="pins" style="flex:1; background:var(--tint); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px; position:relative;">
-            <img src="images/gymng-screenshot.png" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;" onerror="this.style.display='none';" />
-            <i class="ti ti-barbell" style="font-size:28px; color:var(--amber); margin-bottom:4px; position:relative; z-index:0;"></i>
-            <span style="font-size:9px; font-weight:bold; color:var(--ink-soft); text-align:center; position:relative; z-index:0;">gymng app</span>
-            <div style="width:80%; height:4px; background:var(--rose); border-radius:2px; margin-top:8px; position:relative; z-index:0;"></div>
-            <div style="width:60%; height:4px; background:var(--btn); border-radius:2px; margin-top:3px; position:relative; z-index:0;"></div>
-          </div>
-          <div style="width:10px; height:10px; border-radius:50%; background:var(--card); align-self:center; margin-top:4px;"></div>
-        </div>
-      </div>
-      <div class="prose" style="font-size:11px; line-height:1.5;">
-        <p style="margin:0 0 4px; font-weight:bold; color:var(--ink-soft);">track workouts and fitness schedules designed for ng athletes.</p>
-        <p style="margin:0 0 10px; color:var(--muted); font-style:italic;">learned: how to design robust offline fitness state architectures and smooth mobile viewport transitions.</p>
-        <div style="display:flex; justify-content:flex-end; border-top:1px solid var(--bev-lo); padding-top:8px;">
-          <span class="try-link" style="font-size:10.5px; font-weight:bold; color:var(--rose); cursor:pointer; opacity:0.8;">try it →</span>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ============ ABOUT ============ -->
   <section class="window pout" id="about-character-rejected" style="top:40px;left:130px;width:1100px;height:70vh;display:none;">
@@ -6311,7 +7913,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
             <div class="xp-version-rail" aria-hidden="true"></div>
 
             <section class="xp-next-release" aria-label="Next chapter">
-              <div class="xp-version-marker">v5.0</div>
+              <div class="xp-version-marker">v6.0</div>
               <div class="xp-next-card">
                 <div class="xp-next-copy">
                   <strong class="xp-next-title">coming soon ♡</strong>
@@ -6324,23 +7926,48 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
             </section>
 
             <article class="xp-version-entry">
-              <div class="xp-version-marker">v4.0</div>
+              <div class="xp-version-marker">v5.0</div>
               <div class="xp-role-release">
                 <section class="xp-sheet-overview">
-                  <h2 class="xp-sheet-company">Vesti Technologies</h2>
+                  <h2 class="xp-sheet-company">Technology for Empowerment (T4EF)</h2>
                   <div class="xp-sheet-role">Product Designer</div>
-                  <div class="xp-sheet-meta">2022—2026 · fintech &amp; ai · Abuja, Nigeria</div>
+                  <div class="xp-sheet-meta">May 2026—present · public health · Abuja, remote · volunteer</div>
                   <p class="xp-sheet-summary">
-                    Designed product experiences across Vesti AI and the wider fintech suite,
-                    bringing clarity and consistency to complex financial flows.
+                    Lead designer for VaxTrack, a vaccine supply-chain and last-mile delivery
+                    platform built for the Federal Ministry of Health under the DRIVE Initiative.
                   </p>
                 </section>
                 <section class="xp-sheet-contributions">
                   <div class="xp-sheet-contribution-label">key contributions</div>
                   <ul>
-                    <li>Mapped user flows and built interactive prototypes for new product features.</li>
-                    <li>Created reusable components that kept the product suite coherent.</li>
-                    <li>Partnered with frontend engineers on accessible, polished implementation.</li>
+                    <li>Designed the web and mobile product for nine distinct user roles, from national vaccine allocation and stock management through to delivery and facility confirmation.</li>
+                    <li>Translated programme rules into product logic: stock thresholds, first-expiry-first-out batch ordering, cold-chain temperature alerts and dual confirmation before a delivery can close.</li>
+                    <li>Designed field experiences for budget Android devices, unreliable networks and direct sunlight, with large tap targets and automatic saving when connectivity drops.</li>
+                    <li>Built and maintained the VaxTrack design system in Figma, and wrote the mobile user guide for facility staff and delivery officers.</li>
+                  </ul>
+                </section>
+              </div>
+            </article>
+
+            <article class="xp-version-entry">
+              <div class="xp-version-marker">v4.0</div>
+              <div class="xp-role-release">
+                <section class="xp-sheet-overview">
+                  <h2 class="xp-sheet-company">Vesti Technologies</h2>
+                  <div class="xp-sheet-role">Senior Product Designer</div>
+                  <div class="xp-sheet-meta">March 2022—February 2026 · fintech &amp; migration · remote · full-time</div>
+                  <p class="xp-sheet-summary">
+                    Led design across Vesti's mobile, web and admin products, simplifying the
+                    financial and migration tasks people face when moving countries.
+                  </p>
+                </section>
+                <section class="xp-sheet-contributions">
+                  <div class="xp-sheet-contribution-label">key contributions</div>
+                  <ul>
+                    <li>Led the redesign of key experiences across mobile, web and admin, contributing to a 40% increase in user satisfaction.</li>
+                    <li>Designed an admin dashboard that improved administrative efficiency by 26%.</li>
+                    <li>Owned end-to-end design for the visa requirements upload flow, the savings experience and internal admin tools, from flows and prototypes through engineering handoff.</li>
+                    <li>Mentored graduate trainees through their first design projects.</li>
                   </ul>
                 </section>
               </div>
@@ -6350,20 +7977,20 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
               <div class="xp-version-marker">v3.0</div>
               <div class="xp-role-release">
                 <section class="xp-sheet-overview">
-                  <h2 class="xp-sheet-company">White Garment Connect</h2>
-                  <div class="xp-sheet-role">Pioneer Designer</div>
-                  <div class="xp-sheet-meta">2021—2022 · web + mobile · remote</div>
+                  <h2 class="xp-sheet-company">White Synergy</h2>
+                  <div class="xp-sheet-role xp-sheet-role--long">E-commerce &amp; Email Designer</div>
+                  <div class="xp-sheet-meta">January 2024—January 2026 · e-commerce · Germany, remote · part-time</div>
                   <p class="xp-sheet-summary">
-                    Joined as the first designer and established the product's visual foundation
-                    across its web and mobile experiences.
+                    Designed Shopify storefronts and lifecycle email for consumer brands across
+                    fashion, home, lifestyle and leather goods.
                   </p>
                 </section>
                 <section class="xp-sheet-contributions">
                   <div class="xp-sheet-contribution-label">key contributions</div>
                   <ul>
-                    <li>Established the brand colours, type hierarchy and visual language from zero.</li>
-                    <li>Designed the primary web and mobile product experiences.</li>
-                    <li>Translated early business ideas into wireframes and shipped features.</li>
+                    <li>Built Shopify storefronts and landing pages covering site structure, product presentation and the shopping experience.</li>
+                    <li>Designed lifecycle and campaign email for brands including Jacaranda Living and HIDES Leather.</li>
+                    <li>Kept one consistent visual system from campaign click-through to storefront.</li>
                   </ul>
                 </section>
               </div>
@@ -6373,19 +8000,20 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
               <div class="xp-version-marker">v2.0</div>
               <div class="xp-role-release">
                 <section class="xp-sheet-overview">
-                  <h2 class="xp-sheet-company">White Synergy</h2>
-                  <div class="xp-sheet-role xp-sheet-role--long">Shopify Store Designer &amp; Email Marketing Specialist</div>
-                  <div class="xp-sheet-meta">2020—2021 · e-commerce · Lagos, Nigeria · remote</div>
+                  <h2 class="xp-sheet-company">Distresso</h2>
+                  <div class="xp-sheet-role">Design Manager</div>
+                  <div class="xp-sheet-meta">June 2024—January 2025 · marketplace · Abuja, remote · contract</div>
                   <p class="xp-sheet-summary">
-                    Connected storefront design with email campaigns across the wider
-                    e-commerce customer journey.
+                    Owned the design direction for a preloved marketplace, from requirements
+                    and timelines through to the shipped buying and selling experience.
                   </p>
                 </section>
                 <section class="xp-sheet-contributions">
                   <div class="xp-sheet-contribution-label">key contributions</div>
                   <ul>
-                    <li>Custom-designed and optimised Shopify shopping experiences.</li>
-                    <li>Created targeted email templates and digital campaigns.</li>
+                    <li>Defined project requirements, objectives and delivery timelines.</li>
+                    <li>Designed the end-to-end marketplace experience: user flows, wireframes, prototypes and responsive web interfaces.</li>
+                    <li>Refined concepts iteratively, reducing revision cycles and clarifying the key flows.</li>
                   </ul>
                 </section>
               </div>
@@ -6395,20 +8023,20 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
               <div class="xp-version-marker">v1.0</div>
               <div class="xp-role-release">
                 <section class="xp-sheet-overview">
-                  <h2 class="xp-sheet-company">Covatech</h2>
-                  <div class="xp-sheet-role">UX Designer</div>
-                  <div class="xp-sheet-meta">2019—2020 · research + UX · Abuja, Nigeria</div>
+                  <h2 class="xp-sheet-company">COVATECH</h2>
+                  <div class="xp-sheet-role">Product Designer</div>
+                  <div class="xp-sheet-meta">February 2024—December 2024 · education · Abuja, remote · contract</div>
                   <p class="xp-sheet-summary">
-                    Used research and low-fidelity prototyping to uncover pain points and
-                    refine early client interfaces.
+                    Led the end-to-end design of an education management system for Stella Maris,
+                    alongside client web projects.
                   </p>
                 </section>
                 <section class="xp-sheet-contributions">
                   <div class="xp-sheet-contribution-label">key contributions</div>
                   <ul>
-                    <li>Conducted user research, interviews and usability testing.</li>
-                    <li>Created wireframes and low-fidelity mockups to refine client interfaces.</li>
-                    <li>Used feedback to identify pain points and guide iteration.</li>
+                    <li>Created user flows, wireframes and high-fidelity prototypes for the core product workflows.</li>
+                    <li>Designed landing pages and digital product experiences for client web projects.</li>
+                    <li>Worked with cross-functional teams to turn requirements into clear flows and responsive interfaces.</li>
                   </ul>
                 </section>
               </div>
@@ -8598,10 +10226,6 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
           <i class="ti ti-file-text" aria-hidden="true" style="color:var(--rose);"></i>download my cv
           <span class="go">↓ pdf</span>
         </a>
-        <a class="clink channel-row" href="https://calendly.com/akanbimaryam-placeholder" target="_blank" rel="noopener" style="background:rgba(196,77,114,0.06); color:var(--rose-dark); border:1px dashed var(--rose);">
-          <i class="ti ti-calendar-heart" aria-hidden="true" style="color:var(--rose);"></i>book a call ♡
-          <span class="go" style="color:var(--rose); font-weight:bold;">↗ schedule</span>
-        </a>
       </div>
     </div>
     <script>
@@ -8855,7 +10479,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   var Genie=(function(){
     var canvas,gl,prog,vbo,ibo,aUV,u={},idxCount=0,dpr=1,glOK=false,inited=false;
     var texCache={}, pendingWarm={}, current=null, res={w:0,h:0}, lastC2F=null;
-    var STATIC_IDS=['welcome','work','builds','about','xp','contact','app-empty-state','app-png-to-svg','app-ng-logos','app-gymng'];
+    var STATIC_IDS=['welcome','work','builds','about','xp','contact','app-empty-state','app-png-to-svg','app-ng-logos'];
     function idle(fn){
       if(window.requestIdleCallback)requestIdleCallback(fn,{timeout:800});
       else setTimeout(fn,1);
@@ -9157,7 +10781,6 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       outcome: "designed clearer mobile journeys across Vesti's wider fintech and migration suite.",
       img: "images/vesti-ai.png",
       actions: [
-        { label: "app store ↗", url: "https://apps.apple.com/ng/app/vesti-move-abroad-pay-bills/id1564444402/" },
         { label: "play store ↗", url: "https://play.google.com/store/apps/details?id=com.vesti.app" }
       ]
     },
@@ -9628,6 +11251,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   var caseStudies = {
     'compass': {
       title: 'Compass',
+      summary: 'A connected campus experience for students, guardians and lecturers, built around the real tasks that usually disappear into paper slips, phone calls and disconnected portals.',
       metadata: {
         role: 'product designer',
         timeline: 'independent concept · ongoing',
@@ -9935,13 +11559,14 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     },
     'baby steps': {
       title: 'Baby Steps',
+      summary: 'A pregnancy companion for tracking and managing a pregnancy from conception to due date, with antenatal booking, an in-app pharmacy and virtual therapy built in.',
       metadata: {
         role: 'solo ux/ui designer',
         timeline: '2 weeks',
         team: 'solo',
         platform: 'mobile app'
       },
-      heroImg: 'baby-steps-hero.png',
+      heroImg: '../baby-steps.png',
       sections: [
         {
           type: 'context',
@@ -9978,7 +11603,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
           blocks: [
             { type: 'text', content: 'To understand what pregnant women actually experience, I ran a survey through Google Forms targeting mothers and pregnant women. It gave me insight into what women are facing right now, what others went through while pregnant, and how they would want the journey made easier.' },
             { type: 'text', content: 'These are the pain points I was able to gather:' },
-            { type: 'checklist', items: [
+            { type: 'checklist', numbered: true, items: [
               'Difficulty finding pregnancy safe drugs.',
               'Difficulty booking antenatal appointments.',
               'Difficulty accurately tracking pregnancy and baby&rsquo;s growth progress.',
@@ -10171,6 +11796,9 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     
     railList.innerHTML = '';
     readingContainer.innerHTML = '';
+    readingContainer.classList.remove('case-baby-steps', 'case-compass', 'case-terminal', 'case-distresso', 'bs-reference-page');
+    readingContainer.classList.add('case-' + slug);
+    viewer.setAttribute('data-case-study', slug);
     
     // Update metadata strip
     viewer.querySelector('.meta-role').textContent = 'role: ' + cs.metadata.role;
@@ -10181,6 +11809,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     viewer.querySelector('.hlp-project-platform').textContent = cs.metadata.platform + ' · ' + cs.sections.length + ' sections';
     
     var readingPane = viewer.querySelector('.hlp-reading-pane');
+    readingPane.scrollTop = 0;
 
     // One frame treatment for every image in the reader: inset frame,
     // caption in the white space below it. Used by hero and all figures.
@@ -10236,7 +11865,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     }
 
     function checklistHTML(b) {
-      return '<div class="cs-checklist">' +
+      // numbered:true renders "01 →" instead of a check — for lists of problems.
+      return '<div class="cs-checklist' + (b.numbered ? ' numbered' : '') + '">' +
         (b.items || []).map(function(item) {
           return '<div class="cs-check-item">' + item + '</div>';
         }).join('') +
@@ -10266,25 +11896,290 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       '</div>';
     }
 
+    function renderBabyStepsReference() {
+      viewer.querySelector('.hlp-project-platform').textContent = 'mobile app · 9 sections';
+      var bsSections = [
+        { id: 'bs-overview', title: 'overview' },
+        { id: 'bs-problem', title: 'problem' },
+        { id: 'bs-research', title: 'research' },
+        { id: 'bs-solution', title: 'solution' },
+        { id: 'bs-features', title: 'features' },
+        { id: 'bs-visuals', title: 'visuals' },
+        { id: 'bs-outcome', title: 'outcome' },
+        { id: 'bs-learnings', title: 'learnings' },
+        { id: 'bs-next-steps', title: 'next steps' }
+      ];
+
+      function bsHead(num, title, file) {
+        return '<header class="bs-section-head">' +
+          '<div><span>' + num + ' / </span>' + title.toUpperCase() + '</div>' +
+          '<small>baby-steps/' + file + '.md</small>' +
+        '</header>';
+      }
+
+      function bsPhone(title, detail, hero) {
+        return '<div class="bs-phone-placeholder' + (hero ? ' bs-phone-placeholder--hero' : '') + '" aria-label="Screen placeholder: ' + title + '">' +
+          '<span class="bs-phone-notch"></span>' +
+          '<div class="bs-phone-screen">' +
+            '<span class="bs-phone-time">9:41</span>' +
+            '<span class="bs-phone-status"></span>' +
+            '<div class="bs-phone-copy">' +
+              '<small>screen placeholder</small>' +
+              '<strong>' + title + '</strong>' +
+              '<p>' + detail + '</p>' +
+            '</div>' +
+            '<div class="bs-phone-focus"><span></span><span></span><span></span></div>' +
+            '<div class="bs-phone-actions"><i></i><i></i><i></i><i></i></div>' +
+            '<div class="bs-phone-nav"><i></i><i></i><i></i><i></i></div>' +
+          '</div>' +
+        '</div>';
+      }
+
+      readingContainer.classList.add('bs-reference-page');
+      readingContainer.innerHTML =
+        '<section class="cs-cover bs-ref-overview" id="bs-overview">' +
+          '<div class="bs-overview-copy">' +
+            bsHead('01', 'overview', 'overview') +
+            '<h1 class="cs-title">Baby Steps</h1>' +
+            '<p class="bs-tagline">A pregnancy companion shaped around the days when even one more task can feel like too much.</p>' +
+            '<p class="bs-summary">The idea started during my hospital visits. I kept seeing heavily pregnant women moving from one queue to another and waiting for hours for routine care. I designed Baby Steps to explore how tracking, appointments, medicine information and emotional support could live in one calmer place.</p>' +
+            '<span class="bs-discipline"><i></i> solo product design · concept</span>' +
+          '</div>' +
+          '<div class="bs-overview-device">' + bsPhone('home dashboard', 'week, baby growth and appointments in one place', true) + '</div>' +
+        '</section>' +
+
+        '<div class="bs-meta-strip" aria-label="Case study details">' +
+          '<div><span>role</span><strong>solo ux/ui designer</strong></div>' +
+          '<div><span>platform</span><strong>mobile app</strong></div>' +
+          '<div><span>timeline</span><strong>2 weeks</strong></div>' +
+          '<div><span>status</span><strong>concept · visual refresh in progress</strong></div>' +
+        '</div>' +
+
+        '<section class="section-block bs-ref-section bs-ref-problem" id="bs-problem">' +
+          bsHead('02', 'the problem', 'problem') +
+          '<div class="bs-problem-left">' +
+            '<h2>Routine pregnancy care can demand the most effort when somebody has the least energy to spare.</h2>' +
+            '<p class="bs-problem-intro">The original question was simple: how could I reduce the amount of running around needed to manage a pregnancy? The problem stretched beyond appointments. Information, medicines, emotional support and everyday planning were all scattered.</p>' +
+            '<img src="images/case-studies/baby-steps-story.png" alt="Pregnant Nigerian Muslim woman resting at home" />' +
+          '</div>' +
+          '<ol class="bs-number-list">' +
+            '<li><span>01</span><p>Finding clear information about pregnancy-safe medicines can take too long.</p></li>' +
+            '<li><span>02</span><p>Booking antenatal care or choosing a physician may require another hospital visit and another wait.</p></li>' +
+            '<li><span>03</span><p>Due dates, baby growth, appointments and daily tasks are easy to lose across different places.</p></li>' +
+            '<li><span>04</span><p>Work, fatigue and changes in mental wellbeing make every extra step feel heavier.</p></li>' +
+          '</ol>' +
+        '</section>' +
+
+        '<section class="section-block bs-ref-section bs-ref-research" id="bs-research">' +
+          bsHead('03', 'research', 'research') +
+          '<div class="bs-research-lead">' +
+            '<div class="bs-research-copy">' +
+              '<h2>I started with the women already living through the problem.</h2>' +
+              '<p>I used a Google Forms survey to hear from pregnant women and mothers about the parts of pregnancy they found difficult to manage. Their responses helped me move past my hospital observation and see the wider pattern: care was only one part of the load.</p>' +
+              '<p class="bs-research-note">The original project did not record the survey sample size. I am treating these findings as directional, not representative.</p>' +
+            '</div>' +
+            '<figure class="bs-research-image"><img src="images/case-studies/baby-steps-research.png" alt="Pregnant Nigerian woman completing a mobile survey at home" /></figure>' +
+          '</div>' +
+          '<div class="bs-insight-grid">' +
+            '<article><i class="ti ti-users"></i><div><strong>Recurring pain points</strong><p>Medicine safety, appointments, tracking, work-life balance, physician choice, fatigue and mental wellbeing kept appearing.</p></div></article>' +
+            '<article><i class="ti ti-chart-dots"></i><div><strong>Competitive audit</strong><p>BabyCenter offered breadth but felt crowded. My Pregnancy was easier to scan, with less depth and personalisation.</p></div></article>' +
+            '<article><i class="ti ti-user-heart"></i><div><strong>Primary persona</strong><p>Amina is 27, lives in Ilorin, works in customer support and is trying to manage her first pregnancy around a busy schedule.</p></div></article>' +
+            '<article><i class="ti ti-heart"></i><div><strong>Design implication</strong><p>Every core flow had to reduce cognitive load and stay useful when the person using it was tired or worried.</p></div></article>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="section-block bs-ref-section bs-ref-solution" id="bs-solution">' +
+          bsHead('04', 'the solution', 'solution') +
+          '<div class="bs-process-strip" aria-label="Design process">' +
+            '<div><span>01</span><strong>survey</strong></div>' +
+            '<div><span>02</span><strong>synthesise</strong></div>' +
+            '<div><span>03</span><strong>map the IA</strong></div>' +
+            '<div><span>04</span><strong>wireframe</strong></div>' +
+            '<div><span>05</span><strong>prototype</strong></div>' +
+          '</div>' +
+          '<div class="bs-solution-copy">' +
+            '<h2>I brought the recurring jobs into one calm home base.</h2>' +
+            '<ul>' +
+              '<li>See the due date, baby&rsquo;s growth and upcoming care from the home screen.</li>' +
+              '<li>Book antenatal care and choose an available physician remotely.</li>' +
+              '<li>Browse pregnancy-safe medicine information and start a pharmacy order.</li>' +
+              '<li>Keep reminders, lists and appointments visible.</li>' +
+              '<li>Reach therapy, yoga and community support from the same product.</li>' +
+            '</ul>' +
+            '<p class="bs-solution-note">The information architecture grouped the main experience into Home, Clinic, To-do, Community and Tools. Notifications and settings stayed outside the core task flow.</p>' +
+          '</div>' +
+          '<div class="bs-phone-row">' +
+            bsPhone('home & due date', 'pregnancy progress, baby growth and reminders', false) +
+            bsPhone('clinic booking', 'physicians, dates and prenatal appointments', false) +
+            bsPhone('pharmacy', 'medicine information, product details and checkout', false) +
+          '</div>' +
+        '</section>' +
+
+        '<section class="section-block bs-ref-section bs-ref-features" id="bs-features">' +
+          bsHead('05', 'features', 'features') +
+          '<div class="bs-feature-grid">' +
+            '<article><i class="ti ti-calendar-heart"></i><strong>Pregnancy timeline</strong><p>Follow the due date, baby&rsquo;s growth and weekly progress.</p></article>' +
+            '<article><i class="ti ti-stethoscope"></i><strong>Clinic booking</strong><p>Choose a physician, compare availability and book prenatal care.</p></article>' +
+            '<article><i class="ti ti-pill"></i><strong>Pharmacy support</strong><p>Find medicine information and complete an order from home.</p></article>' +
+            '<article><i class="ti ti-heart-handshake"></i><strong>Therapy &amp; yoga</strong><p>Book remote emotional support and guided movement sessions.</p></article>' +
+            '<article><i class="ti ti-tool"></i><strong>Community &amp; tools</strong><p>Keep lists and reminders, with space for peer support when the concept grows.</p></article>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="section-block bs-ref-section bs-ref-visuals" id="bs-visuals">' +
+          bsHead('06', 'design & visuals', 'visuals') +
+          '<div class="bs-visual-intro">' +
+            '<h2>The visual direction is changing, so the structure comes first.</h2>' +
+            '<p>The blue interface in the original concept no longer reflects how I want Baby Steps to feel. I am revisiting the typography, colour, spacing and illustration system. The product flows remain as placeholders until that work is ready.</p>' +
+            '<ul><li>Keep the hierarchy calm and easy to scan</li><li>Use larger, clearer actions for tired users</li><li>Make sensitive information feel supportive</li><li>Separate health guidance from product convenience</li></ul>' +
+          '</div>' +
+          '<div class="bs-visual-image"><img src="images/case-studies/baby-steps-care-plan.png" alt="Pregnant Nigerian woman planning appointments and medicine from home" /></div>' +
+          '<div class="bs-direction-board" aria-label="Visual refresh status">' +
+            '<div class="bs-direction-card"><span>keep</span><strong>The product structure</strong><p>The main journeys, IA and task priorities still hold.</p></div>' +
+            '<div class="bs-direction-card"><span>rework</span><strong>The visual language</strong><p>Colour, type, components and the final screen system are in progress.</p></div>' +
+            '<div class="bs-direction-card"><span>validate</span><strong>Trust and readability</strong><p>The new direction needs to work with pregnant users before it becomes final.</p></div>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="section-block bs-ref-section bs-ref-outcome" id="bs-outcome">' +
+          bsHead('07', 'current outcome', 'outcome') +
+          '<p class="bs-outcome-intro">The current outcome is a clearer product direction and a prototype that connects the main journeys. Baby Steps has not shipped, and the concept has not been tested enough to claim that it reduces hospital visits or stress.</p>' +
+          '<div class="bs-outcome-grid">' +
+            '<article><i class="ti ti-sitemap"></i><div><strong>Defined architecture</strong><p>Home, Clinic, To-do, Community and Tools now have clear roles.</p></div></article>' +
+            '<article><i class="ti ti-route"></i><div><strong>Connected journeys</strong><p>Tracking, booking, pharmacy and support can be tested as one experience.</p></div></article>' +
+            '<article><i class="ti ti-device-mobile-check"></i><div><strong>Testable prototype</strong><p>The wireframes turn the early survey themes into specific flows and decisions.</p></div></article>' +
+            '<article><i class="ti ti-flask"></i><div><strong>Impact still open</strong><p>Real outcomes depend on usability, clinical safety and operational testing.</p></div></article>' +
+          '</div>' +
+        '</section>' +
+
+        '<div class="bs-closing-grid">' +
+          '<section class="section-block bs-ref-section bs-ref-learning" id="bs-learnings">' +
+            bsHead('08', 'learnings', 'learnings') +
+            '<ul><li>I moved from survey answers to screens too quickly. Another round of conversations should have happened before the prototype.</li><li>Accessibility changed the type sizes, contrast, tap targets and information hierarchy. It could not stay as a final check.</li><li>Pregnancy care is high stakes. Medicine information, privacy and mental-health support need clear clinical and operational rules.</li><li>Two weeks gave me a direction, with validation still outstanding.</li></ul>' +
+            '<i class="ti ti-heart-filled bs-closing-icon" aria-hidden="true"></i>' +
+          '</section>' +
+          '<section class="section-block bs-ref-section bs-ref-next" id="bs-next-steps">' +
+            bsHead('09', 'next steps', 'next-steps') +
+            '<ul><li>Replace every screen placeholder with the new visual direction.</li><li>Test the core flows with pregnant women at different stages of pregnancy.</li><li>Explore how fathers and other caregivers fit without shifting focus away from the primary user.</li><li>Define the safety, privacy and service rules behind pharmacy, clinic booking and therapy.</li><li>Validate the community and tools areas before expanding them.</li></ul>' +
+            '<i class="ti ti-arrow-right bs-closing-icon" aria-hidden="true"></i>' +
+          '</section>' +
+        '</div>' +
+
+        '<div class="cs-footer bs-ref-footer">' +
+          '<button class="back-work-btn cs-btn secondary">← back to my work</button>' +
+          '<span class="cs-eof">you&rsquo;ve reached the end of baby-steps.case-study</span>' +
+          '<button class="next-cs-btn cs-btn primary">open next project →</button>' +
+        '</div>';
+
+      railList.innerHTML = '';
+      bsSections.forEach(function(section, index) {
+        var btn = document.createElement('button');
+        var number = (index + 1 < 10 ? '0' : '') + (index + 1);
+        btn.className = 'rail-section-item' + (index === 0 ? ' active-rose' : '');
+        btn.innerHTML = '<span class="rn">' + number + '</span><span class="rf">' + number + '_' + section.title.replace(/\s+/g, '-') + '</span>';
+        btn.setAttribute('aria-label', number + ' ' + section.title);
+        btn.addEventListener('click', function() {
+          var target = readingContainer.querySelector('#' + section.id);
+          if (!target) return;
+          var paneRect = readingPane.getBoundingClientRect();
+          var targetRect = target.getBoundingClientRect();
+          var top = readingPane.scrollTop + targetRect.top - paneRect.top - 16;
+          readingPane.scrollTo({ top: top, behavior: reducedMotion() ? 'instant' : 'smooth' });
+          railList.querySelectorAll('.rail-section-item').forEach(function(item) { item.classList.remove('active-rose'); });
+          btn.classList.add('active-rose');
+          var currentLabel = viewer.querySelector('.hlp-cur');
+          if (currentLabel) currentLabel.textContent = '· ' + section.title;
+        });
+        railList.appendChild(btn);
+      });
+
+      var infoCard = document.createElement('div');
+      infoCard.className = 'cs-rail-info';
+      infoCard.innerHTML =
+        '<div class="cs-rail-info-title">case study info</div>' +
+        '<div class="cs-rail-info-row"><span class="k">role</span><span class="v">solo ux/ui designer</span></div>' +
+        '<div class="cs-rail-info-row"><span class="k">platform</span><span class="v">mobile app</span></div>' +
+        '<div class="cs-rail-info-row"><span class="k">timeline</span><span class="v">2 weeks</span></div>' +
+        '<div class="cs-rail-info-row"><span class="k">focus</span><span class="v">research, ux, ui, prototyping</span></div>' +
+        '<div class="cs-rail-info-row"><span class="k">status</span><span class="v">concept · visual refresh in progress</span></div>';
+      railList.appendChild(infoCard);
+
+      viewer._csTitles = bsSections.map(function(s) { return s.title; });
+      viewer._csLastIdx = -1;
+      viewer.querySelector('.hlp-cur').textContent = '· overview';
+      if (viewer._csCacheOffsets) requestAnimationFrame(viewer._csCacheOffsets);
+
+      readingContainer.querySelector('.back-work-btn').addEventListener('click', function() {
+        closeWin(viewer);
+        openWin('work');
+      });
+      readingContainer.querySelector('.next-cs-btn').addEventListener('click', function() {
+        readingPane.scrollTop = 0;
+        renderCaseStudy('compass');
+        Genie.invalidate('viewer');
+        Genie.warm(viewer);
+      });
+    }
+
+    if (normName === 'baby steps') {
+      renderBabyStepsReference();
+      return;
+    }
+
     // --- 1. Cover: title block on the left, hero on the right ---
     var docHeader = document.createElement('div');
     docHeader.className = 'cs-cover';
 
     var heroFile = cs.heroImg || (slug + '-hero.png');
-    var metaCells = ['role', 'timeline', 'team', 'platform'].filter(function(k) {
+    var metaCells = ['role', 'platform', 'timeline', 'team'].filter(function(k) {
       return cs.metadata && cs.metadata[k];
     }).map(function(k) {
       return '<div><div class="k">' + k + '</div><div class="val">' + cs.metadata[k] + '</div></div>';
     }).join('');
 
+    // Flat cover: title and standfirst on the page, hero beside them. The rose
+    // panel is gone — it was the only saturated surface in an otherwise calm
+    // document, and it made the opening read as a banner rather than a title.
+    // Standfirst comes from the first prose block, never the statement — the
+    // statement appears in full a screen below and repeating it reads as a bug.
+    var standfirst = cs.summary || '';
+    var firstSec = cs.sections[0];
+    if (!standfirst && firstSec) {
+      var fb = (firstSec.blocks || []).filter(function(b) { return b.type === 'text' && b.content; })[0];
+      if (fb) standfirst = fb.content;
+    }
     docHeader.innerHTML =
       '<div class="cs-cover-text">' +
         '<p class="cs-kicker">case study ✦ ' + cs.sections.length + ' sections</p>' +
         '<h1 class="cs-title">' + cs.title + '</h1>' +
-        (metaCells ? '<div class="cs-meta">' + metaCells + '</div>' : '') +
+        (standfirst ? '<p class="cs-standfirst">' + standfirst + '</p>' : '') +
       '</div>' +
       '<figure class="cs-figure">' + frameHTML(heroFile, cs.title + ' hero', true) + '</figure>';
     readingContainer.appendChild(docHeader);
+
+    // Metadata as a full-width strip under the cover, divided by hairlines.
+    if (metaCells) {
+      var metaStrip = document.createElement('div');
+      metaStrip.className = 'cs-metastrip';
+      metaStrip.innerHTML = metaCells;
+      readingContainer.appendChild(metaStrip);
+    }
+
+    // The reference begins with an overview file before the numbered chapters.
+    // Keeping it in the same rail makes the cover a real destination instead of
+    // an unlabelled area above section 01.
+    var overviewBtn = document.createElement('button');
+    overviewBtn.className = 'rail-section-item active-rose';
+    overviewBtn.innerHTML = '<span class="rn">01</span><span class="rf">01_overview</span>';
+    overviewBtn.setAttribute('aria-label', '01 overview');
+    overviewBtn.addEventListener('click', function() {
+      readingPane.scrollTo({ top: 0, behavior: reducedMotion() ? 'instant' : 'smooth' });
+      railList.querySelectorAll('.rail-section-item').forEach(function(item) {
+        item.classList.remove('active-rose');
+      });
+      overviewBtn.classList.add('active-rose');
+    });
+    railList.appendChild(overviewBtn);
 
     // A compact story map gives recruiters the shape of the project before
     // they commit to the full read. It is derived from the authored study,
@@ -10301,10 +12196,13 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       // Add to contents rail
       var btn = document.createElement('button');
       btn.className = 'rail-section-item';
-      if (idx === 0) btn.classList.add('active-rose');
-      
-      var numStr = (idx + 1 < 10 ? '0' : '') + (idx + 1);
-      btn.innerHTML = '<span class="rn">' + numStr + '</span>' + section.title;
+      var sectionNumber = idx + 2;
+      var numStr = (sectionNumber < 10 ? '0' : '') + sectionNumber;
+      // Sidebar reads as the project's files: 01_context, 02_approach, ...
+      var railSlug = String(section.title || '')
+        .toLowerCase().replace(/^the\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      btn.innerHTML = '<span class="rn">' + numStr + '</span>' +
+        '<span class="rf">' + numStr + '_' + railSlug + '</span>';
       btn.setAttribute('aria-label', numStr + ' ' + section.title);
       
       btn.addEventListener('click', function() {
@@ -10349,24 +12247,31 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       
       // Add section container to reading pane
       var block = document.createElement('div');
-      block.className = 'section-block cs-block cs-block--' + section.type;
+      block.className = 'section-block cs-block cs-block--' + section.type +
+        (section.statement && section.type !== 'hook' && section.type !== 'reflection' ? ' cs-block--split' : '');
       block.id = 'cs-sec-' + idx;
 
       var innerHTML = '';
       var blocks = section.blocks || [];
 
       // Section heading: number, title, dashed rule to the margin
+      // Header reads like a file in the project: "01 / THE CONTEXT" with the
+      // path beneath it, matching the sidebar's file list.
+      var sectionSlug = String(section.title || '')
+        .toLowerCase().replace(/^the\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       var headerHTML =
         '<h3 class="cs-head">' +
           '<span class="num">' + numStr + '</span>' +
-          '<span>' + section.title + '</span>' +
-          '<span class="rule"></span>' +
+          '<span class="cs-head-label">' + section.title + '</span>' +
+          '<span class="cs-head-path">' + slug + '/' + sectionSlug + '.md</span>' +
+          (idx === 0 ? '<span class="cs-head-stamp">case study <b>' +
+            (cs.metadata && cs.metadata.timeline ? cs.metadata.timeline : '') + '</b> <i></i></span>' : '') +
         '</h3>';
 
-      // A. The hook: the one inverted rose band, no heading — it opens
-      //    the document the way a statement slide does
+      // A. The hook keeps the same numbered file heading as every other band.
       if (section.type === 'hook') {
         var hookText = section.content || (blocks[0] && blocks[0].content) || '';
+        innerHTML += headerHTML;
         innerHTML +=
           '<div class="cs-hook wide">' +
             '<span class="lab">' + (section.label || section.title) + '</span>' +
@@ -10457,7 +12362,10 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 
         if (blocks.length) {
           blocks.forEach(function(b) {
-            if (b.type === 'image' && !b.wide) { flushDecs(); figBuf.push(b); return; }
+            // Phone and screen exports stay in compact visual rows even when an
+            // older data entry marked one as wide. Only contextual bleed images
+            // earn a full-width break in the document.
+            if (b.type === 'image' && !b.bleed) { flushDecs(); figBuf.push(b); return; }
             if (b.type === 'decision') { flushFigs(); decBuf.push(b); return; }
             flushFigs(); flushDecs();
             if (b.type === 'text') {
@@ -10507,13 +12415,31 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       block.innerHTML = innerHTML;
       readingContainer.appendChild(block);
     });
-    
+
+    // Case study info card, pinned under the file list in the sidebar.
+    var infoRows = [
+      { k: 'role', v: cs.metadata && cs.metadata.role },
+      { k: 'platform', v: cs.metadata && cs.metadata.platform },
+      { k: 'team', v: cs.metadata && cs.metadata.team },
+      { k: 'timeline', v: cs.metadata && cs.metadata.timeline }
+    ].filter(function(r) { return r.v; });
+    if (infoRows.length) {
+      var infoCard = document.createElement('div');
+      infoCard.className = 'cs-rail-info';
+      infoCard.innerHTML =
+        '<div class="cs-rail-info-title">case study info</div>' +
+        infoRows.map(function(r) {
+          return '<div class="cs-rail-info-row"><span class="k">' + r.k + '</span><span class="v">' + r.v + '</span></div>';
+        }).join('');
+      railList.appendChild(infoCard);
+    }
+
     // Seed the toolbar indicator so it reads correctly before any scroll
     var curEl = viewer.querySelector('.hlp-cur');
-    if (curEl && cs.sections[0]) curEl.textContent = '· ' + cs.sections[0].title;
+    if (curEl) curEl.textContent = '· overview';
 
     // Re-measure for the scroll spy: new document, new section offsets
-    viewer._csTitles = cs.sections.map(function(s) { return s.title; });
+    viewer._csTitles = ['overview'].concat(cs.sections.map(function(s) { return s.title; }));
     viewer._csLastIdx = -1;
     if (viewer._csCacheOffsets) requestAnimationFrame(viewer._csCacheOffsets);
 
@@ -10531,6 +12457,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     
     bottomRow.innerHTML =
       '<button class="back-work-btn cs-btn secondary">← back to my work</button>' +
+      '<span class="cs-eof">you’ve reached the end of ' + slug + '.hlp</span>' +
       '<button class="next-cs-btn cs-btn primary">next: ' + nextTitle.toLowerCase() + ' →</button>';
 
     bottomRow.querySelector('.next-cs-btn').addEventListener('click', function() {
@@ -10606,7 +12533,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         var container = viewer.querySelector('.reading-container');
         if (!container) return;
         var base = container.offsetTop || 0;
-        var blocks = container.querySelectorAll('.section-block');
+        var blocks = container.querySelectorAll('.cs-cover, .section-block');
         var offs = [];
         for (var i = 0; i < blocks.length; i++) offs.push(base + blocks[i].offsetTop);
         viewer._csOffsets = offs;
@@ -11217,8 +13144,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     { name: "lattice", oneLiner: "an exploratory JavaScript build with its source available on GitHub.", category: "experiment", icon: "ti-layout-grid", accent: "#64794c", soft: "#edf3e7", image: "images/ai-builds/lattice.png", liveUrl: "https://playlattice.netlify.app", sourceUrl: "https://github.com/maryam-ay/lattice", desc: "an exploratory JavaScript project from my AI build archive. open the repository to explore the work." },
     { name: "penline", oneLiner: "a JavaScript build from my growing collection of AI-assisted experiments.", category: "experiment", icon: "ti-writing", accent: "#904a5d", soft: "#f7e8ec", image: "images/ai-builds/penline.png", liveUrl: "https://usepenline.netlify.app", sourceUrl: "https://github.com/maryam-ay/Penline", desc: "a JavaScript project from my AI build archive. open the repository to explore the work." },
     { name: "svg forge", oneLiner: "a JavaScript experiment for working with scalable vector graphics.", category: "vector tool", icon: "ti-vector", accent: "#7853a1", soft: "#f0e8f8", image: "images/ai-builds/svg-forge.png", liveUrl: "https://svg-forge.netlify.app", sourceUrl: "https://github.com/maryam-ay/svg-forge", desc: "a JavaScript project for exploring SVG workflows, with the source available on GitHub." },
-    { name: "nigerian brands logos", oneLiner: "search and insert Nigerian brand logos from a curated Figma library.", category: "figma plugin", icon: "ti-brand-figma", accent: "#b56b2d", soft: "#f9ead9", image: "images/ai-builds/nigerian-brands-logos.png", liveUrl: "https://nigerianbrandlogos.netlify.app", sourceUrl: "https://github.com/maryam-ay/nigerian-brands-logos-plugin", desc: "a Figma plugin that lets you search, insert and update Nigerian brand logos from a curated, continuously updated library." },
-    { name: "skinpet", oneLiner: "a skincare companion where a little pet reacts to the routine you keep.", category: "companion app", icon: "ti-mood-smile", accent: "#c9587f", soft: "#fdeaf0", image: "images/ai-builds/skin-pet.png", liveUrl: "https://skin-pet.vercel.app", sourceUrl: "https://github.com/maryam-ay/SkinPet", desc: "a skincare tracker built around Mochi, a small companion that responds to how consistently you look after your skin." },
+    { name: "nigerian brand logos", oneLiner: "a searchable library of 900+ Nigerian brand logos, free to download as SVG or PNG.", category: "asset library", icon: "ti-photo-search", accent: "#b56b2d", soft: "#f9ead9", image: "images/ai-builds/nigerian-brands-logos.png", liveUrl: "https://nigerianbrandlogos.netlify.app", sourceUrl: "https://github.com/maryam-ay/nigerian-brands-logos-plugin", desc: "a growing library of Nigerian brand logos, built to make local brand assets easier for designers and developers to find and use. search a brand, take the SVG or PNG you need, and get back to designing instead of hunting through Google Images." },
+    { name: "skinpet", oneLiner: "a skincare companion where a little pet reacts to the routine you keep.", category: "companion app", icon: "ti-mood-smile", accent: "#c9587f", soft: "#fdeaf0", image: "images/ai-builds/skin-pet.png", liveUrl: "https://skin-pet.vercel.app", desc: "a skincare tracker built around Mochi, a small companion that responds to how consistently you look after your skin." },
     { name: "empty state generator", oneLiner: "describe an empty state and get a full illustration back.", category: "design tool", icon: "ti-sparkles", accent: "#5f6bab", soft: "#eaedf9", image: "images/ai-builds/empty-state-generator.png", liveUrl: "https://emptystategenerator.netlify.app", desc: "a Figma plugin prototype that turns a written description into a complete empty state illustration, with style presets and a live preview." }
   ];
 
