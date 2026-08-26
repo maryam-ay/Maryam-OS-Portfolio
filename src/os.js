@@ -244,6 +244,10 @@
       }
       html2canvasPromise.then(cb);
     }
+    function preload(){
+      if(!glOK||reduced())return;
+      idle(function(){ensureHtml2Canvas(function(){});});
+    }
     function canGenie(){return !reduced() && glOK;}
     function ready(id){return canGenie() && !!texCache[id];}
     function easeInCubic(x){return x*x*x;}
@@ -481,7 +485,7 @@
       };
       current=self;self.raf=requestAnimationFrame(step);return true;
     }
-    return {init:init, canGenie:canGenie, ready:ready, play:play, warm:warm, prepare:prepare, warmAll:warmAll, warmOpen:warmOpen, invalidate:invalidate, invalidateAll:invalidateAll, clickToFrame:function(){return lastC2F;}};
+    return {init:init, preload:preload, canGenie:canGenie, ready:ready, play:play, warm:warm, prepare:prepare, warmAll:warmAll, warmOpen:warmOpen, invalidate:invalidate, invalidateAll:invalidateAll, clickToFrame:function(){return lastC2F;}};
   })();
   // The welcome ResizeObserver reaches for window.Genie, so publish the module.
   window.Genie=Genie;
@@ -1047,9 +1051,29 @@
       playPhoneWindow(win,true);
       return;
     }
-    if(noAnim||!Genie.ready(id)){
-      win.classList.add('open');fadeIn(win);setActive(win);syncMaxed();
-      if(!noAnim)Genie.warm(win);return;
+    if(noAnim){
+      win.classList.add('open');fadeIn(win);setActive(win);syncMaxed();return;
+    }
+    if(!Genie.ready(id)){
+      // The first open used to fall back to a fade while its texture warmed in
+      // the background. That made the reverse genie work on close but skipped
+      // the more important launch motion. Lay the window out invisibly, capture
+      // it once, then pull it from the clicked icon. Only this one window is
+      // prepared, so lazy media in the rest of the portfolio stays untouched.
+      var firstAnchor=anchorCenter(origin);
+      win.classList.add('open','genie-prep');setActive(win);syncMaxed();
+      if(win._genieOpening)return;
+      win._genieOpening=true;
+      Genie.prepare(win,function(ok){
+        win._genieOpening=false;
+        if(!win.classList.contains('open'))return;
+        if(ok){
+          Genie.play(win,firstAnchor,'in',function(){win.classList.remove('genie-prep');},clickTs);
+        }else{
+          win.classList.remove('genie-prep');fadeIn(win);
+        }
+      });
+      return;
     }
     win.classList.add('open');setActive(win);syncMaxed();
     Genie.play(win,anchorCenter(origin),'in',function(){win.classList.remove('genie-prep');},clickTs);
@@ -3901,6 +3925,7 @@
     initAppInteractivity();
     initMarquee();
     Genie.init();
+    if(window.innerWidth>767)Genie.preload();
 
 
 
