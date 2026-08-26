@@ -5136,6 +5136,17 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   .pdi svg { width: 50px !important; height: 50px !important; }
 }
 
+/* Mobile readability floor. JavaScript adds this only to text whose computed
+   size is below 12px, so larger titles and body copy keep their authored scale. */
+@media (max-width: 767px) {
+  .mobile-type-floor,
+  .mobile-type-floor::before,
+  .mobile-type-floor::after {
+    font-size: 12px !important;
+  }
+  .window .tctl .mn::after { font-size: 12px !important; }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   .rail-section-item,

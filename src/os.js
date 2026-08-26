@@ -845,6 +845,55 @@
     syncMobileNavigation(win);
   }
   function isPhoneOS(){ return window.matchMedia('(max-width:767px)').matches; }
+  var mobileTypeFloorObserver=null,mobileTypeFloorQueued=false;
+  function mobileTextCandidates(scope){
+    var candidates=[],seen=new Set();
+    function add(el){
+      if(!el||seen.has(el)||/^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE|SVG|PATH|I)$/.test(el.tagName)||el.closest('svg'))return;
+      seen.add(el);candidates.push(el);
+    }
+    var walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT);
+    var node;
+    while((node=walker.nextNode())){
+      if(node.nodeValue.trim())add(node.parentElement);
+    }
+    Array.prototype.forEach.call(scope.querySelectorAll('input,textarea,select,option'),add);
+    if(scope.matches&&scope.matches('input,textarea,select,option'))add(scope);
+    return candidates;
+  }
+  function applyMobileTypeFloor(root){
+    var scope=root&&root.nodeType===1?root:desktop;
+    var existing=scope.querySelectorAll('.mobile-type-floor');
+    Array.prototype.forEach.call(existing,function(el){el.classList.remove('mobile-type-floor');});
+    if(!isPhoneOS())return;
+    var candidates=mobileTextCandidates(scope);
+    var needsFloor=[];
+    candidates.forEach(function(el){
+      var size=parseFloat(getComputedStyle(el).fontSize);
+      if(isFinite(size)&&size<12)needsFloor.push(el);
+    });
+    needsFloor.forEach(function(el){el.classList.add('mobile-type-floor');});
+  }
+  function queueMobileTypeFloor(){
+    if(mobileTypeFloorQueued)return;
+    mobileTypeFloorQueued=true;
+    requestAnimationFrame(function(){
+      mobileTypeFloorQueued=false;
+      applyMobileTypeFloor(desktop);
+    });
+  }
+  function initMobileTypeFloor(){
+    applyMobileTypeFloor(desktop);
+    if(typeof MutationObserver!=='undefined'&&!mobileTypeFloorObserver){
+      mobileTypeFloorObserver=new MutationObserver(function(records){
+        if(!isPhoneOS())return;
+        var hasNewContent=records.some(function(record){return record.addedNodes&&record.addedNodes.length;});
+        if(hasNewContent)queueMobileTypeFloor();
+      });
+      mobileTypeFloorObserver.observe(desktop,{childList:true,subtree:true});
+    }
+    window.addEventListener('resize',queueMobileTypeFloor,{passive:true});
+  }
   function mobileDestination(win){
     if(!win)return 'home';
     if(win.id==='viewer')return 'work';
@@ -941,6 +990,7 @@
   }
   function openWin(id,srcEl,noAnim){
     var win=document.getElementById(id);if(!win)return;
+    if(isPhoneOS())applyMobileTypeFloor(win);
     var wasOpen = win.classList.contains('open') && !win.classList.contains('min');
     var phoneCurrent=isPhoneOS()?currentPhoneWindow():null;
 
@@ -2710,6 +2760,7 @@
     }
 
     renderCaseStudy(name);
+    if(isPhoneOS())applyMobileTypeFloor(viewer);
 
     Genie.invalidate('viewer');
     if(cardEl)viewer._origin=cardEl;
@@ -3855,6 +3906,7 @@
 
     initPhotoViewer();
     syncMobileChrome();
+    initMobileTypeFloor();
     if(isPhoneOS()){
       if(startBtn)startBtn.setAttribute('aria-label','Open apps menu');
     }
