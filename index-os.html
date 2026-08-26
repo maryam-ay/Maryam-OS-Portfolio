@@ -364,6 +364,12 @@ body.dark .process-row:hover {
   gap: 24px;
   margin-bottom: 12px;
 }
+.welcome-mobile-identity,
+.welcome-mobile-only,
+.welcome-mobile-swipe,
+.welcome-guide-label {
+  display: none;
+}
 .welcome-photo-polaroid {
   flex-shrink: 0;
   width: 85px;
@@ -3470,7 +3476,6 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     height: calc(100dvh - 56px - env(safe-area-inset-bottom)) !important;
     max-width: none !important; max-height: none !important;
     border-radius: 0 !important; border: none !important; box-shadow: none !important;
-    transform: none !important; opacity: 1 !important;
   }
   .window.min { display: none !important; opacity: 0 !important; }
   
@@ -4544,12 +4549,625 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #viewer .hlp-reading-pane { min-height: 0; padding: 0 !important; }
 }
 
+/* ============================================================
+   MARYAM OS — PHONE HOME SCREEN
+   A touch-first translation of the desktop rather than a compressed desktop.
+   ============================================================ */
+#mobile-home { display: none; }
+#mobile-app-nav,
+#mobile-nav-scrim,
+#mobile-more-sheet { display: none; }
+
+@media (max-width: 767px) {
+  html, body, #desktop {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+  #desktop {
+    position: fixed;
+    inset: 0;
+    padding-top: env(safe-area-inset-top);
+    background-color: var(--desk);
+    background-image: radial-gradient(color-mix(in srgb, var(--rose) 18%, transparent) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  #mobile-home {
+    position: absolute;
+    z-index: 3;
+    top: calc(18px + env(safe-area-inset-top));
+    right: 18px;
+    left: 18px;
+    display: block;
+    padding: 13px 15px 15px;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    border: 1px solid var(--bev-lo);
+    border-radius: 16px;
+    box-shadow: 3px 4px 0 var(--soft-sh);
+  }
+  .mobile-home-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--rose);
+    font: 700 10px/1.2 var(--font-mono);
+    letter-spacing: .06em;
+    text-transform: lowercase;
+  }
+  .mobile-home-title {
+    margin: 8px 0 3px;
+    color: var(--rose-dark);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(27px, 8.5vw, 36px);
+    font-style: italic;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .mobile-home-note {
+    margin: 0;
+    color: var(--ink-soft);
+    font: 11px/1.4 Tahoma, Verdana, sans-serif;
+  }
+  #icons {
+    top: calc(150px + env(safe-area-inset-top)) !important;
+    right: 12px !important;
+    bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+    left: 12px !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-content: start !important;
+    gap: clamp(15px, 4.5vh, 28px) 8px !important;
+    padding: 12px 2px 18px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+  #icons::-webkit-scrollbar { display: none; }
+  .pdi {
+    width: 100% !important;
+    min-width: 0;
+    padding: 0 2px !important;
+    color: var(--ink);
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+  .pdi svg {
+    width: 54px !important;
+    height: 54px !important;
+    padding: 10px;
+    overflow: visible;
+    background: var(--paper);
+    border: 1px solid var(--bev-lo);
+    border-radius: 18px;
+    box-shadow: 3px 4px 0 var(--soft-sh);
+    box-sizing: content-box;
+    filter: none;
+  }
+  .pdi span {
+    max-width: 92px;
+    margin: 8px auto 0 !important;
+    color: var(--icon-lbl);
+    font: 700 11px/1.15 var(--font-mono) !important;
+    text-shadow: 0 1px 0 var(--icon-lbl-sh);
+  }
+  .pdi:active { transform: scale(.96) !important; }
+  .pdi:active svg {
+    transform: translateY(2px) !important;
+    box-shadow: 1px 2px 0 var(--soft-sh);
+  }
+
+  /* The taskbar becomes a floating phone dock. */
+  #taskbar {
+    right: 12px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    left: 12px !important;
+    width: auto !important;
+    min-height: 62px !important;
+    padding: 8px !important;
+    gap: 6px !important;
+    background: color-mix(in srgb, var(--paper) 94%, transparent) !important;
+    border: 1px solid var(--bev-lo) !important;
+    border-radius: 20px !important;
+    box-shadow: 3px 4px 0 var(--soft-sh) !important;
+  }
+  body.has-maxed #taskbar { transform: none; }
+  #startbtn,
+  #themebtn {
+    width: 46px !important;
+    min-width: 46px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 0 !important;
+    justify-content: center;
+    font-size: 0 !important;
+    border-radius: 14px !important;
+  }
+  #startbtn .ti,
+  #themebtn .ti { font-size: 20px !important; }
+  #tasks {
+    min-width: 0;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #tasks::-webkit-scrollbar { display: none; }
+  .taskbtn {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 46px !important;
+    display: grid !important;
+    place-items: center;
+    border-radius: 13px !important;
+  }
+  .taskbtn .ti {
+    display: block !important;
+    color: var(--rose) !important;
+    font-size: 20px !important;
+  }
+  .taskbtn::after {
+    top: auto !important;
+    bottom: 3px !important;
+    width: 5px !important;
+    height: 5px !important;
+  }
+  .taskbtn.on { background: var(--tint) !important; }
+
+  #startmenu {
+    right: 12px !important;
+    bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+    left: 12px !important;
+    width: auto !important;
+    border-radius: 18px !important;
+    box-shadow: 3px 4px 0 var(--soft-sh) !important;
+  }
+  #startmenu .head { padding: 13px 15px !important; }
+  #startmenu ul { padding: 7px; }
+  #startmenu li button { min-height: 44px; border-radius: 10px; }
+
+  /* Apps occupy the usable phone canvas above the dock. */
+  .window,
+  #viewer.window {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: calc(100dvh - 82px - env(safe-area-inset-bottom)) !important;
+    max-width: none !important;
+    max-height: none !important;
+    border: 0 !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: none !important;
+  }
+  .window .tbar {
+    min-height: calc(52px + env(safe-area-inset-top)) !important;
+    height: calc(52px + env(safe-area-inset-top)) !important;
+    padding: max(8px, env(safe-area-inset-top)) 10px 8px 14px !important;
+    border-radius: 0 !important;
+    font-size: 13px !important;
+  }
+  .window .tt {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .window .wbody {
+    min-height: 0 !important;
+    height: calc(100% - 52px - env(safe-area-inset-top)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+  }
+  .tctl { gap: 5px !important; }
+  .tctl .mx,
+  .tctl .cl { display: none !important; }
+  .tctl .mn {
+    display: grid !important;
+    width: 40px !important;
+    height: 40px !important;
+    place-items: center;
+    border-radius: 12px !important;
+  }
+
+  /* Primary app surfaces share the same phone spacing. */
+  #welcome .wpad,
+  #contact .wbody { padding: 18px !important; }
+  #welcome .welcome-header { align-items: flex-start; text-align: left; }
+  #welcome .bigname { font-size: 34px; }
+  #welcome .marquee-card { width: min(72vw, 250px); }
+  #work .work-browser { gap: 12px; padding: 12px; }
+  #work .work-index-scroll { padding: 8px; scroll-snap-type: x proximity; }
+  #work .work-index .rail-entry { width: min(72vw, 250px); scroll-snap-align: start; }
+  #work .work-preview { min-height: 0; }
+  #work .work-image-frame { min-height: 210px; }
+  #builds .builds-stage { padding: 12px; }
+  #about .about-shell { padding: 18px 16px 24px !important; }
+  #xp .xp-dossier { padding: 12px !important; }
+}
+
+/* Mobile app navigation: the OS becomes one app with persistent destinations. */
+@media (max-width: 767px) {
+  #taskbar,
+  #startmenu { display: none !important; }
+
+  #mobile-app-nav {
+    position: fixed;
+    z-index: 10020;
+    right: 10px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    left: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 3px;
+    min-height: 64px;
+    padding: 6px;
+    background: color-mix(in srgb, var(--paper) 96%, transparent);
+    border: 1px solid var(--bev-lo);
+    border-radius: 20px;
+    box-shadow: 3px 4px 0 var(--soft-sh);
+  }
+  .mobile-nav-item {
+    position: relative;
+    min-width: 0;
+    min-height: 50px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 3px;
+    padding: 4px 2px;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    border-radius: 14px;
+    font-family: var(--font-mono);
+  }
+  .mobile-nav-item .ti { font-size: 19px; }
+  .mobile-nav-item span { font-size: 8px; font-weight: 700; line-height: 1; }
+  .mobile-nav-item[aria-current="page"] {
+    color: var(--rose-dark);
+    background: var(--tint);
+    box-shadow: inset 0 0 0 1px var(--bev-lo);
+  }
+  .mobile-nav-item[aria-current="page"]::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--rose);
+    transform: translateX(-50%);
+  }
+  .mobile-nav-item:active { transform: scale(.94); }
+
+  #mobile-nav-scrim {
+    position: fixed;
+    z-index: 10021;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    background: color-mix(in srgb, var(--rose-dark) 16%, transparent);
+    transition: opacity 180ms var(--ease-out-soft);
+  }
+  #mobile-nav-scrim.open { pointer-events: auto; opacity: 1; }
+  #mobile-more-sheet {
+    position: fixed;
+    z-index: 10022;
+    right: 10px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    left: 10px;
+    display: block;
+    padding: 9px;
+    pointer-events: none;
+    opacity: 0;
+    background: var(--paper);
+    border: 1px solid var(--bev-lo);
+    border-radius: 18px;
+    box-shadow: 3px 4px 0 var(--soft-sh);
+    transform: translateY(14px) scale(.985);
+    transition: transform 220ms var(--ease-spring), opacity 160ms var(--ease-out-soft);
+  }
+  #mobile-more-sheet.open {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .mobile-more-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 6px 9px;
+    color: var(--rose);
+    font: 700 10px/1.2 var(--font-mono);
+  }
+  .mobile-more-close {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    background: var(--btn);
+    border-radius: 10px;
+  }
+  .mobile-more-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .mobile-more-action {
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 11px;
+    color: var(--ink);
+    background: var(--tint);
+    border: 1px solid var(--bev-lo);
+    border-radius: 12px;
+    font: 700 10px/1.2 var(--font-mono);
+    text-align: left;
+  }
+  .mobile-more-action .ti { color: var(--rose); font-size: 18px; }
+  .mobile-more-action:active { transform: scale(.97); }
+
+  #icons { bottom: calc(82px + env(safe-area-inset-bottom)) !important; }
+  .window,
+  #viewer.window {
+    height: calc(100dvh - 78px - env(safe-area-inset-bottom)) !important;
+    border-radius: 0 !important;
+  }
+
+  /* Phone windows use app navigation, while keeping the OS titlebar. */
+  .window .tbar {
+    justify-content: flex-start !important;
+    gap: 8px;
+  }
+  .window .tbar::after {
+    content: '';
+    flex: 0 0 62px;
+  }
+  .window .tt {
+    flex: 1 1 auto;
+    justify-content: center;
+    text-align: center;
+  }
+  .window .tctl {
+    order: -1;
+    flex: 0 0 62px;
+    display: flex !important;
+  }
+  .window .tctl .mx,
+  .window .tctl .cl { display: none !important; }
+  .window .tctl .mn {
+    width: 62px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 0 7px !important;
+    color: var(--ink);
+    background: var(--btn);
+    border-radius: 11px !important;
+  }
+  .window .tctl .mn::after {
+    content: 'back';
+    font: 700 9px/1 var(--font-mono);
+    text-transform: lowercase;
+  }
+
+  /* Hi There becomes a native-feeling introduction screen on phones. */
+  #welcome .wbody {
+    flex: 1 1 0 !important;
+    width: 100%;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 17px 12px 20px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: none;
+  }
+  #welcome .wbody::-webkit-scrollbar { display: none; }
+  #welcome .kick {
+    margin-bottom: 8px !important;
+    padding: 0 6px;
+    color: var(--rose);
+    font-size: 9px;
+    letter-spacing: .08em;
+  }
+  #welcome .welcome-header {
+    display: block;
+    margin-bottom: 12px !important;
+    padding: 0 6px;
+  }
+  #welcome .bigname {
+    max-width: 330px;
+    font-size: clamp(34px, 10.5vw, 42px);
+    line-height: 1.02;
+  }
+  #welcome .welcome-mobile-identity {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0 6px 15px;
+    overflow: hidden;
+    background: var(--tint);
+    border: 1px solid var(--bev-lo);
+    border-radius: 12px;
+    box-shadow: 2px 3px 0 var(--soft-sh);
+  }
+  #welcome .welcome-mobile-identity span {
+    min-width: 0;
+    min-height: 47px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 4px;
+    padding: 7px 4px;
+    color: var(--ink-soft);
+    font: 700 8px/1.15 var(--font-mono);
+    text-align: center;
+    text-transform: lowercase;
+  }
+  #welcome .welcome-mobile-identity span + span {
+    border-left: 1px solid var(--bev-lo);
+  }
+  #welcome .welcome-mobile-identity .ti {
+    color: var(--rose);
+    font-size: 15px;
+  }
+  #welcome .prose {
+    max-width: 38rem;
+    padding: 0 6px;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  #welcome .prose p { margin-bottom: 12px; }
+  #welcome .welcome-summary {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    line-height: 1.64;
+  }
+  #welcome .welcome-guide {
+    margin-top: 13px !important;
+    padding: 11px 12px 12px;
+    color: var(--ink-soft);
+    background: var(--tint);
+    border: 1px solid var(--bev-lo);
+    border-left: 3px solid var(--rose);
+    border-radius: 11px;
+    box-shadow: 2px 3px 0 var(--soft-sh);
+    font-size: 12px;
+    line-height: 1.58;
+  }
+  #welcome .welcome-guide-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 6px;
+    color: var(--rose);
+    font: 700 9px/1.2 var(--font-mono);
+    letter-spacing: .07em;
+    text-transform: lowercase;
+  }
+  #welcome .welcome-desktop-only { display: none; }
+  #welcome .welcome-mobile-only { display: inline; }
+  #welcome .sechead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 20px 6px 9px !important;
+    color: var(--rose);
+    font-size: 10px;
+    text-transform: lowercase;
+  }
+  #welcome .welcome-mobile-swipe {
+    display: inline;
+    color: var(--muted);
+    font: 400 8px/1.2 var(--font-mono);
+  }
+  #welcome .marquee-viewport {
+    width: calc(100% + 12px);
+    margin-right: -12px;
+    padding: 4px 18px 12px 1px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding-left: 0;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    cursor: auto;
+    scrollbar-width: none;
+  }
+  #welcome .marquee-viewport::-webkit-scrollbar { display: none; }
+  #welcome .marquee-track {
+    gap: 11px;
+    transform: none !important;
+  }
+  #welcome .marquee-card {
+    width: min(76vw, 286px) !important;
+    padding: 6px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    border-radius: 13px;
+    box-shadow: 2px 3px 0 var(--soft-sh);
+    transition: transform .16s var(--ease-snap), box-shadow .16s var(--ease-out-soft), border-color .16s ease;
+  }
+  #welcome .marquee-card:hover,
+  #welcome .marquee-card:focus-visible {
+    outline: none;
+    transform: translateY(-3px) rotate(-.4deg);
+    box-shadow: 4px 5px 0 var(--soft-sh);
+  }
+  #welcome .marquee-card:nth-child(even):hover,
+  #welcome .marquee-card:nth-child(even):focus-visible {
+    transform: translateY(-3px) rotate(.4deg);
+  }
+  #welcome .marquee-card:nth-child(n + 5) { display: none; }
+  #welcome .marquee-card .card-img-holder { border-radius: 8px; }
+  #welcome .marquee-card .card-info { padding: 10px 7px 6px; }
+  #welcome .marquee-card .card-title { font-size: 13px; }
+  #welcome .marquee-card .card-meta {
+    margin-top: 2px;
+    color: var(--amber);
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+  #welcome .reduced-motion-arrows { display: none !important; }
+  #welcome .welcome-ctas {
+    position: relative;
+    z-index: 2;
+    flex: 0 0 auto;
+    gap: 7px !important;
+    padding: 9px 12px calc(10px + env(safe-area-inset-bottom)) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -4px 12px color-mix(in srgb, var(--soft-sh) 60%, transparent);
+  }
+  #welcome .welcome-btn {
+    min-height: 44px;
+    padding: 9px 7px !important;
+    border-radius: 12px;
+    font-size: 10px;
+  }
+  #welcome #btnSeeAllWork {
+    color: white;
+    background: var(--rose) !important;
+    border-color: var(--rose) var(--rose-dark) var(--rose-dark) var(--rose) !important;
+  }
+  #welcome #btnSayHi { background: var(--btn) !important; }
+}
+
+@media (max-width: 360px) {
+  #mobile-home { right: 14px; left: 14px; }
+  #icons {
+    top: calc(146px + env(safe-area-inset-top)) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .pdi svg { width: 50px !important; height: 50px !important; }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   .rail-section-item,
   .cs-btn,
   .progress-bar { transition: none !important; }
   .rail-section-item:hover { transform: none; }
+  .pdi:active,
+  .pdi:active svg,
+  .mobile-nav-item:active,
+  .mobile-more-action:active,
+  #welcome .marquee-card,
+  #welcome .marquee-card:hover,
+  #welcome .marquee-card:focus-visible,
+  #work .work-index .rail-entry:active,
+  #work .work-mobile-project-action:active { transform: none !important; }
+  #welcome .marquee-card { transition: none !important; }
+  #welcome .rose-dot,
+  #welcome .terminal-cursor { animation: none !important; }
+  #welcome .rose-dot { opacity: 1; }
+  #mobile-nav-scrim,
+  #mobile-more-sheet { transition: none !important; }
 }
 </style>
 
@@ -4636,6 +5254,15 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     </div>
   </div>
 
+  <section id="mobile-home" aria-label="Maryam OS mobile home">
+    <div class="mobile-home-status">
+      <span>maryam os · mobile</span>
+      <time id="mobile-home-clock" datetime="">12:00</time>
+    </div>
+    <h2 class="mobile-home-title">hello, i&rsquo;m maryam ♡</h2>
+    <p class="mobile-home-note">product designer · choose a tab or tap an app</p>
+  </section>
+
   <div id="icons">
     <button class="pdi" data-open="welcome" aria-label="Hi There">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h24l8 8v22H8z" fill="#fff" stroke="#4b1528" stroke-width="2.4" stroke-linejoin="round"/><path d="M32 10v8h8" fill="#f5d6de" stroke="#4b1528" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 22h14M14 27h18M14 32h12" stroke="#c99aa8" stroke-width="2.2" stroke-linecap="round"/><path d="M31 33.6c2.2-2.6 6.6-1.4 6.6 1.8 0 2.6-3.6 4.8-6.6 6.6-3-1.8-6.6-4-6.6-6.6 0-3.2 4.4-4.4 6.6-1.8z" fill="#c44d72" stroke="#4b1528" stroke-width="2.2" stroke-linejoin="round"/></svg>
@@ -4669,14 +5296,20 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         <div class="bigname" style="margin:0;">hi, i'm maryam<span class="h"> ♡</span></div>
       </div>
 
-      <div class="prose">
-        <p>i design digital products and build some of my own ideas with ai. i&rsquo;ve spent the past 4+ years across fintech, health, saas and e-commerce, designing mobile and web products from early flows through to shipped experiences.</p>
-        <p style="margin-top:9px;">lately i&rsquo;ve also been using ai to take more of my ideas beyond figma and turn them into working tools. double-click the icons, poke around the start menu, and make yourself at home ✦<span class="terminal-cursor"></span></p>
+      <div class="welcome-mobile-identity" aria-label="Maryam at a glance">
+        <span><i class="ti ti-palette" aria-hidden="true"></i>product designer</span>
+        <span><i class="ti ti-history" aria-hidden="true"></i>4+ years</span>
+        <span><i class="ti ti-map-pin" aria-hidden="true"></i>abuja</span>
       </div>
 
-      <div class="sechead" style="margin-top:15px;">selected work ✦</div>
+      <div class="prose">
+        <p class="welcome-summary">i design digital products and build some of my own ideas with ai. i&rsquo;ve spent the past 4+ years across fintech, health, saas and e-commerce, designing mobile and web products from early flows through to shipped experiences.</p>
+        <p class="welcome-guide" style="margin-top:9px;"><span class="welcome-guide-label"><i class="ti ti-pointer" aria-hidden="true"></i>quick tour</span>lately i&rsquo;ve also been using ai to take more of my ideas beyond figma and turn them into working tools. <span class="welcome-desktop-only">double-click the icons, poke around the start menu, and make yourself at home</span><span class="welcome-mobile-only">use the navigation below, swipe through my work, and make yourself at home</span> ✦<span class="terminal-cursor"></span></p>
+      </div>
+
+      <div class="sechead" style="margin-top:15px;"><span>selected work ✦</span><span class="welcome-mobile-swipe">swipe →</span></div>
       
-      <div class="marquee-viewport" id="marqueeViewport" tabindex="0" aria-label="Selected work marquee. Use left and right arrow keys to nudge.">
+      <div class="marquee-viewport" id="marqueeViewport" tabindex="0" aria-label="Selected work. Swipe horizontally on touch or use the left and right arrow keys.">
         <div class="marquee-track" id="marqueeTrack">
           <!-- Cards Set 1 -->
           <div class="marquee-card" data-project="Vesti AI">
@@ -4903,6 +5536,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       border: 1px solid var(--bev-lo);
       border-radius: 7px;
     }
+    #work .work-mobile-filters,
+    #work .work-mobile-feed { display: none; }
     #work .work-index-scroll {
       flex: 1 1 auto;
       min-height: 0;
@@ -5338,92 +5973,425 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       transform: translateY(2px);
       box-shadow: 0 1px 0 var(--rose-dark);
     }
-    @media (max-width: 720px) {
+    @media (max-width: 767px) {
+      #work .work-body {
+        flex: 1 1 0 !important;
+        width: 100%;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
       #work .work-shell {
         width: 100%;
+        height: 100%;
         border: 0;
       }
       #work .work-browser-head {
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 8px 12px;
-        min-height: auto;
-        padding: 10px 12px;
+        align-items: center;
+        gap: 10px;
+        min-height: 78px;
+        padding: 13px 18px 12px;
+        background: var(--paper);
       }
       #work .work-browser-heading {
+        flex: 1 1 auto;
         min-width: 0;
       }
+      #work .work-kicker {
+        font-size: 9px;
+        letter-spacing: .1em;
+      }
       #work .work-browser-title {
-        font-size: 21px;
+        margin-top: 3px;
+        font-size: 30px;
       }
       #work .work-project-count {
-        padding-top: 4px;
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 6px 8px;
+        color: var(--rose-dark);
+        background: var(--tint);
+        border: 1px solid var(--bev-lo);
+        border-radius: 999px;
+        font-size: 9px;
       }
       #work .work-browser {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        padding: 10px;
+        gap: 24px;
+        min-height: 0;
+        padding: 0 12px 24px;
+        overflow-x: hidden;
         overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
       }
+      #work .work-browser::-webkit-scrollbar { display: none; }
       #work .work-index {
         display: flex;
         flex-direction: column;
         flex: 0 0 auto !important;
-        width: 100% !important;
-        overflow: hidden;
-        padding: 0 !important;
-        border: 1px solid var(--bev-lo) !important;
+        width: calc(100% + 24px) !important;
+        position: sticky;
+        z-index: 5;
+        top: 0;
+        margin: 0 -12px;
+        overflow: visible;
+        padding: 10px 12px 9px !important;
+        border: 0 !important;
+        border-radius: 0;
+        background: var(--paper);
+        box-shadow: 0 1px 0 var(--bev-lo), 0 10px 16px color-mix(in srgb, var(--soft-sh) 55%, transparent);
       }
       #work .work-index-scroll {
-        flex: 0 0 auto;
-        width: 100%;
-        padding: 8px;
-        overflow-x: auto;
-        overflow-y: hidden;
+        display: none;
+      }
+      #work .work-index-scroll::-webkit-scrollbar { display: none; }
+      #work .work-mobile-filters {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+        padding: 6px;
+        background: var(--tint);
+        border: 1px solid var(--bev-lo);
+        border-radius: 14px;
+        box-shadow: 2px 3px 0 var(--soft-sh);
+      }
+      #work .work-mobile-filter {
+        min-height: 36px;
+        padding: 7px 8px;
+        color: var(--muted);
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        font: 700 9px/1.2 var(--font-mono);
+        text-transform: lowercase;
+      }
+      #work .work-mobile-filter[aria-selected="true"] {
+        color: var(--rose-dark);
+        background: var(--tint);
+        border-color: var(--bev-lo);
+        box-shadow: inset 0 -2px 0 var(--rose);
+      }
+      #work .work-mobile-filter span {
+        margin-left: 3px;
+        color: var(--rose);
       }
       #work .work-index-groups {
-        flex-direction: row;
-        width: max-content;
-        gap: 12px;
+        display: block;
+        width: 100%;
       }
       #work .work-index-group {
+        display: none;
+        width: 100%;
         gap: 6px;
       }
+      #work .work-index-group.mobile-active { display: flex; }
       #work .work-index-group-head {
-        padding-inline: 2px;
+        display: none;
       }
       #work .work-index .rail-list {
-        flex-direction: row;
-        width: max-content;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 7px;
       }
       #work .work-index .rail-entry {
-        grid-template-columns: 32px minmax(125px, 1fr);
-        width: 220px;
-        min-height: 62px;
+        grid-template-columns: 28px minmax(0, 1fr);
+        width: 100%;
+        min-height: 68px;
+        gap: 8px;
+        padding: 8px 9px;
+        border-radius: 11px;
+        box-shadow: none;
       }
+      #work .work-index .rail-entry:hover { transform: none; }
+      #work .work-index .rail-entry:active { transform: scale(.98); }
       #work .work-entry-arrow {
         display: none;
       }
+      #work .work-entry-number {
+        width: 27px;
+        height: 27px;
+        font-size: 10px;
+      }
+      #work .entry-info { gap: 4px; }
+      #work .entry-name { font-size: 14px; }
+      #work .entry-meta-row { gap: 4px; }
+      #work .entry-tag {
+        color: var(--amber);
+        font-size: 9px;
+      }
+      #work .work-index .rail-entry.selected .entry-tag { color: var(--amber) !important; }
+      #work .entry-status {
+        min-height: 17px;
+        padding: 2px 5px;
+        font-size: 8px;
+      }
+      #work .entry-status.soon {
+        color: var(--muted);
+        background: var(--btn);
+        border-color: var(--bev-lo);
+      }
       #work .work-preview {
+        display: none;
+        flex-direction: column;
         flex: 0 0 auto !important;
+        gap: 10px;
         width: 100% !important;
-        min-height: 520px;
+        min-height: 0;
         padding: 0 !important;
+        overflow: visible;
       }
       #work .work-image-frame {
-        min-height: 270px;
+        width: 100%;
+        min-height: 0;
+        padding-bottom: 8px;
+        border-radius: 14px;
       }
+      #work .work-preview-bar {
+        min-height: 34px;
+        padding: 7px 10px;
+      }
+      #work .work-preview-label { font-size: 9px; }
       #work #previewScreenshot {
+        width: calc(100% - 16px);
+        height: auto;
+        margin: 8px 8px 0;
         padding: 0;
+        border: 1px solid var(--bev-lo);
+        border-radius: 9px;
+        object-fit: cover;
+      }
+      #work .preview-placeholder {
+        min-height: 220px;
+        margin: 8px 8px 0;
+        padding: 24px 18px;
+        border: 1px solid var(--bev-lo);
+        border-radius: 9px;
+      }
+      #work .work-project-copy {
+        padding: 17px 16px 16px;
+        border-radius: 14px;
+      }
+      #work .work-copy-heading {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      #work .preview-title {
+        flex: 1 1 190px;
+        font-size: 29px;
+      }
+      #work .preview-tag {
+        margin-top: 2px;
+        font-size: 9px;
+      }
+      #work .preview-desc {
+        margin: 10px 0 13px;
+        font-size: 13px;
+        line-height: 1.62;
       }
       #work .work-copy-footer {
         align-items: stretch;
         flex-direction: column;
+        gap: 12px;
+        padding-top: 13px;
+      }
+      #work .preview-meta { font-size: 9px; }
+      #work .preview-outcome {
+        margin-top: 5px;
+        font-size: 14px;
+        line-height: 1.4;
       }
       #work .preview-actions,
       #work .preview-action-btn {
         width: 100%;
+      }
+      #work .preview-actions { gap: 8px; }
+      #work .preview-action-btn {
+        min-height: 44px;
+        padding: 10px 12px;
+        border-radius: 11px;
+      }
+      #work .work-spec-strip {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        padding: 0;
+        overflow: visible;
+        background: transparent;
+        border: 0;
+      }
+      #work .spec-cell {
+        gap: 4px;
+        min-height: 70px;
+        padding: 10px;
+        background: var(--tint);
+        border: 1px solid var(--bev-lo);
+        border-radius: 11px;
+      }
+      #work .spec-cell + .spec-cell {
+        padding-left: 10px;
+        border-left: 1px solid var(--bev-lo);
+      }
+      #work .spec-label { font-size: 8px; }
+      #work .spec-value {
+        font-size: 12px;
+        line-height: 1.3;
+      }
+      #work .work-mobile-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        width: 100%;
+      }
+      #work .work-mobile-project-card {
+        padding: 7px;
+        overflow: hidden;
+        background: var(--paper);
+        border: 1px solid var(--bev-lo);
+        border-radius: 16px;
+        box-shadow: 2px 3px 0 var(--soft-sh);
+      }
+      #work .work-mobile-project-card[hidden] { display: none !important; }
+      #work .work-mobile-card-image {
+        overflow: hidden;
+        background: var(--tint);
+        border: 1px solid var(--bev-lo);
+        border-radius: 11px;
+      }
+      #work .work-mobile-card-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      #work .work-mobile-card-placeholder {
+        min-height: 210px;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        color: var(--rose);
+        font-size: 26px;
+      }
+      #work .work-mobile-card-placeholder[hidden] { display: none; }
+      #work .work-mobile-card-copy { padding: 15px 10px 10px; }
+      #work .work-mobile-card-kicker {
+        margin: 0 0 7px;
+        color: var(--rose);
+        font: 700 9px/1.2 var(--font-mono);
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      #work .work-mobile-card-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      #work .work-mobile-card-title {
+        flex: 1 1 190px;
+        margin: 0;
+        color: var(--rose-dark);
+        font-family: "Playfair Display", serif;
+        font-size: 29px;
+        font-style: italic;
+        line-height: 1.05;
+      }
+      #work .work-mobile-card-tag {
+        padding: 4px 7px;
+        color: var(--amber);
+        background: var(--ashot1);
+        border: 1px solid var(--ashot2);
+        border-radius: 999px;
+        font: 700 9px/1.2 var(--font-mono);
+        text-transform: lowercase;
+      }
+      #work .work-mobile-card-desc {
+        margin: 10px 0 13px;
+        color: var(--ink-soft);
+        font: 13px/1.62 Tahoma, Verdana, sans-serif;
+      }
+      #work .work-mobile-card-context {
+        padding-top: 12px;
+        border-top: 1px solid var(--bev-lo);
+      }
+      #work .work-mobile-card-meta {
+        display: block;
+        color: var(--rose);
+        font: 700 9px/1.3 var(--font-mono);
+        text-transform: lowercase;
+      }
+      #work .work-mobile-card-outcome {
+        display: block;
+        margin-top: 5px;
+        color: var(--ink-soft);
+        font-family: "Playfair Display", serif;
+        font-size: 14px;
+        font-style: italic;
+        line-height: 1.4;
+      }
+      #work .work-mobile-card-specs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 13px;
+      }
+      #work .work-mobile-card-spec {
+        min-height: 66px;
+        padding: 9px;
+        background: var(--tint);
+        border: 1px solid var(--bev-lo);
+        border-radius: 10px;
+      }
+      #work .work-mobile-card-spec-label {
+        display: block;
+        color: var(--rose);
+        font: 700 8px/1.2 var(--font-mono);
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      #work .work-mobile-card-spec-value {
+        display: block;
+        margin-top: 5px;
+        color: var(--ink);
+        font-size: 12px;
+        line-height: 1.3;
+      }
+      #work .work-mobile-card-actions {
+        display: grid;
+        gap: 8px;
+        margin-top: 13px;
+      }
+      #work .work-mobile-project-action {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+        color: white;
+        background: var(--rose);
+        border: 1px solid var(--rose-dark);
+        border-radius: 11px;
+        box-shadow: 0 3px 0 var(--rose-dark);
+        font: 700 10px/1.2 var(--font-mono);
+        text-transform: lowercase;
+      }
+      #work .work-mobile-project-action.secondary {
+        color: var(--rose-dark);
+        background: var(--btn);
+        border-color: var(--bev-lo);
+        box-shadow: 0 3px 0 var(--bev-lo);
+      }
+      #work .work-mobile-project-action:disabled {
+        color: var(--muted);
+        background: var(--btn);
+        border-color: var(--bev-lo);
+        box-shadow: none;
+        opacity: .82;
+      }
+      #work .work-mobile-project-action:active:not(:disabled) {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 var(--rose-dark);
       }
     }
 
@@ -5443,9 +6411,13 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 
         <div class="work-browser">
           <nav class="split-rail work-index" aria-label="Project index">
+            <div class="work-mobile-filters" role="tablist" aria-label="Project categories">
+              <button type="button" class="work-mobile-filter" role="tab" data-work-filter="live" aria-selected="true" aria-controls="work-live-group">live projects <span>03</span></button>
+              <button type="button" class="work-mobile-filter" role="tab" data-work-filter="case" aria-selected="false" aria-controls="work-case-group">case studies <span>04</span></button>
+            </div>
             <div class="work-index-scroll custom-scroll">
               <div class="work-index-groups">
-                <section class="work-index-group" aria-labelledby="work-live-heading">
+                <section class="work-index-group mobile-active" id="work-live-group" role="tabpanel" aria-labelledby="work-live-heading">
                   <div class="work-index-group-head">
                     <span id="work-live-heading">live projects</span>
                     <span class="work-index-group-count">03</span>
@@ -5478,7 +6450,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
                   </div>
                 </section>
 
-                <section class="work-index-group" aria-labelledby="work-studies-heading">
+                <section class="work-index-group" id="work-case-group" role="tabpanel" aria-labelledby="work-studies-heading">
                   <div class="work-index-group-head">
                     <span id="work-studies-heading">case studies</span>
                     <span class="work-index-group-count">04</span>
@@ -5521,6 +6493,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
               </div>
             </div>
           </nav>
+
+          <section class="work-mobile-feed" id="workMobileFeed" aria-label="Projects"></section>
 
           <section class="split-preview work-preview" aria-live="polite">
             <div class="work-image-frame" id="previewScreenshotContainer">
@@ -6307,6 +7281,248 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         width: 100%;
       }
     }
+
+    /* Phone layout: AI Builds reads as a scrollable app library, not a desktop inspector. */
+    #builds .builds-mobile-feed {
+      display: none;
+    }
+    @media (max-width: 767px) {
+      #builds .builds-body {
+        flex: 1 1 0 !important;
+        width: 100%;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
+      #builds .builds-shell {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      #builds .builds-lab-head {
+        position: relative;
+        z-index: 2;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        gap: 10px;
+        min-height: 0;
+        padding: 14px 18px 13px;
+        background: var(--paper);
+        box-shadow: 0 1px 0 var(--bev-lo), 0 8px 14px color-mix(in srgb, var(--soft-sh) 45%, transparent);
+      }
+      #builds .builds-heading {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      #builds .builds-kicker {
+        font-size: 9px;
+        letter-spacing: .1em;
+      }
+      #builds .builds-title {
+        margin-top: 3px;
+        font-size: 29px;
+        line-height: 1.02;
+      }
+      #builds .builds-lede {
+        margin-top: 8px;
+        font-size: 12px;
+        line-height: 1.52;
+      }
+      #builds .builds-count {
+        flex: 0 0 auto;
+        margin-top: 1px;
+        padding: 6px 8px;
+        color: var(--rose-dark);
+        background: var(--tint);
+        border: 1px solid var(--bev-lo);
+        border-radius: 999px;
+        font-size: 9px;
+      }
+      #builds .builds-stage {
+        display: none;
+      }
+      #builds .builds-mobile-feed {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        gap: 14px;
+        min-height: 0;
+        padding: 14px 12px 26px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      #builds .builds-mobile-feed::-webkit-scrollbar {
+        display: none;
+      }
+      #builds .builds-mobile-card {
+        flex: 0 0 auto;
+        padding: 7px;
+        overflow: hidden;
+        background: var(--paper);
+        border: 1px solid var(--bev-lo);
+        border-radius: 16px;
+        box-shadow: 2px 3px 0 var(--soft-sh);
+      }
+      #builds .builds-mobile-card-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        min-height: 33px;
+        padding: 6px 7px 8px;
+        color: var(--rose);
+        font: 700 9px/1.2 var(--font-mono);
+        letter-spacing: .04em;
+        text-transform: lowercase;
+      }
+      #builds .builds-mobile-card-bar span:first-child {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        gap: 6px;
+      }
+      #builds .builds-mobile-card-bar .ti {
+        flex: 0 0 auto;
+        font-size: 15px;
+      }
+      #builds .builds-mobile-card-number {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      #builds .builds-mobile-card-visual {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 16 / 10;
+        background: var(--tint);
+        border: 1px solid var(--bev-lo);
+        border-radius: 11px;
+      }
+      #builds .builds-mobile-card-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+      }
+      #builds .builds-mobile-card-placeholder {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 8px;
+        padding: 24px;
+        color: var(--rose);
+        font: 700 11px/1.3 var(--font-mono);
+        text-align: center;
+        text-transform: lowercase;
+      }
+      #builds .builds-mobile-card-placeholder .ti {
+        font-size: 28px;
+      }
+      #builds .builds-mobile-card-placeholder[hidden] {
+        display: none;
+      }
+      #builds .builds-mobile-card-copy {
+        padding: 14px 10px 10px;
+      }
+      #builds .builds-mobile-card-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      #builds .builds-mobile-card-category,
+      #builds .builds-mobile-card-status {
+        font: 700 9px/1.2 var(--font-mono);
+        text-transform: lowercase;
+      }
+      #builds .builds-mobile-card-category {
+        padding: 4px 7px;
+        color: var(--amber);
+        background: var(--ashot1);
+        border: 1px solid var(--ashot2);
+        border-radius: 999px;
+      }
+      #builds .builds-mobile-card-status {
+        color: var(--rose);
+      }
+      #builds .builds-mobile-card-status::before {
+        content: '';
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        margin-right: 5px;
+        background: var(--rose);
+        border-radius: 50%;
+        vertical-align: 1px;
+      }
+      #builds .builds-mobile-card-title {
+        margin: 10px 0 0;
+        color: var(--rose-dark);
+        font-family: "Playfair Display", serif;
+        font-size: 29px;
+        font-style: italic;
+        line-height: 1.04;
+        text-transform: lowercase;
+      }
+      #builds .builds-mobile-card-desc {
+        margin: 9px 0 0;
+        color: var(--ink-soft);
+        font: 13px/1.6 Tahoma, Verdana, sans-serif;
+      }
+      #builds .builds-mobile-card-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 14px;
+        padding-top: 13px;
+        border-top: 1px solid var(--bev-lo);
+      }
+      #builds .builds-mobile-card-actions.single {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      #builds .builds-mobile-action {
+        min-height: 43px;
+        padding: 9px 10px;
+        color: var(--paper);
+        background: var(--rose);
+        border: 1px solid var(--rose-dark);
+        border-radius: 11px;
+        box-shadow: 0 3px 0 var(--rose-dark);
+        font: 700 9px/1.2 var(--font-mono);
+        text-transform: lowercase;
+      }
+      #builds .builds-mobile-action.secondary {
+        color: var(--rose-dark);
+        background: var(--btn);
+        border-color: var(--bev-lo);
+        box-shadow: 0 3px 0 var(--bev-lo);
+      }
+      #builds .builds-mobile-action:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 var(--rose-dark);
+      }
+    }
+    @media (max-width: 365px) {
+      #builds .builds-lab-head {
+        padding-right: 13px;
+        padding-left: 13px;
+      }
+      #builds .builds-title {
+        font-size: 26px;
+      }
+      #builds .builds-mobile-card-actions {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #builds .builds-mobile-action:active {
+        transform: none !important;
+      }
+    }
   </style>
   <section class="window pout" id="builds" style="top:44px;left:180px;width:1100px;height:70vh;">
     <div class="tbar"><span class="tt"><i class="ti ti-cpu" aria-hidden="true"></i>ai builds ✦ programs</span>
@@ -6321,6 +7537,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
           </div>
           <span class="builds-count" id="buildsVisibleCount">12 builds</span>
         </header>
+
+        <section class="builds-mobile-feed" id="buildsMobileFeed" aria-label="AI build library"></section>
 
         <div class="builds-stage custom-scroll">
           <section class="builds-feature" aria-live="polite">
@@ -6902,7 +8120,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       #about .animated-stagger-3 { animation-delay: 0.15s; }
       #about .animated-stagger-4 { animation-delay: 0.2s; }
       #about .animated-stagger-5 { animation-delay: 0.25s; }
-      
+
       @media (prefers-reduced-motion: reduce) {
         #about .animated-item {
           animation: none !important;
@@ -6911,7 +8129,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
           transform: none !important;
         }
       }
-      
+
       /* Subtle custom scrollbar inside about */
       #about .custom-scroll::-webkit-scrollbar {
         width: 8px;
@@ -6927,12 +8145,402 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       #about .custom-scroll::-webkit-scrollbar-thumb:hover {
         background: var(--rose);
       }
-      
+
       /* Polaroid hover interaction */
       #about .polaroid-card:hover {
         transform: rotate(0.5deg) scale(1.03) !important;
         box-shadow: 6px 10px 20px rgba(139, 38, 62, 0.15), 2px 2px 6px rgba(139, 38, 62, 0.08) !important;
         z-index: 10;
+      }
+
+      #about .about-mobile {
+        display: none;
+      }
+
+      /* Phone layout: a single profile app, with the desktop scrapbook preserved above 767px. */
+      @media (max-width: 767px) {
+        #about > .wbody {
+          flex: 1 1 0 !important;
+          width: 100%;
+          height: auto !important;
+          min-height: 0 !important;
+          padding: 0 !important;
+          overflow: hidden !important;
+        }
+        #about > .wbody > .wtool,
+        #about > .wbody > .split-view {
+          display: none !important;
+        }
+        #about .about-mobile {
+          display: flex;
+          flex: 1 1 auto;
+          flex-direction: column;
+          gap: 14px;
+          min-height: 0;
+          padding: 16px 12px 28px;
+          overflow-x: hidden;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          scrollbar-width: none;
+        }
+        #about .about-mobile::-webkit-scrollbar {
+          display: none;
+        }
+        #about .about-mobile-header {
+          padding: 0 6px 3px;
+        }
+        #about .about-mobile-kicker {
+          margin: 0;
+          color: var(--rose);
+          font: 700 9px/1.2 var(--font-mono);
+          letter-spacing: .1em;
+          text-transform: lowercase;
+        }
+        #about .about-mobile-identity {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-top: 11px;
+        }
+        #about .about-mobile-avatar {
+          position: relative;
+          flex: 0 0 112px;
+          width: 112px;
+          height: 112px;
+          padding: 5px;
+          overflow: hidden;
+          background: var(--paper);
+          border: 1px solid var(--bev-lo);
+          border-radius: 7px;
+          box-shadow: 4px 4px 0 var(--rose);
+        }
+        #about .about-mobile-avatar img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border: 1px solid var(--bev-lo);
+          border-radius: 3px;
+        }
+        #about .about-mobile-avatar-fallback {
+          position: absolute;
+          inset: 5px;
+          display: grid;
+          place-items: center;
+          align-content: center;
+          gap: 6px;
+          color: var(--rose);
+          background: var(--tint);
+          border: 1px solid var(--bev-lo);
+          border-radius: 3px;
+          font: 700 9px/1.2 var(--font-mono);
+          text-transform: lowercase;
+        }
+        #about .about-mobile-avatar-fallback[hidden] {
+          display: none;
+        }
+        #about .about-mobile-avatar-fallback .ti {
+          font-size: 27px;
+        }
+        #about .about-mobile-name {
+          margin: 0;
+          color: var(--rose-dark);
+          font-family: "Playfair Display", serif;
+          font-size: 31px;
+          font-style: italic;
+          font-weight: 700;
+          line-height: 1;
+          text-transform: lowercase;
+        }
+        #about .about-mobile-role,
+        #about .about-mobile-location {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          margin-top: 7px;
+          font: 700 9px/1.25 var(--font-mono);
+          text-transform: lowercase;
+        }
+        #about .about-mobile-role {
+          color: var(--rose);
+        }
+        #about .about-mobile-location {
+          margin-top: 5px;
+          color: var(--muted);
+          font-weight: 400;
+        }
+        #about .about-mobile-actions {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+          margin-top: 17px;
+        }
+        #about .about-mobile-action {
+          min-height: 43px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 9px 10px;
+          color: var(--paper);
+          background: var(--rose);
+          border: 1px solid var(--rose-dark);
+          border-radius: 11px;
+          box-shadow: 0 3px 0 var(--rose-dark);
+          font: 700 9px/1.2 var(--font-mono);
+          text-decoration: none;
+          text-transform: lowercase;
+        }
+        #about .about-mobile-action.secondary {
+          color: var(--rose-dark);
+          background: var(--btn);
+          border-color: var(--bev-lo);
+          box-shadow: 0 3px 0 var(--bev-lo);
+        }
+        #about .about-mobile-action:active {
+          transform: translateY(2px);
+          box-shadow: 0 1px 0 var(--rose-dark);
+        }
+        #about .about-mobile-window,
+        #about .about-mobile-processes {
+          overflow: hidden;
+          background: var(--paper);
+          border: 1px solid var(--bev-lo);
+          border-radius: 15px;
+          box-shadow: 2px 3px 0 var(--soft-sh);
+        }
+        #about .about-mobile-window-bar {
+          min-height: 34px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 7px 10px;
+          color: var(--rose-dark);
+          background: var(--tint);
+          border-bottom: 1px solid var(--bev-lo);
+          font: 700 9px/1.2 var(--font-mono);
+          text-transform: lowercase;
+        }
+        #about .about-mobile-window-dots {
+          color: var(--rose);
+          letter-spacing: .08em;
+        }
+        #about .about-mobile-readme {
+          padding: 15px 14px 16px;
+        }
+        #about .about-mobile-readme p {
+          margin: 0 0 11px;
+          color: var(--ink-soft);
+          font: 13px/1.62 Tahoma, Verdana, sans-serif;
+        }
+        #about .about-mobile-readme p:last-child {
+          margin-bottom: 0;
+          padding-top: 11px;
+          color: var(--muted);
+          border-top: 1px dashed var(--bev-lo);
+          font-size: 12px;
+        }
+        #about .about-mobile-facts {
+          display: grid;
+          gap: 0;
+          overflow: hidden;
+          background: var(--tint);
+          border: 1px solid var(--bev-lo);
+          border-radius: 13px;
+          box-shadow: 2px 3px 0 var(--soft-sh);
+        }
+        #about .about-mobile-fact {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          min-height: 48px;
+          padding: 10px 12px;
+        }
+        #about .about-mobile-fact + .about-mobile-fact {
+          border-top: 1px solid var(--bev-lo);
+        }
+        #about .about-mobile-fact span {
+          color: var(--muted);
+          font: 400 9px/1.3 var(--font-mono);
+          text-transform: lowercase;
+        }
+        #about .about-mobile-fact b {
+          color: var(--ink);
+          font: 700 10px/1.35 Tahoma, Verdana, sans-serif;
+          text-align: right;
+        }
+        #about .about-mobile-fact.availability b {
+          color: var(--rose-dark);
+        }
+        #about .about-mobile-section-head {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 12px;
+          margin: 8px 5px -4px;
+        }
+        #about .about-mobile-section-label {
+          margin: 0;
+          color: var(--rose);
+          font: 700 10px/1.25 var(--font-mono);
+          text-transform: lowercase;
+        }
+        #about .about-mobile-section-note {
+          color: var(--muted);
+          font: 400 8px/1.25 var(--font-mono);
+          text-align: right;
+          text-transform: lowercase;
+        }
+        #about .about-mobile-process-list {
+          padding: 5px 12px;
+        }
+        #about .about-mobile-process {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          min-height: 42px;
+          padding: 8px 1px;
+          border-bottom: 1px dashed var(--bev-lo);
+          font: 700 10px/1.2 var(--font-mono);
+        }
+        #about .about-mobile-process:last-child {
+          border-bottom: 0;
+        }
+        #about .about-mobile-process-name {
+          color: var(--ink-soft);
+        }
+        #about .about-mobile-process-status {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          color: var(--rose);
+          font-size: 9px;
+        }
+        #about .about-mobile-process-status.muted {
+          color: var(--muted);
+        }
+        #about .about-mobile-process-status::before {
+          content: '';
+          width: 5px;
+          height: 5px;
+          flex: 0 0 auto;
+          background: currentColor;
+          border-radius: 50%;
+        }
+        #about .about-mobile-photo-rail {
+          display: flex;
+          gap: 11px;
+          width: calc(100% + 12px);
+          margin-right: -12px;
+          padding: 1px 18px 12px 1px;
+          overflow-x: auto;
+          overflow-y: visible;
+          overscroll-behavior-x: contain;
+          scroll-padding-left: 1px;
+          scroll-snap-type: x mandatory;
+          scrollbar-width: none;
+        }
+        #about .about-mobile-photo-rail::-webkit-scrollbar {
+          display: none;
+        }
+        #about .about-mobile-photo-card {
+          flex: 0 0 min(72vw, 260px);
+          padding: 6px;
+          background: var(--paper);
+          border: 1px solid var(--bev-lo);
+          border-radius: 13px;
+          box-shadow: 2px 3px 0 var(--soft-sh);
+          scroll-snap-align: start;
+          transform: rotate(-.35deg);
+          transition: transform .16s var(--ease-snap), box-shadow .16s var(--ease-out-soft);
+        }
+        #about .about-mobile-photo-card:nth-child(even) {
+          transform: rotate(.35deg);
+        }
+        #about .about-mobile-photo-card:hover,
+        #about .about-mobile-photo-card:focus-visible {
+          outline: none;
+          transform: translateY(-3px) rotate(-.4deg);
+          box-shadow: 4px 5px 0 var(--soft-sh);
+        }
+        #about .about-mobile-photo-card:nth-child(even):hover,
+        #about .about-mobile-photo-card:nth-child(even):focus-visible {
+          transform: translateY(-3px) rotate(.4deg);
+        }
+        #about .about-mobile-photo-frame {
+          position: relative;
+          overflow: hidden;
+          aspect-ratio: 4 / 3;
+          background: var(--tint);
+          border: 1px solid var(--bev-lo);
+          border-radius: 8px;
+        }
+        #about .about-mobile-photo-frame img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        #about .about-mobile-photo-fallback {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          color: var(--rose);
+          font-size: 25px;
+        }
+        #about .about-mobile-photo-fallback[hidden] {
+          display: none;
+        }
+        #about .about-mobile-photo-copy {
+          padding: 10px 6px 7px;
+        }
+        #about .about-mobile-photo-copy strong {
+          display: block;
+          color: var(--ink);
+          font: 700 12px/1.25 Tahoma, Verdana, sans-serif;
+          text-transform: lowercase;
+        }
+        #about .about-mobile-photo-copy span {
+          display: block;
+          margin-top: 4px;
+          color: var(--amber);
+          font: 700 8px/1.2 var(--font-mono);
+          text-transform: lowercase;
+        }
+      }
+
+      @media (max-width: 365px) {
+        #about .about-mobile-identity {
+          gap: 12px;
+        }
+        #about .about-mobile-avatar {
+          flex-basis: 98px;
+          width: 98px;
+          height: 98px;
+        }
+        #about .about-mobile-name {
+          font-size: 27px;
+        }
+        #about .about-mobile-actions {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #about .about-mobile-action:active,
+        #about .about-mobile-photo-card,
+        #about .about-mobile-photo-card:nth-child(even),
+        #about .about-mobile-photo-card:hover,
+        #about .about-mobile-photo-card:focus-visible,
+        #about .about-mobile-photo-card:nth-child(even):hover,
+        #about .about-mobile-photo-card:nth-child(even):focus-visible {
+          transform: none !important;
+          transition: none !important;
+        }
       }
     </style>
     
@@ -6952,6 +8560,98 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
           user profile ✿ <b style="color:var(--rose);">active</b>
         </span>
       </div>
+
+      <main class="about-mobile" aria-label="About Maryam Yahaya">
+        <header class="about-mobile-header">
+          <p class="about-mobile-kicker">user profile ✿ active</p>
+          <div class="about-mobile-identity">
+            <div class="about-mobile-avatar">
+              <img src="images/about/maryam-portrait.webp" alt="Maryam Yahaya" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" />
+              <div class="about-mobile-avatar-fallback" hidden><i class="ti ti-user-heart" aria-hidden="true"></i><span>maryam</span></div>
+            </div>
+            <div>
+              <h1 class="about-mobile-name">maryam yahaya</h1>
+              <span class="about-mobile-role"><i class="ti ti-palette" aria-hidden="true"></i>product designer</span>
+              <span class="about-mobile-location"><i class="ti ti-map-pin" aria-hidden="true"></i>abuja, nigeria</span>
+            </div>
+          </div>
+          <div class="about-mobile-actions">
+            <a href="images/about/maryam_yahaya_resume.pdf" download="Maryam_Yahaya_Resume.pdf" class="about-mobile-action"><i class="ti ti-download" aria-hidden="true"></i>download resume</a>
+            <button type="button" data-open="contact" class="about-mobile-action secondary"><i class="ti ti-mail" aria-hidden="true"></i>contact me</button>
+          </div>
+        </header>
+
+        <section class="about-mobile-window" aria-labelledby="aboutMobileReadme">
+          <div class="about-mobile-window-bar">
+            <span id="aboutMobileReadme"><i class="ti ti-file-text" aria-hidden="true"></i> read_me.txt</span>
+            <span class="about-mobile-window-dots" aria-hidden="true">● ● ●</span>
+          </div>
+          <div class="about-mobile-readme">
+            <p>i&rsquo;m maryam, a product designer based in abuja, nigeria. i moved into design in 2021 and have spent the years since working on products across fintech, health, saas and e-commerce.</p>
+            <p>i&rsquo;m especially interested in products with a lot going on behind the interface: different user roles, messy information, rules, handoffs and edge cases. i like figuring out how all of that should work, then making it straightforward for the person using it.</p>
+            <p>more recently i&rsquo;ve been using ai tools to prototype and build working versions of my own ideas. it has made me more interested in the space between designing and building, because i can take an idea much further than a mockup.</p>
+            <p>when i&rsquo;m not designing, i&rsquo;m usually reading, cooking, baking, painting, watching nollywood or disappearing into some sci-fi rabbit hole. ✿</p>
+          </div>
+        </section>
+
+        <section class="about-mobile-facts" aria-label="Profile details">
+          <div class="about-mobile-fact"><span>experience.log</span><b>4+ years</b></div>
+          <div class="about-mobile-fact"><span>focus.folder</span><b>fintech, SaaS, mobile, AI</b></div>
+          <div class="about-mobile-fact availability"><span>availability.status</span><b>open to freelance and full-time ♡</b></div>
+        </section>
+
+        <div class="about-mobile-section-head">
+          <h2 class="about-mobile-section-label">✦ currently running</h2>
+          <span class="about-mobile-section-note">5 background processes</span>
+        </div>
+
+        <section class="about-mobile-processes" aria-label="Current interests">
+          <div class="about-mobile-window-bar"><span><i class="ti ti-cpu" aria-hidden="true"></i> activity_monitor.exe</span><span>♡</span></div>
+          <div class="about-mobile-process-list">
+            <div class="about-mobile-process"><span class="about-mobile-process-name">painting.exe</span><span class="about-mobile-process-status">active</span></div>
+            <div class="about-mobile-process"><span class="about-mobile-process-name">baking.exe</span><span class="about-mobile-process-status muted">retrying</span></div>
+            <div class="about-mobile-process"><span class="about-mobile-process-name">nollywood.exe</span><span class="about-mobile-process-status">always on</span></div>
+            <div class="about-mobile-process"><span class="about-mobile-process-name">short-films.exe</span><span class="about-mobile-process-status muted">rendering</span></div>
+            <div class="about-mobile-process"><span class="about-mobile-process-name">comedy.exe</span><span class="about-mobile-process-status">always open</span></div>
+          </div>
+        </section>
+
+        <div class="about-mobile-section-head">
+          <h2 class="about-mobile-section-label">✦ interests &amp; moments</h2>
+          <span class="about-mobile-section-note">swipe through</span>
+        </div>
+
+        <section class="about-mobile-photo-rail" aria-label="Life outside Figma photo gallery">
+          <article class="about-mobile-photo-card" tabindex="0">
+            <div class="about-mobile-photo-frame"><img src="images/about/interest-painting.webp" alt="Maryam painting" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" /><div class="about-mobile-photo-fallback" hidden><i class="ti ti-photo-off" aria-hidden="true"></i></div></div>
+            <div class="about-mobile-photo-copy"><strong>painting</strong><span>me pretending i can paint</span></div>
+          </article>
+          <article class="about-mobile-photo-card" tabindex="0">
+            <div class="about-mobile-photo-frame"><img src="images/about/interest-baking.webp" alt="Baking macarons" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" /><div class="about-mobile-photo-fallback" hidden><i class="ti ti-photo-off" aria-hidden="true"></i></div></div>
+            <div class="about-mobile-photo-copy"><strong>baking</strong><span>attempt #4 at macarons</span></div>
+          </article>
+          <article class="about-mobile-photo-card" tabindex="0">
+            <div class="about-mobile-photo-frame"><img src="images/about/interest-cooking.webp" alt="Cooking in the kitchen" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" /><div class="about-mobile-photo-fallback" hidden><i class="ti ti-photo-off" aria-hidden="true"></i></div></div>
+            <div class="about-mobile-photo-copy"><strong>cooking</strong><span>experiments in the kitchen</span></div>
+          </article>
+          <article class="about-mobile-photo-card" tabindex="0">
+            <div class="about-mobile-photo-frame"><img src="images/about/interest-nollywood.webp" alt="Maryam on a Nollywood set" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" /><div class="about-mobile-photo-fallback" hidden><i class="ti ti-photo-off" aria-hidden="true"></i></div></div>
+            <div class="about-mobile-photo-copy"><strong>nollywood</strong><span>on set looking busy</span></div>
+          </article>
+          <article class="about-mobile-photo-card" tabindex="0">
+            <div class="about-mobile-photo-frame"><img src="images/about/interest-scifi.webp" alt="Sci-fi visual" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" /><div class="about-mobile-photo-fallback" hidden><i class="ti ti-photo-off" aria-hidden="true"></i></div></div>
+            <div class="about-mobile-photo-copy"><strong>sci-fi</strong><span>exploring infinite shapes and space</span></div>
+          </article>
+          <article class="about-mobile-photo-card" tabindex="0">
+            <div class="about-mobile-photo-frame"><img src="images/about/interest-short-films.webp" alt="Short film production" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" /><div class="about-mobile-photo-fallback" hidden><i class="ti ti-photo-off" aria-hidden="true"></i></div></div>
+            <div class="about-mobile-photo-copy"><strong>short films</strong><span>storytelling behind the lens</span></div>
+          </article>
+          <article class="about-mobile-photo-card" tabindex="0">
+            <div class="about-mobile-photo-frame"><img src="images/about/interest-comedy.webp" alt="Comedy show" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;" /><div class="about-mobile-photo-fallback" hidden><i class="ti ti-photo-off" aria-hidden="true"></i></div></div>
+            <div class="about-mobile-photo-copy"><strong>comedy</strong><span>sunday morning laughs</span></div>
+          </article>
+        </section>
+      </main>
       
       <div class="split-view" style="display:flex; flex-direction:row; gap:24px; height:100%; min-height:0; overflow:hidden;">
         <!-- ============ LEFT COLUMN (38%) ============ -->
@@ -7652,6 +9352,9 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         font-family: var(--font-mono, "JetBrains Mono", monospace);
         font-size: 11px;
       }
+      #xp .xp-mobile-title {
+        display: none;
+      }
       #xp .xp-sheet-download {
         display: inline-flex;
         align-items: center;
@@ -7951,6 +9654,266 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
           border-left: 0;
         }
       }
+
+      /* Phone layout: full-width career releases instead of a compressed desktop timeline. */
+      @media (max-width: 767px) {
+        #xp > .wbody {
+          flex: 1 1 0 !important;
+          width: 100%;
+          height: auto !important;
+          min-height: 0 !important;
+          overflow: hidden !important;
+        }
+        #xp .xp-career-sheet {
+          width: 100%;
+          height: 100%;
+          min-height: 0;
+          border: 0;
+        }
+        #xp .xp-sheet-head {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          grid-template-areas:
+            "kicker action"
+            "title action"
+            "subtitle subtitle";
+          column-gap: 12px;
+          row-gap: 3px;
+          align-items: center;
+          min-height: 0;
+          padding: 14px 18px 13px;
+          background: var(--paper);
+          border-bottom: 1px solid var(--bev-lo);
+          box-shadow: 0 8px 14px color-mix(in srgb, var(--soft-sh) 45%, transparent);
+        }
+        #xp .xp-sheet-head > div {
+          display: contents;
+        }
+        #xp .xp-sheet-kicker {
+          grid-area: kicker;
+          font-size: 9px;
+          letter-spacing: .1em;
+        }
+        #xp .xp-mobile-title {
+          display: block;
+          grid-area: title;
+          margin: 0;
+          color: var(--rose-dark);
+          font-family: "Playfair Display", serif;
+          font-size: 30px;
+          font-style: italic;
+          font-weight: 700;
+          line-height: 1.02;
+          text-transform: lowercase;
+        }
+        #xp .xp-sheet-subtitle {
+          display: block;
+          grid-area: subtitle;
+          margin: 3px 0 0;
+          color: var(--ink-soft);
+          font: 12px/1.45 Tahoma, Verdana, sans-serif;
+        }
+        #xp .xp-sheet-download {
+          grid-area: action;
+          min-height: 42px;
+          align-self: center;
+          justify-content: center;
+          padding: 8px 10px;
+          color: var(--paper);
+          background: var(--rose);
+          border-color: var(--rose-dark);
+          border-radius: 11px;
+          box-shadow: 0 3px 0 var(--rose-dark);
+          font-size: 8.5px;
+          letter-spacing: 0;
+          text-align: center;
+        }
+        #xp .xp-sheet-download:hover {
+          color: var(--paper);
+          background: var(--rose);
+        }
+        #xp .xp-sheet-download:active {
+          transform: translateY(2px);
+          box-shadow: 0 1px 0 var(--rose-dark);
+        }
+        #xp .xp-history-scroll {
+          flex: 1 1 auto;
+          min-height: 0;
+          padding: 14px 12px 28px;
+          overflow-x: hidden;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          scrollbar-width: none;
+        }
+        #xp .xp-history-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        #xp .xp-version-list {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+        #xp .xp-version-rail {
+          display: none;
+        }
+        #xp .xp-next-release,
+        #xp .xp-version-entry {
+          position: relative;
+          display: block;
+          margin: 0;
+        }
+        #xp .xp-version-marker {
+          position: absolute;
+          z-index: 2;
+          top: 13px;
+          left: 14px;
+          width: auto;
+          min-width: 44px;
+          margin: 0;
+          padding: 4px 7px;
+          color: var(--rose-dark);
+          background: var(--tint);
+          border: 1px solid var(--bev-lo);
+          border-radius: 999px;
+          box-shadow: none;
+          font-size: 9px;
+        }
+        #xp .xp-version-entry .xp-version-marker {
+          color: var(--rose-dark);
+          border-color: var(--bev-lo);
+        }
+        #xp .xp-version-entry:hover .xp-version-marker,
+        #xp .xp-version-entry:focus-within .xp-version-marker {
+          padding: 4px 7px;
+          color: var(--rose-dark);
+          border: 1px solid var(--bev-lo);
+          box-shadow: none;
+        }
+        #xp .xp-version-entry:first-of-type .xp-version-marker {
+          color: var(--paper);
+          background: var(--rose);
+          border-color: var(--rose-dark);
+        }
+        #xp .xp-next-card,
+        #xp .xp-role-release {
+          width: 100%;
+          margin: 0;
+          padding: 47px 14px 15px;
+          overflow: hidden;
+          background: var(--paper);
+          border: 1px solid var(--bev-lo);
+          border-radius: 15px;
+          box-shadow: 2px 3px 0 var(--soft-sh);
+        }
+        #xp .xp-next-card {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 12px;
+          background: var(--tint);
+          border-style: dashed;
+          border-color: var(--rose);
+        }
+        #xp .xp-next-title {
+          font-size: 24px;
+        }
+        #xp .xp-next-note {
+          margin-top: 7px;
+          color: var(--ink-soft);
+          font: 12px/1.5 Tahoma, Verdana, sans-serif;
+        }
+        #xp .xp-next-action {
+          width: 100%;
+          min-height: 42px;
+          color: var(--rose-dark);
+          background: var(--btn);
+          border-color: var(--bev-lo);
+          border-radius: 11px;
+          box-shadow: 0 3px 0 var(--bev-lo);
+          font-size: 9px;
+        }
+        #xp .xp-role-release {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 13px;
+          transition: border-color .16s ease, box-shadow .16s ease;
+        }
+        #xp .xp-version-entry:hover .xp-role-release,
+        #xp .xp-version-entry:focus-within .xp-role-release {
+          background: var(--paper);
+          border-color: var(--rose);
+          box-shadow: inset 3px 0 0 var(--rose), 2px 3px 0 var(--soft-sh);
+        }
+        #xp .xp-sheet-company {
+          font-size: 27px;
+          line-height: 1.04;
+        }
+        #xp .xp-sheet-role {
+          margin-top: 6px;
+          font-size: 10px;
+          line-height: 1.4;
+        }
+        #xp .xp-sheet-meta {
+          margin-top: 8px;
+          color: var(--muted);
+          font-size: 8.5px;
+          letter-spacing: .04em;
+          line-height: 1.55;
+          text-transform: lowercase;
+        }
+        #xp .xp-sheet-summary {
+          margin-top: 10px;
+          font-size: 13px;
+          line-height: 1.58;
+        }
+        #xp .xp-sheet-contributions {
+          margin: 0;
+          padding: 12px;
+          background: var(--tint);
+          border: 1px solid var(--bev-lo);
+          border-radius: 11px;
+        }
+        #xp .xp-sheet-contribution-label {
+          margin-bottom: 5px;
+          font-size: 9px;
+          letter-spacing: .08em;
+          text-transform: lowercase;
+        }
+        #xp .xp-sheet-contributions li {
+          padding: 8px 0 8px 16px;
+          font-size: 12px;
+          line-height: 1.52;
+        }
+        #xp .xp-sheet-contributions li::before {
+          top: 8px;
+        }
+      }
+
+      @media (max-width: 365px) {
+        #xp .xp-sheet-head {
+          padding-right: 13px;
+          padding-left: 13px;
+        }
+        #xp .xp-mobile-title {
+          font-size: 27px;
+        }
+        #xp .xp-sheet-download {
+          max-width: 86px;
+          padding-right: 7px;
+          padding-left: 7px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #xp .xp-sheet-download:active,
+        #xp .xp-next-action:active {
+          transform: none !important;
+        }
+        #xp .xp-role-release {
+          transition: none !important;
+        }
+      }
     </style>
     
     <div class="tbar"><span class="tt"><i class="ti ti-id-badge-2" aria-hidden="true"></i>experience ♡ version history</span>
@@ -7961,6 +9924,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         <header class="xp-sheet-head">
           <div>
             <span class="xp-sheet-kicker">experience · career</span>
+            <h1 class="xp-mobile-title">version history</h1>
             <p class="xp-sheet-subtitle">every release taught me something.</p>
           </div>
           <a href="images/about/maryam_yahaya_resume.pdf" download="Maryam_Yahaya_Resume.pdf" class="xp-sheet-download">
@@ -10200,6 +12164,9 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       #contact .channel-row:hover .go {
         color: var(--rose) !important;
       }
+      #contact .contact-compose-bar {
+        display: none;
+      }
       @keyframes wiggle {
         0%, 100% { transform: translateX(0); }
         25% { transform: translateX(-4px); }
@@ -10216,41 +12183,266 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
           transform: none !important;
         }
       }
+
+      /* Phone layout: a focused compose app with touch-sized controls. */
+      @media (max-width: 767px) {
+        #contact > .wbody {
+          flex: 1 1 0 !important;
+          width: 100%;
+          height: auto !important;
+          min-height: 0 !important;
+          padding: 16px 12px 28px !important;
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
+          overscroll-behavior: contain;
+          scrollbar-width: none;
+        }
+        #contact > .wbody::-webkit-scrollbar {
+          display: none;
+        }
+        #contact .contact-header {
+          margin: 0 0 14px !important;
+          padding: 0 6px 3px !important;
+          background: var(--paper);
+          border: 0 !important;
+        }
+        #contact .contact-kicker {
+          margin-bottom: 5px !important;
+          font-size: 9px !important;
+          letter-spacing: .1em;
+        }
+        #contact .contact-title {
+          font-size: 32px !important;
+          line-height: 1.02 !important;
+        }
+        #contact .contact-intro {
+          max-width: 36rem !important;
+          margin-top: 9px !important;
+          font-size: 13px !important;
+          line-height: 1.62 !important;
+        }
+        #contact .contact-compose {
+          gap: 0 !important;
+          margin-bottom: 18px !important;
+          padding: 0 !important;
+          overflow: hidden;
+          background: var(--paper) !important;
+          border: 1px solid var(--bev-lo) !important;
+          border-radius: 15px !important;
+          box-shadow: 2px 3px 0 var(--soft-sh);
+        }
+        #contact .contact-compose-bar {
+          min-height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 8px 11px;
+          color: var(--rose-dark);
+          background: var(--tint);
+          border-bottom: 1px solid var(--bev-lo);
+          font: 700 9px/1.2 var(--font-mono);
+          text-transform: lowercase;
+        }
+        #contact .contact-compose-dots {
+          color: var(--rose);
+          letter-spacing: .08em;
+        }
+        #contact .contact-row {
+          display: flex !important;
+          align-items: stretch !important;
+          flex-direction: column;
+          gap: 6px !important;
+          margin: 0 12px;
+          padding: 11px 0 !important;
+          border-bottom: 1px solid var(--bev-lo) !important;
+        }
+        #contact .contact-message-row {
+          gap: 7px !important;
+          padding-bottom: 12px !important;
+        }
+        #contact .contact-label {
+          width: auto !important;
+          color: var(--rose) !important;
+          font-size: 9px !important;
+          letter-spacing: .08em;
+        }
+        #contact .contact-recipient {
+          min-height: 40px;
+          display: flex;
+          align-items: center;
+          padding: 9px 10px;
+          color: var(--ink-soft) !important;
+          background: var(--tint);
+          border: 1px solid var(--bev-lo);
+          border-radius: 10px;
+          font-size: 9px !important;
+          line-height: 1.35;
+          overflow-wrap: anywhere;
+        }
+        #contact .mail-input,
+        #contact .mail-select,
+        #contact .mail-textarea {
+          width: 100%;
+          min-height: 42px;
+          padding: 10px !important;
+          color: var(--ink);
+          background: var(--paper) !important;
+          border: 1px solid var(--bev-lo) !important;
+          border-radius: 10px !important;
+          font-size: 11px;
+          line-height: 1.35;
+        }
+        #contact .mail-input:focus,
+        #contact .mail-select:focus,
+        #contact .mail-textarea:focus {
+          border-color: var(--rose) !important;
+          box-shadow: 0 0 0 2px color-mix(in srgb, var(--rose) 20%, transparent);
+        }
+        #contact .contact-select-wrap {
+          width: 100%;
+        }
+        #contact .mail-select {
+          padding-right: 32px !important;
+        }
+        #contact .mail-textarea {
+          min-height: 136px;
+          resize: vertical !important;
+        }
+        #contact .contact-send-row {
+          margin: 0 !important;
+          padding: 12px !important;
+        }
+        #contact .mail-send-btn-style {
+          width: 100%;
+          min-height: 44px;
+          justify-content: center;
+          padding: 10px 12px !important;
+          border: 1px solid var(--rose-dark) !important;
+          border-radius: 11px !important;
+          box-shadow: 0 3px 0 var(--rose-dark) !important;
+          font-size: 10px !important;
+        }
+        #contact .mail-send-btn-style:hover {
+          background: var(--rose) !important;
+          transform: none;
+          box-shadow: 0 3px 0 var(--rose-dark) !important;
+        }
+        #contact .mail-send-btn-style:active {
+          transform: translateY(2px);
+          box-shadow: 0 1px 0 var(--rose-dark) !important;
+        }
+        #contact .contact-divider {
+          display: none;
+        }
+        #contact .contact-channels-label {
+          margin: 0 5px 8px !important;
+          color: var(--rose) !important;
+          font-size: 10px !important;
+          letter-spacing: .06em;
+        }
+        #contact .contact-channels-label::before {
+          content: '✦ ';
+        }
+        #contact .contact-channels {
+          gap: 8px !important;
+          padding: 0 !important;
+          background: transparent !important;
+          border: 0 !important;
+        }
+        #contact .channel-row {
+          min-height: 58px;
+          display: grid;
+          grid-template-columns: 34px minmax(0, 1fr) auto;
+          gap: 10px;
+          padding: 10px 11px;
+          color: var(--ink-soft);
+          background: var(--tint);
+          border: 1px solid var(--bev-lo);
+          border-radius: 12px;
+          box-shadow: 2px 3px 0 var(--soft-sh);
+          font-size: 9px;
+          overflow-wrap: anywhere;
+        }
+        #contact .channel-row > .ti {
+          width: 34px;
+          height: 34px;
+          display: grid;
+          place-items: center;
+          background: var(--paper);
+          border: 1px solid var(--bev-lo);
+          border-radius: 9px;
+          font-size: 17px;
+        }
+        #contact .channel-row .go {
+          color: var(--rose);
+          font-size: 8px;
+          white-space: nowrap;
+        }
+        #contact .channel-row:hover {
+          color: var(--rose-dark) !important;
+          background: var(--tint) !important;
+          transform: translateX(2px);
+        }
+      }
+
+      @media (max-width: 365px) {
+        #contact > .wbody {
+          padding-right: 10px !important;
+          padding-left: 10px !important;
+        }
+        #contact .contact-title {
+          font-size: 29px !important;
+        }
+        #contact .channel-row {
+          grid-template-columns: 32px minmax(0, 1fr);
+        }
+        #contact .channel-row .go {
+          grid-column: 2;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #contact .mail-send-btn-style:active {
+          transform: none !important;
+        }
+      }
     </style>
     <div class="tbar"><span class="tt"><i class="ti ti-mail-heart" aria-hidden="true"></i>say hi ♡</span>
       <span class="tctl"><button class="pout mn" aria-label="Minimize"><i class="ti ti-minus"></i></button><button class="pout mx" aria-label="Maximize"><i class="ti ti-square"></i></button><button class="pout cl" aria-label="Close"><i class="ti ti-x"></i></button></span></div>
     <div class="wpad wbody" style="overflow-y:auto;">
       <!-- Header block per house pattern -->
-      <div style="flex-shrink:0; margin-bottom:16px; border-bottom:1px dashed var(--bev-lo); padding-bottom:12px;">
-        <div style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--rose); font-weight:bold; text-transform:lowercase; margin-bottom:4px;">
+      <div class="contact-header" style="flex-shrink:0; margin-bottom:16px; border-bottom:1px dashed var(--bev-lo); padding-bottom:12px;">
+        <div class="contact-kicker" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--rose); font-weight:bold; text-transform:lowercase; margin-bottom:4px;">
           new message ✦
         </div>
-        <div style="font-family:'Playfair Display', serif; font-style:italic; font-weight:700; font-size:24px; color:var(--rose-dark); line-height:1.2;">
+        <div class="contact-title" style="font-family:'Playfair Display', serif; font-style:italic; font-weight:700; font-size:24px; color:var(--rose-dark); line-height:1.2;">
           let's talk.
         </div>
-        <div style="font-family:Tahoma, Verdana, sans-serif; font-size:13px; line-height:1.6; color:var(--ink-soft); margin-top:8px; max-width:52ch;">
+        <div class="contact-intro" style="font-family:Tahoma, Verdana, sans-serif; font-size:13px; line-height:1.6; color:var(--ink-soft); margin-top:8px; max-width:52ch;">
           i&rsquo;m open to product design roles, interesting freelance work, and conversations about design, ai and digital health.
         </div>
       </div>
 
       <!-- Compose form -->
-      <div class="pins" style="background:var(--tint); padding:14px; display:flex; flex-direction:column; gap:12px; border-radius:6px; margin-bottom:14px;">
+      <div class="pins contact-compose" style="background:var(--tint); padding:14px; display:flex; flex-direction:column; gap:12px; border-radius:6px; margin-bottom:14px;">
+        <div class="contact-compose-bar"><span><i class="ti ti-mail-heart" aria-hidden="true"></i> compose.msg</span><span class="contact-compose-dots" aria-hidden="true">● ● ●</span></div>
         <!-- To Row -->
-        <div style="display:flex; align-items:center; gap:8px; border-bottom:1px dashed var(--bev-lo); padding-bottom:8px;">
-          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); width:65px; font-weight:bold; text-transform:lowercase; flex-shrink:0;">to:</span>
-          <div style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--ink-soft); font-weight:bold;">maryam ♡ · akanbimaryam@gmail.com</div>
+        <div class="contact-row" style="display:flex; align-items:center; gap:8px; border-bottom:1px dashed var(--bev-lo); padding-bottom:8px;">
+          <span class="contact-label" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); width:65px; font-weight:bold; text-transform:lowercase; flex-shrink:0;">to:</span>
+          <div class="contact-recipient" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--ink-soft); font-weight:bold;">maryam ♡ · akanbimaryam@gmail.com</div>
         </div>
 
         <!-- From Row -->
-        <div style="display:flex; align-items:center; gap:8px; border-bottom:1px dashed var(--bev-lo); padding-bottom:8px;">
-          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); width:65px; font-weight:bold; text-transform:lowercase; flex-shrink:0;">from:</span>
+        <div class="contact-row" style="display:flex; align-items:center; gap:8px; border-bottom:1px dashed var(--bev-lo); padding-bottom:8px;">
+          <span class="contact-label" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); width:65px; font-weight:bold; text-transform:lowercase; flex-shrink:0;">from:</span>
           <input type="email" id="mail-from" class="mail-input" placeholder="your.email@example.com" required style="flex:1; background:none; border:none; outline:none; padding:2px 4px; border-radius:4px;" />
         </div>
 
         <!-- Subject Row -->
-        <div style="display:flex; align-items:center; gap:8px; border-bottom:1px dashed var(--bev-lo); padding-bottom:8px;">
-          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); width:65px; font-weight:bold; text-transform:lowercase; flex-shrink:0;">subject:</span>
-          <div style="position:relative; flex:1;">
+        <div class="contact-row" style="display:flex; align-items:center; gap:8px; border-bottom:1px dashed var(--bev-lo); padding-bottom:8px;">
+          <span class="contact-label" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); width:65px; font-weight:bold; text-transform:lowercase; flex-shrink:0;">subject:</span>
+          <div class="contact-select-wrap" style="position:relative; flex:1;">
             <select id="mail-subject" class="mail-select" style="width:100%; background:var(--paper); padding:4px 24px 4px 8px; appearance:none; cursor:pointer;">
               <option value="i want to hire you">i want to hire you</option>
               <option value="i have a project" selected>i have a project</option>
@@ -10264,13 +12456,13 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         </div>
 
         <!-- Message Row -->
-        <div style="display:flex; flex-direction:column; gap:6px;">
-          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); font-weight:bold; text-transform:lowercase;">message:</span>
+        <div class="contact-row contact-message-row" style="display:flex; flex-direction:column; gap:6px;">
+          <span class="contact-label" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:var(--muted); font-weight:bold; text-transform:lowercase;">message:</span>
           <textarea id="mail-message" class="mail-textarea" rows="5" placeholder="write something nice ♡" required style="width:100%; padding:8px; resize:none;"></textarea>
         </div>
 
         <!-- Send Button -->
-        <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+        <div class="contact-send-row" style="display:flex; justify-content:flex-end; margin-top:4px;">
           <button id="mail-send-btn" class="pout mail-send-btn-style" style="padding:8px 18px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; font-weight:bold; border:2px solid; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
             <i class="ti ti-send" style="font-size:12px;"></i>send ♡
           </button>
@@ -10278,9 +12470,9 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       </div>
 
       <!-- Other channels -->
-      <hr style="border:none; border-top:1px dashed var(--bev-lo); margin:14px 0 10px 0;" />
-      <div style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; color:var(--muted); font-weight:bold; margin-bottom:4px; text-transform:lowercase;">other channels:</div>
-      <div class="pins panel" style="display:flex; flex-direction:column; gap:2px; padding:4px; border-radius:6px; background:var(--card);">
+      <hr class="contact-divider" style="border:none; border-top:1px dashed var(--bev-lo); margin:14px 0 10px 0;" />
+      <div class="contact-channels-label" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; color:var(--muted); font-weight:bold; margin-bottom:4px; text-transform:lowercase;">other channels:</div>
+      <div class="pins panel contact-channels" style="display:flex; flex-direction:column; gap:2px; padding:4px; border-radius:6px; background:var(--card);">
         <a class="clink channel-row" href="https://www.linkedin.com/in/maryam-akanbi/" target="_blank" rel="noopener">
           <i class="ti ti-brand-linkedin" aria-hidden="true" style="color:var(--rose);"></i>linkedin.com/in/maryam-akanbi
           <span class="go">↗ connect</span>
@@ -10297,6 +12489,12 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         var formSubject = document.getElementById('mail-subject');
         var formMessage = document.getElementById('mail-message');
         var sendBtn = document.getElementById('mail-send-btn');
+
+        if (formMessage) {
+          formMessage.addEventListener('input', function() {
+            if (formMessage.value.trim()) formMessage.removeAttribute('aria-invalid');
+          });
+        }
         
         if (sendBtn) {
           sendBtn.addEventListener('click', function(e) {
@@ -10306,12 +12504,15 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
             var subjectVal = formSubject.value;
             
             if (!messageVal) {
+              formMessage.setAttribute('aria-invalid', 'true');
+              formMessage.focus();
               formMessage.classList.add('wiggle-anim');
               setTimeout(function() {
                 formMessage.classList.remove('wiggle-anim');
               }, 600);
               return;
             }
+            formMessage.removeAttribute('aria-invalid');
             
             var emailTo = "akanbimaryam@gmail.com";
             var bodyText = messageVal;
@@ -10333,6 +12534,25 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 
 </div>
 
+
+<nav id="mobile-app-nav" aria-label="Portfolio navigation">
+  <button class="mobile-nav-item" type="button" data-mobile-home aria-label="Home" aria-current="page"><i class="ti ti-home-heart" aria-hidden="true"></i><span>home</span></button>
+  <button class="mobile-nav-item" type="button" data-mobile-open="work" aria-label="Work"><i class="ti ti-folder-heart" aria-hidden="true"></i><span>work</span></button>
+  <button class="mobile-nav-item" type="button" data-mobile-open="builds" aria-label="AI builds"><i class="ti ti-cpu" aria-hidden="true"></i><span>builds</span></button>
+  <button class="mobile-nav-item" type="button" data-mobile-open="about" aria-label="About"><i class="ti ti-coffee" aria-hidden="true"></i><span>about</span></button>
+  <button class="mobile-nav-item" type="button" data-mobile-more aria-label="More" aria-controls="mobile-more-sheet" aria-expanded="false"><i class="ti ti-dots" aria-hidden="true"></i><span>more</span></button>
+</nav>
+
+<button id="mobile-nav-scrim" type="button" aria-label="Close more menu"></button>
+<aside id="mobile-more-sheet" aria-label="More portfolio sections" aria-hidden="true">
+  <div class="mobile-more-head"><span>more in maryam os ✦</span><button class="mobile-more-close pout" type="button" aria-label="Close more menu"><i class="ti ti-x"></i></button></div>
+  <div class="mobile-more-grid">
+    <button class="mobile-more-action" type="button" data-mobile-open="xp"><i class="ti ti-id-badge-2"></i><span>experience</span></button>
+    <button class="mobile-more-action" type="button" data-mobile-open="contact"><i class="ti ti-mail-heart"></i><span>say hi</span></button>
+    <button class="mobile-more-action" type="button" data-mobile-open="welcome"><i class="ti ti-heart"></i><span>introduction</span></button>
+    <button class="mobile-more-action" type="button" data-mobile-theme><i class="ti ti-moon"></i><span>change theme</span></button>
+  </div>
+</aside>
 
 <nav id="startmenu" class="pout">
   <div class="head"><i class="ti ti-flower" aria-hidden="true"></i>maryam yahaya · product designer</div>
@@ -10366,7 +12586,10 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   var startMenu=document.getElementById('startmenu');
   var themeBtn=document.getElementById('themebtn');
   var soundBtn=document.getElementById('soundbtn');
-  var z=20, openOrder=[];
+  var mobileAppNav=document.getElementById('mobile-app-nav');
+  var mobileMoreSheet=document.getElementById('mobile-more-sheet');
+  var mobileNavScrim=document.getElementById('mobile-nav-scrim');
+  var z=20, openOrder=[], mobileHistory=[], mobileBackNavigating=false, mobileWorkKind='live';
 
   function applyTheme(dark){
     document.body.classList.toggle('dark',dark);
@@ -11161,10 +13384,112 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     windows().forEach(function(w){w.classList.add('inactive');});
     if(win){win.classList.remove('inactive');win.style.zIndex=++z;}
     updateTasks();
+    syncMobileNavigation(win);
+  }
+  function isPhoneOS(){ return window.matchMedia('(max-width:767px)').matches; }
+  function mobileDestination(win){
+    if(!win)return 'home';
+    if(win.id==='viewer')return 'work';
+    if(win.id==='work'||win.id==='builds'||win.id==='about')return win.id;
+    return 'more';
+  }
+  function syncMobileNavigation(win){
+    if(!mobileAppNav)return;
+    var destination=mobileDestination(win);
+    mobileAppNav.querySelectorAll('.mobile-nav-item').forEach(function(btn){
+      var key=btn.hasAttribute('data-mobile-home')?'home':
+        (btn.hasAttribute('data-mobile-more')?'more':btn.getAttribute('data-mobile-open'));
+      if(key===destination)btn.setAttribute('aria-current','page');
+      else btn.removeAttribute('aria-current');
+    });
+  }
+  function currentPhoneWindow(){
+    return windows().find(function(win){
+      return win.classList.contains('open') &&
+        !win.classList.contains('min') &&
+        !win.classList.contains('inactive');
+    }) || null;
+  }
+  function closeMobileMore(){
+    if(mobileMoreSheet){mobileMoreSheet.classList.remove('open');mobileMoreSheet.setAttribute('aria-hidden','true');}
+    if(mobileNavScrim)mobileNavScrim.classList.remove('open');
+    var moreBtn=mobileAppNav&&mobileAppNav.querySelector('[data-mobile-more]');
+    if(moreBtn)moreBtn.setAttribute('aria-expanded','false');
+    if(isPhoneOS())syncMobileNavigation(currentPhoneWindow());
+  }
+  function openMobileMore(){
+    if(!mobileMoreSheet||!mobileNavScrim)return;
+    mobileMoreSheet.classList.add('open');mobileMoreSheet.setAttribute('aria-hidden','false');
+    mobileNavScrim.classList.add('open');
+    var moreBtn=mobileAppNav&&mobileAppNav.querySelector('[data-mobile-more]');
+    if(moreBtn)moreBtn.setAttribute('aria-expanded','true');
+    syncMobileNavigation({id:'more'});
+  }
+  function showMobileHome(){
+    if(!isPhoneOS())return;
+    mobileHistory.length=0;
+    windows().forEach(function(win){
+      if(win.classList.contains('open'))win.classList.add('min','inactive');
+    });
+    closeMobileMore();
+    updateTasks();
+    syncMobileNavigation(null);
+  }
+  function playPhoneWindow(win, entering, done){
+    if(reducedMotion() || !win.animate){ if(done)done(); return; }
+    var frames=entering
+      ? [{transform:'translateY(18px) scale(.985)',opacity:0},{transform:'translateY(0) scale(1)',opacity:1}]
+      : [{transform:'translateY(0) scale(1)',opacity:1},{transform:'translateY(14px) scale(.99)',opacity:0}];
+    var anim=win.animate(frames,{
+      duration:entering?320:190,
+      easing:entering?'cubic-bezier(.3,1.1,.35,1)':'cubic-bezier(.25,.8,.3,1)',
+      fill:'both'
+    });
+    anim.finished.then(function(){ anim.cancel(); if(done)done(); }).catch(function(){ if(done)done(); });
+  }
+  function openMobileRoot(id,srcEl){
+    mobileHistory=['home'];
+    mobileBackNavigating=true;
+    openWin(id,srcEl);
+    mobileBackNavigating=false;
+  }
+  function goMobileBack(win,srcEl){
+    if(!isPhoneOS()){minWin(win);return;}
+    SoundSystem.playClick();
+    var target=mobileHistory.length?mobileHistory.pop():(win.id==='viewer'?'work':'home');
+    playPhoneWindow(win,false,function(){
+      win.classList.add('min','inactive');
+      win.classList.remove('genie-prep');
+      updateTasks();syncMaxed();
+      if(!target||target==='home'||!document.getElementById(target)){
+        showMobileHome();
+        return;
+      }
+      mobileBackNavigating=true;
+      openWin(target,srcEl);
+      mobileBackNavigating=false;
+    });
+  }
+  function syncMobileChrome(){
+    var phone=isPhoneOS();
+    windows().forEach(function(win){
+      var btn=win.querySelector('.mn');
+      if(!btn)return;
+      var icon=btn.querySelector('i');
+      btn.setAttribute('aria-label',phone?'Back to previous screen':'Minimize');
+      btn.title=phone?'Back':'';
+      if(icon)icon.className=phone?'ti ti-chevron-left':'ti ti-minus';
+    });
   }
   function openWin(id,srcEl,noAnim){
     var win=document.getElementById(id);if(!win)return;
     var wasOpen = win.classList.contains('open') && !win.classList.contains('min');
+    var phoneCurrent=isPhoneOS()?currentPhoneWindow():null;
+
+    if(isPhoneOS()&&!mobileBackNavigating&&(!phoneCurrent||phoneCurrent.id!==id)){
+      var mobileOrigin=phoneCurrent?phoneCurrent.id:'home';
+      if(mobileHistory[mobileHistory.length-1]!==mobileOrigin)mobileHistory.push(mobileOrigin);
+    }
 
     // Experience used to run html2canvas on the click itself so the genie texture
     // matched its full-screen layout, which cost a visible pause before anything
@@ -11182,7 +13507,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       updateTasks();
     }
 
-    if (!wasOpen) {
+    if (!wasOpen && !mobileBackNavigating) {
       var isDesktopOrMenu = srcEl && (srcEl.classList.contains('pdi') || (startMenu && startMenu.contains(srcEl)));
       if (isDesktopOrMenu) {
         SoundSystem.playWinOpen();
@@ -11207,6 +13532,13 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     if(openOrder.indexOf(id)===-1)openOrder.push(id);
     var origin=srcEl||document.querySelector('.pdi[data-open="'+id+'"]');
     if(origin)win._origin=origin;
+    if(isPhoneOS()){
+      win.classList.add('open');
+      setActive(win);syncMaxed();
+      if(noAnim){ return; }
+      playPhoneWindow(win,true);
+      return;
+    }
     if(noAnim||!Genie.ready(id)){
       win.classList.add('open');fadeIn(win);setActive(win);syncMaxed();
       if(!noAnim)Genie.warm(win);return;
@@ -11223,6 +13555,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       syncMaxed();
     }
     if(!win.classList.contains('open')){finish();return;}
+    if(isPhoneOS()){playPhoneWindow(win,false,finish);return;}
     if(!Genie.ready(win.id)){finish();Genie.warm(win);return;}
     var origin=document.querySelector('.pdi[data-open="'+win.id+'"]')||win._origin;
     Genie.play(win,anchorCenter(origin),'out',finish);
@@ -11230,6 +13563,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   function minWin(win){
     SoundSystem.playClick();
     function finish(){win.classList.add('min','inactive');win.classList.remove('genie-prep');updateTasks();syncMaxed();}
+    if(isPhoneOS()){playPhoneWindow(win,false,finish);return;}
     if(!Genie.ready(win.id)){finish();Genie.warm(win);return;}
     var btn=tasks.querySelector('[data-win="'+win.id+'"]');
     Genie.play(win,anchorCenter(btn||win._origin),'out',finish);
@@ -11245,6 +13579,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
       updateTasks();
     }
     var c=anchorCenter(fromEl);win.classList.remove('min');syncMaxed();
+    if(isPhoneOS()){setActive(win);playPhoneWindow(win,true);return;}
     if(!Genie.ready(win.id)){setActive(win);Genie.warm(win);return;}
     setActive(win);Genie.play(win,c,'in',function(){win.classList.remove('genie-prep');});
   }
@@ -11284,10 +13619,39 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     });
   });
 
+  if(mobileAppNav){
+    mobileAppNav.querySelectorAll('[data-mobile-open]').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        closeMobileMore();
+        openMobileRoot(btn.getAttribute('data-mobile-open'),btn);
+      });
+    });
+    var mobileHomeBtn=mobileAppNav.querySelector('[data-mobile-home]');
+    var mobileMoreBtn=mobileAppNav.querySelector('[data-mobile-more]');
+    if(mobileHomeBtn)mobileHomeBtn.addEventListener('click',showMobileHome);
+    if(mobileMoreBtn)mobileMoreBtn.addEventListener('click',function(){
+      if(mobileMoreSheet&&mobileMoreSheet.classList.contains('open'))closeMobileMore();
+      else openMobileMore();
+    });
+  }
+  if(mobileNavScrim)mobileNavScrim.addEventListener('click',closeMobileMore);
+  var mobileMoreClose=document.querySelector('.mobile-more-close');
+  if(mobileMoreClose)mobileMoreClose.addEventListener('click',closeMobileMore);
+  if(mobileMoreSheet){
+    mobileMoreSheet.querySelectorAll('[data-mobile-open]').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        closeMobileMore();
+        openWin(btn.getAttribute('data-mobile-open'),btn);
+      });
+    });
+    var mobileTheme=mobileMoreSheet.querySelector('[data-mobile-theme]');
+    if(mobileTheme)mobileTheme.addEventListener('click',function(){themeBtn.click();closeMobileMore();});
+  }
+
   windows().forEach(function(win){
     win.addEventListener('mousedown',function(){setActive(win);},true);
     win.querySelector('.cl').addEventListener('click',function(e){e.stopPropagation();closeWin(win);});
-    win.querySelector('.mn').addEventListener('click',function(e){e.stopPropagation();minWin(win);});
+    win.querySelector('.mn').addEventListener('click',function(e){e.stopPropagation();if(isPhoneOS())goMobileBack(win,e.currentTarget);else minWin(win);});
     win.querySelector('.mx').addEventListener('click',function(e){e.stopPropagation();maxWin(win);});
     win.querySelectorAll('.pf[data-project]').forEach(function(c){
       c.addEventListener('click',function(){openProject(c.getAttribute('data-project'),c);});
@@ -13130,6 +15494,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   }, true);
 
   var rzT;window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(function(){
+    syncMobileChrome();
+    syncWorkMobileFilter();
     var workWin = document.getElementById('work'); if (workWin && workWin.classList.contains('open')) sizeWorkWindow();
     var buildsWin = document.getElementById('builds'); if (buildsWin && buildsWin.classList.contains('open')) sizeBuildsWindow();
     var aboutWin = document.getElementById('about'); if (aboutWin && aboutWin.classList.contains('open')) sizeAboutWindow();
@@ -13140,7 +15506,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;closeStart();
     var act=windows().filter(function(w){return w.classList.contains('open')&&!w.classList.contains('inactive')&&!w.classList.contains('min');})[0];
-    if(act)closeWin(act);
+    if(act){if(isPhoneOS())goMobileBack(act,act.querySelector('.mn'));else closeWin(act);}
   });
 
   function fitIcons(){
@@ -13161,7 +15527,10 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 
   function tick(){
     var n=new Date(),h=n.getHours(),m=n.getMinutes();var ap=h>=12?'PM':'AM';h=h%12||12;
-    document.getElementById('clock').textContent=h+':'+(m<10?'0':'')+m+' '+ap;
+    var clockText=h+':'+(m<10?'0':'')+m+' '+ap;
+    document.getElementById('clock').textContent=clockText;
+    var mobileClock=document.getElementById('mobile-home-clock');
+    if(mobileClock){mobileClock.textContent=clockText;mobileClock.dateTime=n.toISOString();}
   }
   tick();setInterval(tick,15000);
 
@@ -13174,6 +15543,31 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     var cards = track.querySelectorAll('.marquee-card');
     var numCards = cards.length;
     if (numCards < 8) return;
+
+    /* Phones use a native swipe carousel instead of the desktop belt. */
+    if(isPhoneOS()){
+      cards.forEach(function(card,index){
+        if(index>=4){
+          card.tabIndex=-1;
+          card.setAttribute('aria-hidden','true');
+          return;
+        }
+        card.tabIndex=0;
+        card.addEventListener('click',function(){
+          openProject(card.getAttribute('data-project'),card);
+        });
+        card.addEventListener('keydown',function(e){
+          if(e.key==='Enter'||e.key===' '){
+            e.preventDefault();openProject(card.getAttribute('data-project'),card);
+          }
+        });
+      });
+      var mobilePrev=document.getElementById('marqueePrev');
+      var mobileNext=document.getElementById('marqueeNext');
+      if(mobilePrev)mobilePrev.addEventListener('click',function(){viewport.scrollBy({left:-280,behavior:reducedMotion()?'auto':'smooth'});});
+      if(mobileNext)mobileNext.addEventListener('click',function(){viewport.scrollBy({left:280,behavior:reducedMotion()?'auto':'smooth'});});
+      return;
+    }
 
     var setWidth = 0;
     var baseSpeedMs = 608 / 30000;
@@ -13366,6 +15760,105 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     });
   });
 
+  function renderMobileProjectFeed(){
+    var feed=document.getElementById('workMobileFeed');
+    if(!feed||feed.children.length)return;
+    PROJECT_NAMES.forEach(function(name,index){
+      var data=PROJECT_DATA[name];
+      if(!data)return;
+      var specs=PROJECT_SPECS[name]||{};
+      var specMarkup=SPEC_ORDER.map(function(spec){
+        var value=specs[spec.key]||'—';
+        return '<div class="work-mobile-card-spec">'+
+          '<span class="work-mobile-card-spec-label">'+escapeBuildText(spec.label)+'</span>'+
+          '<span class="work-mobile-card-spec-value">'+escapeBuildText(value)+'</span>'+
+        '</div>';
+      }).join('');
+      var article=document.createElement('article');
+      article.className='work-mobile-project-card';
+      article.setAttribute('data-kind',data.kind);
+      article.setAttribute('data-project',name);
+      article.innerHTML=
+        '<div class="work-mobile-card-image">'+
+          '<img src="'+escapeBuildText(data.img)+'" alt="'+escapeBuildText(projectDisplayName(name))+' project preview">'+
+          '<div class="work-mobile-card-placeholder" hidden><i class="ti ti-photo-heart" aria-hidden="true"></i></div>'+
+        '</div>'+
+        '<div class="work-mobile-card-copy">'+
+          '<p class="work-mobile-card-kicker">'+String(index+1).padStart(2,'0')+' / '+(data.kind==='case'?'case study':'live project')+'</p>'+
+          '<div class="work-mobile-card-heading">'+
+            '<h2 class="work-mobile-card-title">'+escapeBuildText(projectDisplayName(name))+'</h2>'+
+            '<span class="work-mobile-card-tag">'+escapeBuildText(data.tag)+'</span>'+
+          '</div>'+
+          '<p class="work-mobile-card-desc">'+escapeBuildText(data.desc)+'</p>'+
+          '<div class="work-mobile-card-context">'+
+            '<span class="work-mobile-card-meta">'+escapeBuildText(data.meta||'')+'</span>'+
+            '<span class="work-mobile-card-outcome">'+escapeBuildText(data.outcome||'')+'</span>'+
+          '</div>'+
+          '<div class="work-mobile-card-specs">'+specMarkup+'</div>'+
+          '<div class="work-mobile-card-actions">'+
+            '<button type="button" class="work-mobile-project-action"></button>'+
+            '<button type="button" class="work-mobile-project-action secondary" hidden></button>'+
+          '</div>'+
+        '</div>';
+      var img=article.querySelector('img');
+      var placeholder=article.querySelector('.work-mobile-card-placeholder');
+      if(img)img.addEventListener('error',function(){img.hidden=true;if(placeholder)placeholder.hidden=false;});
+      var primary=article.querySelector('.work-mobile-project-action:not(.secondary)');
+      var secondary=article.querySelector('.work-mobile-project-action.secondary');
+      configureProjectActionSet(primary,secondary,data);
+      if(primary)primary.addEventListener('click',function(){launchProjectAction(name,0,primary);});
+      if(secondary)secondary.addEventListener('click',function(){launchProjectAction(name,1,secondary);});
+      feed.appendChild(article);
+    });
+  }
+
+  function setWorkMobileFilter(kind,selectFirst){
+    if(!isPhoneOS())return;
+    mobileWorkKind=kind;
+    var filters=document.querySelectorAll('#work .work-mobile-filter');
+    var groups=document.querySelectorAll('#work .work-index-group');
+    filters.forEach(function(btn){
+      var selected=btn.getAttribute('data-work-filter')===kind;
+      btn.setAttribute('aria-selected',selected?'true':'false');
+      btn.tabIndex=selected?0:-1;
+    });
+    groups.forEach(function(group){
+      var active=group.id==='work-'+kind+'-group';
+      group.classList.toggle('mobile-active',active);
+      group.setAttribute('aria-hidden',active?'false':'true');
+    });
+    document.querySelectorAll('#work .work-mobile-project-card').forEach(function(card){
+      var visible=card.getAttribute('data-kind')===kind;
+      card.hidden=!visible;
+      card.setAttribute('aria-hidden',visible?'false':'true');
+    });
+    var feed=document.getElementById('workMobileFeed');
+    if(feed)feed.setAttribute('aria-label',kind==='case'?'Case studies':'Live projects');
+    if(selectFirst){
+      var browser=document.querySelector('#work .work-browser');
+      if(browser)requestAnimationFrame(function(){browser.scrollTop=0;});
+    }
+  }
+  function syncWorkMobileFilter(){
+    if(!isPhoneOS()){
+      document.querySelectorAll('#work .work-index-group').forEach(function(group){group.removeAttribute('aria-hidden');});
+      return;
+    }
+    setWorkMobileFilter(mobileWorkKind,false);
+  }
+  document.querySelectorAll('#work .work-mobile-filter').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      setWorkMobileFilter(btn.getAttribute('data-work-filter'),true);
+    });
+    btn.addEventListener('keydown',function(e){
+      if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+      e.preventDefault();
+      var filters=Array.prototype.slice.call(document.querySelectorAll('#work .work-mobile-filter'));
+      var next=filters[(filters.indexOf(btn)+(e.key==='ArrowRight'?1:-1)+filters.length)%filters.length];
+      if(next){next.focus();next.click();}
+    });
+  });
+
   var previewOpenBtn = document.getElementById('previewOpenBtn');
   if (previewOpenBtn) {
     previewOpenBtn.addEventListener('click', function(e) {
@@ -13476,6 +15969,65 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     selectBuild(selectedBuildName, false);
   }
 
+  function renderBuildsMobileFeed() {
+    var feed = document.getElementById('buildsMobileFeed');
+    if (!feed) return;
+    feed.innerHTML = '';
+
+    buildsData.forEach(function(build, index) {
+      var article = document.createElement('article');
+      var hasSource = !!build.sourceUrl;
+      article.className = 'builds-mobile-card';
+      article.setAttribute('data-build', build.name);
+      article.innerHTML =
+        '<div class="builds-mobile-card-bar">' +
+          '<span><i class="ti ' + escapeBuildText(build.icon) + '" aria-hidden="true"></i>ai-build://' + escapeBuildText(build.name.replace(/\s+/g, '-')) + '</span>' +
+          '<span class="builds-mobile-card-number">' + String(index + 1).padStart(2, '0') + ' / ' + String(buildsData.length).padStart(2, '0') + '</span>' +
+        '</div>' +
+        '<div class="builds-mobile-card-visual">' +
+          '<img class="builds-mobile-card-image" src="' + escapeBuildText(build.image || '') + '" alt="' + escapeBuildText(build.name) + ' interface preview" loading="lazy">' +
+          '<div class="builds-mobile-card-placeholder" hidden><i class="ti ' + escapeBuildText(build.icon) + '" aria-hidden="true"></i><span>' + escapeBuildText(build.name) + '</span></div>' +
+        '</div>' +
+        '<div class="builds-mobile-card-copy">' +
+          '<div class="builds-mobile-card-meta">' +
+            '<span class="builds-mobile-card-category">' + escapeBuildText(build.category) + '</span>' +
+            '<span class="builds-mobile-card-status">' + (build.liveUrl ? 'live build' : 'source only') + '</span>' +
+          '</div>' +
+          '<h2 class="builds-mobile-card-title">' + escapeBuildText(build.name) + '</h2>' +
+          '<p class="builds-mobile-card-desc">' + escapeBuildText(build.oneLiner || build.desc) + '</p>' +
+          '<div class="builds-mobile-card-actions' + (hasSource ? '' : ' single') + '">' +
+            '<button type="button" class="builds-mobile-action">' + (build.liveUrl ? 'open live build →' : 'view source →') + '</button>' +
+            (hasSource ? '<button type="button" class="builds-mobile-action secondary">github ↗</button>' : '') +
+          '</div>' +
+        '</div>';
+
+      var image = article.querySelector('.builds-mobile-card-image');
+      var placeholder = article.querySelector('.builds-mobile-card-placeholder');
+      if (image) {
+        image.addEventListener('error', function() {
+          image.hidden = true;
+          if (placeholder) placeholder.hidden = false;
+        });
+      }
+
+      var primary = article.querySelector('.builds-mobile-action:not(.secondary)');
+      var source = article.querySelector('.builds-mobile-action.secondary');
+      if (primary) {
+        primary.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openBuildTarget(build, false);
+        });
+      }
+      if (source) {
+        source.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openBuildTarget(build, true);
+        });
+      }
+      feed.appendChild(article);
+    });
+  }
+
   function renderBuildTileHTML(b, index) {
     var isSelected = (b.name === selectedBuildName) ? ' selected' : '';
     return '<button class="build-tile' + isSelected + '" data-build="' + escapeBuildText(b.name) +
@@ -13578,6 +16130,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 
   function initAppInteractivity() {
     renderBuildsGrid();
+    renderBuildsMobileFeed();
 
     document.querySelectorAll('.launcher-row[data-app]').forEach(function(row) {
       row.addEventListener('click', function(e) {
@@ -13829,6 +16382,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     sizeAboutWindow();
     sizeXpWindow();
     selectProject("Vesti Mobile", false);
+    renderMobileProjectFeed();
+    syncWorkMobileFilter();
     selectBuild("silk loop", false);
 
     initAppInteractivity();
@@ -13838,6 +16393,10 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 
 
     initPhotoViewer();
+    syncMobileChrome();
+    if(isPhoneOS()){
+      if(startBtn)startBtn.setAttribute('aria-label','Open apps menu');
+    }
     setTimeout(function(){
       var b=document.getElementById('boot');b.classList.add('done');
       setTimeout(function(){
@@ -13845,7 +16404,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
         var wp = document.getElementById('widget-column');
         if (wp) wp.classList.add('show');
       },500);
-      openWin('welcome',null,true);
+      if(window.innerWidth>767)openWin('welcome',null,true);
     }, window.innerWidth <= 767 ? 900 : 1250);
   }
 
