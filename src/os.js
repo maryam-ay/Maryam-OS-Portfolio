@@ -178,8 +178,21 @@
     return {x:r.left+r.width/2,y:r.top+r.height/2};
   }
   function fadeIn(win){
+    // The class is what holds the window at opacity 0 for the length of the
+    // animation, and 'animationend' is what takes it off again. If that event
+    // never arrives — a background tab, a throttled frame loop, reduced-motion
+    // quirks — the window stays invisible. Clear it on a timer as well; both
+    // paths are idempotent.
+    var cleared=false;
+    function clear(){
+      if(cleared)return;cleared=true;
+      win.classList.remove('gfade');
+      win.removeEventListener('animationend',onEnd);
+    }
+    function onEnd(){clear();}
     win.classList.add('gfade');
-    win.addEventListener('animationend',function h(){win.classList.remove('gfade');win.removeEventListener('animationend',h);});
+    win.addEventListener('animationend',onEnd);
+    setTimeout(clear,400);
   }
 
   var Genie=(function(){
@@ -187,7 +200,11 @@
     var texCache={}, pendingWarm={}, current=null, res={w:0,h:0}, lastC2F=null;
     var STATIC_IDS=['welcome','work','builds','about','xp','contact','app-empty-state','app-png-to-svg','app-ng-logos'];
     function idle(fn){
-      if(window.requestIdleCallback)requestIdleCallback(fn,{timeout:800});
+      // A hover gives roughly 200-300ms of warning before the click lands, and a
+      // capture is about 60ms, so the deadline has to sit inside that window.
+      // At 800ms the work frequently had not started when the click arrived and
+      // the open fell back to a fade.
+      if(window.requestIdleCallback)requestIdleCallback(fn,{timeout:250});
       else setTimeout(fn,1);
     }
     var VS=[
@@ -249,7 +266,10 @@
       idle(function(){ensureHtml2Canvas(function(){});});
     }
     function canGenie(){return !reduced() && glOK;}
-    function ready(id){return canGenie() && !!texCache[id];}
+    // A stale texture is a screenshot of how the window used to look. Playing it
+    // is what makes the genie 'glitch': the frame that flies in is not the frame
+    // that lands. Staleness therefore counts as not ready.
+    function ready(id){var t=texCache[id];return canGenie() && !!t && !t._stale;}
     function easeInCubic(x){return x*x*x;}
     function uploadTex(src){
       var t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
@@ -342,7 +362,10 @@
         var btnC=(getComputedStyle(win).getPropertyValue('--btn')||'').trim()||'#f7dde4';
         var roseC=(getComputedStyle(win).getPropertyValue('--rose')||'').trim()||'#c44d72';
         try{
-          html2canvas(win,{backgroundColor:null,scale:dpr,logging:false,onclone:function(doc){
+          // The texture is only ever shown mid-warp for about half a second, so a
+          // full-DPR raster is wasted work — at 2x a maximized window is a
+          // 2880x1800 canvas, which is most of what made the first open slow.
+          html2canvas(win,{backgroundColor:null,scale:Math.min(dpr,1.25),logging:false,onclone:function(doc){
             var el=doc.getElementById(win.id);if(!el)return;
             el.classList.remove('genie-prep','inactive');
             el.style.display='flex';el.style.visibility='visible';el.style.opacity='1';el.style.animation='none';el.style.boxShadow='none';
@@ -443,7 +466,9 @@
     }
     function finalizeCurrent(){if(current&&current.finish)current.finish();}
     function play(win,ic,dir,done,clickTs){
-      if(!ready(win.id)||!ic){if(!texCache[win.id])warm(win);if(done)done();return false;}
+      // warm() no-ops when the texture is already fresh, so this also covers the
+      // stale case that ready() now rejects.
+      if(!ready(win.id)||!ic){warm(win);if(done)done();return false;}
       finalizeCurrent();
       var rect=win.getBoundingClientRect();
       if(rect.width<2||rect.height<2){if(done)done();return false;}
@@ -456,7 +481,10 @@
       var perp=[-ay,ax];
       sizeCanvas();canvas.classList.add('on');bindOnce();
       gl.uniform1f(u.spring,dir==='in'?1.0:0.0);
-      var t0=performance.now(),dur=500,FADE=34,total=dur+FADE,self={},first=true;
+      // genie-prep keeps the real window at opacity 0 for the whole of dur, so this
+      // number is exactly how long the click feels dead before anything appears.
+      // 500ms was long enough to read as lag; 340ms still reads as a genie.
+      var t0=performance.now(),dur=340,FADE=34,total=dur+FADE,self={},first=true;
       function step(now){
         if(first){first=false;if(clickTs!=null)lastC2F=now-clickTs;}
         var t=now-t0;
@@ -478,11 +506,16 @@
       self.done2=false;
       self.finish=function(){
         if(self.done2)return;self.done2=true;
+        if(self.guard){clearTimeout(self.guard);self.guard=null;}
         if(self.raf)cancelAnimationFrame(self.raf);
         if(done)done();win.style.pointerEvents='';
         gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);canvas.classList.remove('on');
         if(current===self)current=null;
       };
+      // Wall-clock failsafe. Everything above is driven by requestAnimationFrame,
+      // which stops in a background tab and can be throttled anywhere. Without
+      // this, finish() never runs and the window is left invisible for good.
+      self.guard=setTimeout(function(){self.finish();},total+400);
       current=self;self.raf=requestAnimationFrame(step);return true;
     }
     return {init:init, preload:preload, canGenie:canGenie, ready:ready, play:play, warm:warm, prepare:prepare, warmAll:warmAll, warmOpen:warmOpen, invalidate:invalidate, invalidateAll:invalidateAll, clickToFrame:function(){return lastC2F;}};
@@ -1055,24 +1088,14 @@
       win.classList.add('open');fadeIn(win);setActive(win);syncMaxed();return;
     }
     if(!Genie.ready(id)){
-      // The first open used to fall back to a fade while its texture warmed in
-      // the background. That made the reverse genie work on close but skipped
-      // the more important launch motion. Lay the window out invisibly, capture
-      // it once, then pull it from the clicked icon. Only this one window is
-      // prepared, so lazy media in the rest of the portfolio stays untouched.
-      var firstAnchor=anchorCenter(origin);
-      win.classList.add('open','genie-prep');setActive(win);syncMaxed();
-      if(win._genieOpening)return;
-      win._genieOpening=true;
-      Genie.prepare(win,function(ok){
-        win._genieOpening=false;
-        if(!win.classList.contains('open'))return;
-        if(ok){
-          Genie.play(win,firstAnchor,'in',function(){win.classList.remove('genie-prep');},clickTs);
-        }else{
-          win.classList.remove('genie-prep');fadeIn(win);
-        }
-      });
+      // Never hold a window back for its screenshot. html2canvas over a
+      // maximized window costs seconds, and laying the window out invisibly for
+      // the whole of it is why a click looked like nothing had happened. Show it
+      // straight away and warm the texture in the background instead: the genie
+      // then plays on the next open, and because the desktop icons warm on
+      // hover that is usually the first open the visitor actually sees.
+      win.classList.add('open');fadeIn(win);setActive(win);syncMaxed();
+      Genie.warm(win);
       return;
     }
     win.classList.add('open');setActive(win);syncMaxed();
@@ -1143,6 +1166,19 @@
   }
 
   document.querySelectorAll('[data-open]').forEach(function(el){
+    // Warm the genie texture on hover. A visitor points at an icon well before
+    // they click it, so the expensive html2canvas pass happens during that gap
+    // rather than after the click. warm() is idle-scheduled and no-ops when the
+    // texture is already fresh, so repeated hovers cost nothing. Only the window
+    // actually being reached for is captured, which is what keeps the rest of
+    // the portfolio's lazy media from being pulled down speculatively.
+    var target=el.getAttribute('data-open');
+    function preWarm(){
+      if(window.innerWidth<=767)return;
+      if(window.Genie&&Genie.warm)Genie.warm(target);
+    }
+    el.addEventListener('pointerenter',preWarm,{passive:true});
+    el.addEventListener('focus',preWarm);
     el.addEventListener('click',function(){
       if(el.classList.contains('pdi')&&!reducedMotion()){
         el.classList.add('squish');setTimeout(function(){el.classList.remove('squish');},150);
@@ -3957,6 +3993,12 @@
   // their lazy media to download before the user opens them.
   window.addEventListener('load',function(){
     Genie.invalidateAll();
+    // Then warm them again straight away, while the browser is idle and the
+    // page is already interactive. Nothing warmed at boot before, so the very
+    // first window a visitor opened had no texture and fell back to a fade —
+    // which is what made the genie look like it "kicks in later". Desktop only:
+    // the phone layout uses playPhoneWindow and never touches a genie texture.
+    if(window.innerWidth>767 && Genie.warmAll)Genie.warmAll();
   });
 
   // Wallpaper Picker Logic
