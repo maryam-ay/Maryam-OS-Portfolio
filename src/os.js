@@ -4144,9 +4144,20 @@
     var nextBtn = document.getElementById('cass-next');
     var listEl  = document.getElementById('cass-list');
 
-    // --- Playlist: paste each song's YouTube video ID into `yt`.
-    //     The ID is the "v=XXXXXXXXXXX" part of a youtube.com/watch?v=... link,
-    //     or the last segment of a youtu.be/XXXXXXXXXXX link. Update title/artist too.
+    // Paste whatever YouTube hands you — a watch URL, a youtu.be short link, an
+    // embed URL, or the bare 11-character ID. Anything unrecognised returns ''
+    // and the track is simply treated as empty rather than half-loading.
+    function ytId(v){
+      v = String(v || '').trim();
+      if (!v) return '';
+      if (/^[A-Za-z0-9_-]{11}$/.test(v)) return v;
+      var m = v.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+      return m ? m[1] : '';
+    }
+    // --- Playlist. Paste the whole YouTube link into `yt` — watch URL, youtu.be
+    //     short link, /shorts/, /embed/, or the bare 11-character ID all work.
+    //     Set title and artist to the real song names; they are what visitors
+    //     see, since the video itself never appears.
     var tracks = [
       { title: 'track one',   artist: 'maryam’s pick', yt: '' },
       { title: 'track two',   artist: 'maryam’s pick', yt: '' },
@@ -4160,7 +4171,7 @@
 
     function fmt(t){ if(!isFinite(t)||t<0) t=0; var m=Math.floor(t/60), s=Math.floor(t%60); return m+':'+(s<10?'0':'')+s; }
     function setSeekUI(pct){ pct = Math.max(0, Math.min(100, pct||0)); seekFill.style.width = pct + '%'; seekKnob.style.left = pct + '%'; seek.setAttribute('aria-valuenow', Math.round(pct)); }
-    function hasTrack(){ return !!(tracks[current] && tracks[current].yt); }
+    function hasTrack(){ return !!(tracks[current] && ytId(tracks[current].yt) && !tracks[current]._dead); }
     function dur(){ return (player && player.getDuration) ? (player.getDuration() || 0) : 0; }
 
     function renderList(){
@@ -4206,7 +4217,7 @@
       stripEl.textContent = 'maryam’s mixtape ♡';
       updateMeta();
       curEl.textContent = '0:00'; durEl.textContent = '0:00'; setSeekUI(0);
-      var id = tracks[current].yt;
+      var id = ytId(tracks[current].yt);
       if (!id){ stopPoll(); setPlaying(false); if (player && player.stopVideo) player.stopVideo(); return; }
       if (!apiReady || !player) return; // will start once the API is ready / a control is used
       if (autoplay) player.loadVideoById(id); else player.cueVideoById(id);
@@ -4218,7 +4229,7 @@
       var st = player.getPlayerState ? player.getPlayerState() : -1;
       if (st === 1) player.pauseVideo();            // playing -> pause
       else if (st === 2) player.playVideo();        // paused -> resume
-      else player.loadVideoById(tracks[current].yt); // unstarted / cued / ended -> play
+      else player.loadVideoById(ytId(tracks[current].yt)); // unstarted / cued / ended -> play
     });
     prevBtn.addEventListener('click', function(){
       if (player && player.getCurrentTime && player.getCurrentTime() > 3){ player.seekTo(0, true); return; }
@@ -4254,6 +4265,27 @@
       else if (e.data === 2){ setPlaying(false); }                                // paused
       else if (e.data === 0){ setPlaying(false); stopPoll(); selectTrack(current+1, true); } // ended -> next
     }
+    // A hardcoded playlist of YouTube IDs rots: videos get removed, region
+    // locked, or have embedding switched off by the uploader. Without this the
+    // player just sits there looking broken. Mark the track dead, say so, and
+    // move on — but stop if every track has failed, rather than spinning.
+    function onError(){
+      var t = tracks[current];
+      if (t) t._dead = true;
+      stopPoll(); setPlaying(false);
+      if (tracks.every(function(x){ return x._dead || !ytId(x.yt); })){
+        stripEl.textContent = 'mixtape unavailable ♡';
+        updateMeta();
+        return;
+      }
+      stripEl.textContent = 'skipping unavailable track…';
+      var next = current;
+      for (var i = 1; i <= tracks.length; i++){
+        var j = (current + i) % tracks.length;
+        if (!tracks[j]._dead && ytId(tracks[j].yt)){ next = j; break; }
+      }
+      selectTrack(next, true);
+    }
     function buildPlayer(){
       player = new YT.Player('cass-yt', {
         height: '200', width: '200',
@@ -4261,12 +4293,13 @@
         events: {
           onReady: function(){
             apiReady = true;
-            var id = tracks[current].yt;
+            var id = ytId(tracks[current].yt);
             if (!id) return;
             if (pendingPlay){ pendingPlay = false; player.loadVideoById(id); }
             else player.cueVideoById(id);
           },
-          onStateChange: onState
+          onStateChange: onState,
+          onError: onError
         }
       });
     }
