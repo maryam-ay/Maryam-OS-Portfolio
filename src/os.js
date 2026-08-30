@@ -4332,26 +4332,33 @@
 
     // Have a player ready before anyone reaches for play.
     //
-    // The press used to be what started the download, so the actual play call
-    // came from onReady several hundred milliseconds later — outside the click
-    // that caused it. A user gesture only authorises playback for a few seconds,
-    // so on a slow connection that deferred call was refused and the visitor had
-    // to press a second time, which worked only because the player existed by
-    // then and the call ran inside the tap. Warming early means the press that
-    // matters finds a player already there. The pendingPlay path below is kept
-    // as the fallback for anyone who still gets there first.
-    (function warmPlayerEarly(){
-      var EVENTS = ['pointerdown', 'keydown', 'touchstart'];
-      function warmOnce(){
-        EVENTS.forEach(function(e){ window.removeEventListener(e, warmOnce, true); });
-        // Idle-scheduled: someone who never engages should not pay for this, and
-        // someone who does has long since stopped looking at the music widget.
-        if (window.requestIdleCallback) requestIdleCallback(function(){ loadAPI(); }, { timeout: 1200 });
-        else setTimeout(loadAPI, 1);
+    // The press used to be what started the download, so the play call came from
+    // onReady long afterwards — outside the click that caused it. A gesture only
+    // authorises playback for a few seconds, and iOS is stricter still, wanting
+    // the call in the same task as the tap. So the deferred call was refused and
+    // the visitor pressed again, which worked only because the player existed by
+    // then and the second call ran inside the tap.
+    //
+    // This deliberately does not wait for a first interaction. Measured on live,
+    // the player needs about 2.6s from request to ready, while a tap's click
+    // lands roughly 100ms after it begins. Someone whose first act is pressing
+    // play — the widget sits on the home screen, so that is the obvious thing to
+    // do — could never win that race. Warming has to finish before the first
+    // tap, which means starting it without one.
+    //
+    // The cost is the YouTube player loading for every visitor, including those
+    // who never play anything. It is deferred to idle time after the page has
+    // settled so it competes with nothing, and only the player shell and the
+    // cued track's metadata load here — no audio is fetched until a real press.
+    (function warmPlayerOnLoad(){
+      function warmWhenIdle(){
+        if (window.requestIdleCallback) requestIdleCallback(function(){ loadAPI(); }, { timeout: 3000 });
+        else setTimeout(loadAPI, 600);
       }
-      EVENTS.forEach(function(e){ window.addEventListener(e, warmOnce, { passive: true, capture: true }); });
-      // Reaching for the widget itself is the strongest signal there is, so it
-      // skips the idle queue entirely.
+      if (document.readyState === 'complete') warmWhenIdle();
+      else window.addEventListener('load', warmWhenIdle, { once: true });
+      // A pointer arriving over the widget skips the idle queue, in case the
+      // page is still busy when someone goes straight for the music.
       widget.addEventListener('pointerenter', function(){ loadAPI(); }, { passive: true });
     })();
 
