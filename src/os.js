@@ -4321,4 +4321,80 @@
     updateMeta();
   })();
 
+  // ===== Widget column placement =====
+  // The desktop floats the widgets in a rail on the right. A phone has no room
+  // for a rail, so the same nodes move into the icon grid and become the last
+  // row of the home screen, scrolling with the icons instead of covering them.
+  // The nodes are moved rather than duplicated: every widget is wired up by
+  // getElementById, so a second copy would render but be dead.
+  (function initWidgetPlacement(){
+    var col   = document.getElementById('widget-column');
+    var icons = document.getElementById('icons');
+    var desk  = document.getElementById('desktop');
+    if(!col || !icons || !desk) return;
+
+    // Reparent the YouTube iframe to the body first. Moving an iframe within
+    // the DOM reloads it, so leaving it inside the column would cut the music
+    // off every time the phone is rotated across the breakpoint. It is fixed
+    // and offscreen, so the body is as good a home as any.
+    var yt = document.getElementById('cass-yt-wrap');
+    if(yt && yt.parentNode !== document.body) document.body.appendChild(yt);
+
+    // On a phone the board is not shown on the home screen at all. A teaser card
+    // takes its place and opens #game, and the board itself is moved in there.
+    var match    = document.getElementById('match-widget');
+    var gameBody = document.getElementById('game-body');
+    var gameWin  = document.getElementById('game');
+
+    // Where each node sits on the desktop, so both can be put back exactly.
+    var deskAnchor  = col.nextSibling;
+    var matchAnchor = match ? match.nextSibling : null;
+    var onPhone = null;
+
+    // Rotating a phone into landscape crosses 767px, which pulls the board back
+    // into the rail. A game window left open would then be an empty frame, so it
+    // is closed on the way past. closeWin is deliberately not used here: it
+    // plays a click and runs a genie animation, and neither belongs in a layout
+    // change the visitor did not ask for. This mirrors its bookkeeping instead.
+    function closeGameSilently(){
+      if(!gameWin || !gameWin.classList.contains('open')) return;
+      gameWin.classList.remove('open','min','genie-prep');
+      openOrder = openOrder.filter(function(x){ return x !== gameWin.id; });
+      var last = openOrder[openOrder.length - 1];
+      setActive(last ? document.getElementById(last) : null);
+      syncMaxed();
+    }
+
+    // A media query listener, not a resize handler: it fires once when the
+    // breakpoint is actually crossed rather than on every pixel of a drag, and
+    // it reads the same 767px boundary the stylesheet uses, so the layout and
+    // the DOM can never disagree about which mode is in effect.
+    var phoneMQ = window.matchMedia('(max-width: 767px)');
+
+    function place(){
+      var phone = phoneMQ.matches;
+      // Reparenting restarts the widgets' CSS transitions, so only move the
+      // node when the side of the breakpoint has genuinely changed.
+      if(phone === onPhone) return;
+      onPhone = phone;
+      if(phone){
+        icons.appendChild(col);
+        if(match && gameBody) gameBody.appendChild(match);
+      }else{
+        desk.insertBefore(col, deskAnchor);
+        if(match && gameBody) col.insertBefore(match, matchAnchor);
+        closeGameSilently();
+      }
+    }
+
+    place();
+    if(phoneMQ.addEventListener) phoneMQ.addEventListener('change', place);
+    else if(phoneMQ.addListener) phoneMQ.addListener(place); // Safari < 14
+    // Belt and braces. If either signal is missed the column is stranded in the
+    // wrong parent and lands offscreen, and the guard above makes the duplicate
+    // calls free, so it is worth listening to both.
+    window.addEventListener('resize', place);
+    window.addEventListener('orientationchange', place);
+  })();
+
 })();

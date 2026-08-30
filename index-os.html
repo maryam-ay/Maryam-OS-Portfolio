@@ -49,8 +49,8 @@
 
 <div id="desktop">
   <div id="widget-column" aria-label="Desktop Widgets">
-    <!-- Wallpaper Picker Widget -->
-    <div class="widget-card">
+    <!-- Wallpaper Picker Widget (desktop only; hidden at the phone breakpoint) -->
+    <div class="widget-card" id="wallpaper-widget">
       <div class="widget-head"><span class="wh-title"><i class="ti ti-palette"></i> wallpaper ✦</span></div>
       <div class="widget-body" style="flex-direction:row; align-items:center; justify-content:space-between; padding:10px 12px;">
         <button class="wall-swatch active" data-wall="pink" style="background:#faf5f7;" aria-label="Pink wallpaper"></button>
@@ -115,6 +115,17 @@
         <!-- Playlist (rows injected by JS) -->
         <div class="cass-list" id="cass-list" role="listbox" aria-label="Playlist"></div>
         <div id="cass-yt-wrap" aria-hidden="true"><div id="cass-yt"></div></div>
+      </div>
+    </div>
+
+    <!-- Match Game Teaser. Phone only. The board itself is moved into #game at
+         that breakpoint, so the home screen shows an invitation, not a grid. -->
+    <div class="widget-card" id="game-teaser">
+      <div class="widget-head"><span class="wh-title"><i class="ti ti-device-gamepad"></i> match ♡</span></div>
+      <div class="widget-body">
+        <p class="gt-title">fancy a quick game?</p>
+        <p class="gt-note">flip the cards, find all six pairs.</p>
+        <button class="pout gt-play" type="button" data-open="game">play match ♡</button>
       </div>
     </div>
   </div>
@@ -7442,6 +7453,17 @@
       })();
     </script>
 
+  </section>
+
+  <!-- Match game window. Phone only: on the desktop the board stays playable in
+       the widget rail, and os.js moves #match-widget in here at the phone
+       breakpoint rather than duplicating it, since it is wired up by id. -->
+  <section class="window pout" id="game" style="top:60px;left:220px;width:min(420px, calc(100vw - 40px))">
+    <div class="tbar"><span class="tt"><i class="ti ti-device-gamepad" aria-hidden="true"></i>match ♡</span>
+      <span class="tctl"><button class="pout mn" aria-label="Minimize"><i class="ti ti-minus"></i></button><button class="pout mx" aria-label="Maximize"><i class="ti ti-square"></i></button><button class="pout cl" aria-label="Close"><i class="ti ti-x"></i></button></span></div>
+    <div class="wpad wbody" id="game-body">
+      <p class="game-intro">tap a card to flip it, then find its twin.</p>
+    </div>
   </section>
 
 </div>

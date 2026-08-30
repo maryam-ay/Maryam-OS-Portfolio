@@ -814,6 +814,68 @@ body.dark .rail-group-title {
   flex-direction: column;
   gap: 9px;
 }
+
+/* Match teaser — the phone's stand-in for the playable board, which moves into
+   the #game window at that breakpoint. Hidden by default: the desktop rail has
+   room for the real thing, so the invitation would only be in the way there. */
+#game-teaser {
+  display: none;
+}
+#game-teaser .widget-body {
+  gap: 6px;
+}
+.gt-title {
+  margin: 0;
+  color: var(--rose-dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.15;
+}
+.gt-note {
+  margin: 0;
+  color: var(--ink-soft);
+  font: 11px/1.45 Tahoma, Verdana, sans-serif;
+}
+.gt-play {
+  margin-top: 4px;
+  padding: 12px 14px;
+  background: var(--rose);
+  color: #fff;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: bold;
+}
+.gt-play:hover {
+  background: var(--rose-dark);
+}
+
+/* Match game window. Only ever populated on a phone, where #match-widget is
+   moved in. The card's own chrome is dropped so the board sits in the window
+   directly rather than reading as a widget floating inside another frame. */
+.game-intro {
+  margin: 0 0 14px;
+  color: var(--ink-soft);
+  font: 11px/1.45 Tahoma, Verdana, sans-serif;
+  text-align: center;
+}
+#game #match-widget {
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+/* The title bar already says "match", so the card's heading would repeat it.
+   The move counter sitting beside it is worth keeping. */
+#game #match-widget .wh-title {
+  display: none;
+}
+#game #match-widget .widget-head {
+  justify-content: flex-end;
+  background: none;
+  border-bottom: 0;
+}
+
 @media (max-width: 1024px) {
   #widget-column {
     transform: scale(0.9) translateY(-10px);
@@ -823,10 +885,103 @@ body.dark .rail-group-title {
     transform: scale(0.9) translateY(0);
   }
 }
+/* On a phone the widget column stops being a floating rail. os.js moves the
+   node into the icon grid so the home screen scrolls as one surface, and these
+   rules undo the absolute positioning the rail needs on the desktop. */
 @media (max-width: 767px) {
   #widget-column {
-    display: none !important;
+    position: static;
+    grid-column: 1 / -1;
+    /* An explicit width is needed because the auto side margins that centre the
+       column would otherwise shrink-wrap it to its widest child. */
+    width: 100%;
+    max-width: 420px;
+    margin: 6px auto 0;
+    padding: 0;
+    overflow: visible;
+    gap: 12px;
+    /* The 1024px breakpoint shrinks the rail to fit beside a window. There is
+       no rail to fit here, so the scale is dropped and only the fade remains. */
+    transform: translateY(-10px);
+    transform-origin: center top;
   }
+  #widget-column.show {
+    transform: translateY(0);
+  }
+  /* The wallpaper picker stays a desktop affordance. The phone already carries
+     the light/dark toggle in the more sheet, and the home screen has no room to
+     spare now that the cassette leads it. */
+  #wallpaper-widget {
+    display: none;
+  }
+  #game-teaser {
+    display: block;
+  }
+
+  /* The board is capped at 196px on the desktop because the rail is only 252px
+     wide. A full-screen window gives it far more room than the rail ever had,
+     so the cards grow into real tap targets. Both selectors need !important to
+     beat the max-width set inline on the element. */
+  #match-grid {
+    max-width: 296px !important;
+  }
+  #game #match-grid {
+    max-width: 340px !important;
+  }
+
+  /* Everything below was sized for a mouse pointer in a narrow rail. On a phone
+     the same controls have to clear a fingertip, so the transport, the scrubber
+     and the track rows all grow.
+
+     Every selector here is deliberately scoped to #widget-column. The base
+     control rules live further down this file, and a media query adds no
+     specificity, so an unscoped `.cass-btn` here would simply lose to the
+     later one. The ID also keeps these phone sizes off any control that gets
+     reused elsewhere. */
+  #widget-column .wall-swatch {
+    width: 38px;
+    height: 38px;
+  }
+  #widget-column .cassette-widget .widget-body {
+    gap: 14px;
+  }
+  #widget-column .cass-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  #widget-column .cass-btn.play {
+    width: 48px;
+    height: 48px;
+    font-size: 21px;
+  }
+  #widget-column .cass-controls {
+    gap: 20px;
+  }
+  #widget-column .cass-seek {
+    height: 8px;
+  }
+  /* The bar stays visually thin; an overlay gives it a finger-sized hit area.
+     It reaches further up, over text, than down, where it would otherwise
+     swallow taps meant for the play button. */
+  #widget-column .cass-seek::after {
+    content: "";
+    position: absolute;
+    inset: -16px 0 -12px;
+  }
+  #widget-column .cass-seek-knob {
+    width: 16px;
+    height: 16px;
+  }
+  #widget-column .cass-song { font-size: 13px; }
+  #widget-column .cass-artist { font-size: 11px; }
+  #widget-column .cass-list { gap: 3px; }
+  #widget-column .cass-track {
+    gap: 9px;
+    padding: 9px 8px;
+    font-size: 12px;
+  }
+  #widget-column .cass-track .t-num { font-size: 11px; }
 }
 
 /* Wallpaper Swatches */
