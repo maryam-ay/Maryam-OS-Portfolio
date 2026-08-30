@@ -938,12 +938,8 @@ body.dark .rail-group-title {
      specificity, so an unscoped `.cass-btn` here would simply lose to the
      later one. The ID also keeps these phone sizes off any control that gets
      reused elsewhere. */
-  #widget-column .wall-swatch {
-    width: 38px;
-    height: 38px;
-  }
   #widget-column .cassette-widget .widget-body {
-    gap: 14px;
+    gap: 10px;
   }
   #widget-column .cass-btn {
     width: 40px;
@@ -962,12 +958,12 @@ body.dark .rail-group-title {
     height: 8px;
   }
   /* The bar stays visually thin; an overlay gives it a finger-sized hit area.
-     It reaches further up, over text, than down, where it would otherwise
-     swallow taps meant for the play button. */
+     It reaches up over text rather than down, where the tighter gap below would
+     otherwise let it swallow taps meant for the play button. */
   #widget-column .cass-seek::after {
     content: "";
     position: absolute;
-    inset: -16px 0 -12px;
+    inset: -20px 0 -8px;
   }
   #widget-column .cass-seek-knob {
     width: 16px;
@@ -975,13 +971,28 @@ body.dark .rail-group-title {
   }
   #widget-column .cass-song { font-size: 13px; }
   #widget-column .cass-artist { font-size: 11px; }
-  #widget-column .cass-list { gap: 3px; }
-  #widget-column .cass-track {
-    gap: 9px;
-    padding: 9px 8px;
-    font-size: 12px;
+
+  /* applyMobileTypeFloor lifts any text under 12px on a phone, which catches
+     the tape label at its 9.5px base. The shell is a fixed-height flex column,
+     so the taller label was being squeezed and clipped by its own overflow
+     rather than given room. It needs both: a strip that refuses to shrink and a
+     shell tall enough to hold it. */
+  #widget-column .cassette-shell {
+    height: 74px;
   }
-  #widget-column .cass-track .t-num { font-size: 11px; }
+  #widget-column .cass-strip {
+    flex: 0 0 auto;
+    line-height: 1.35;
+  }
+
+  /* The track list ran to 172px of a 435px widget — 40% of it — which the home
+     screen cannot spare. The header's "1 / 5" still says how many tracks there
+     are and prev/next steps through them, which is how a cassette works anyway.
+     The rows stay in the DOM and keep rendering, so the desktop rail, which has
+     the room for them, is untouched. */
+  #cass-list {
+    display: none;
+  }
 }
 
 /* Wallpaper Swatches */
