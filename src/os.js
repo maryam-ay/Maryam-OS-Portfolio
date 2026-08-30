@@ -4229,9 +4229,16 @@
       if (!hasTrack()) return;
       if (!apiReady || !player){ pendingPlay = true; loadAPI(); return; }
       var st = player.getPlayerState ? player.getPlayerState() : -1;
-      if (st === 1) player.pauseVideo();            // playing -> pause
-      else if (st === 2) player.playVideo();        // paused -> resume
-      else player.loadVideoById(ytId(tracks[current].yt)); // unstarted / cued / ended -> play
+      var want = ytId(tracks[current].yt);
+      var loaded = '';
+      try { loaded = (player.getVideoData() || {}).video_id || ''; } catch(_){}
+      if (st === 1) player.pauseVideo();                   // playing -> pause
+      // Warming leaves the track cued, so the usual case is that the right video
+      // is already here. Play it directly: loadVideoById would fetch it again and
+      // only start once that returned, which is late enough that iOS stops
+      // counting it as part of the tap that asked for it.
+      else if (loaded && loaded === want) player.playVideo();
+      else player.loadVideoById(want);                     // a different track
     });
     prevBtn.addEventListener('click', function(){
       if (player && player.getCurrentTime && player.getCurrentTime() > 3){ player.seekTo(0, true); return; }
@@ -4305,7 +4312,13 @@
         }
       });
     }
+    // Guarded because this is now called from several places. Without it a
+    // second call would wrap onYouTubeIframeAPIReady a second time and build two
+    // players over the same element.
+    var apiRequested = false;
     function loadAPI(){
+      if (apiRequested) return;
+      apiRequested = true;
       if (window.YT && window.YT.Player){ buildPlayer(); return; }
       var prev = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = function(){ if (typeof prev === 'function') prev(); buildPlayer(); };
@@ -4316,6 +4329,31 @@
         document.head.appendChild(tag);
       }
     }
+
+    // Have a player ready before anyone reaches for play.
+    //
+    // The press used to be what started the download, so the actual play call
+    // came from onReady several hundred milliseconds later — outside the click
+    // that caused it. A user gesture only authorises playback for a few seconds,
+    // so on a slow connection that deferred call was refused and the visitor had
+    // to press a second time, which worked only because the player existed by
+    // then and the call ran inside the tap. Warming early means the press that
+    // matters finds a player already there. The pendingPlay path below is kept
+    // as the fallback for anyone who still gets there first.
+    (function warmPlayerEarly(){
+      var EVENTS = ['pointerdown', 'keydown', 'touchstart'];
+      function warmOnce(){
+        EVENTS.forEach(function(e){ window.removeEventListener(e, warmOnce, true); });
+        // Idle-scheduled: someone who never engages should not pay for this, and
+        // someone who does has long since stopped looking at the music widget.
+        if (window.requestIdleCallback) requestIdleCallback(function(){ loadAPI(); }, { timeout: 1200 });
+        else setTimeout(loadAPI, 1);
+      }
+      EVENTS.forEach(function(e){ window.addEventListener(e, warmOnce, { passive: true, capture: true }); });
+      // Reaching for the widget itself is the strongest signal there is, so it
+      // skips the idle queue entirely.
+      widget.addEventListener('pointerenter', function(){ loadAPI(); }, { passive: true });
+    })();
 
     renderList();
     updateMeta();
