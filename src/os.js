@@ -4269,7 +4269,52 @@
     });
 
     // --- YouTube IFrame Player API (hidden, audio only) ---
+
+    // Fill the buffer before anyone presses play.
+    //
+    // Cueing a track loads its metadata but no audio, so the first press spent a
+    // second or two buffering and playback began long after the tap that asked
+    // for it — measured at 1900ms. Desktop tolerates that gap. iOS does not: it
+    // wants playback to start within the gesture, so it refused, and the site
+    // needed two presses there. The second only worked because the first had
+    // filled the buffer on its way to being rejected.
+    //
+    // Muted autoplay is the one form of unprompted playback every browser
+    // allows, iOS included — it is how silent background video works. Playing
+    // muted fills the buffer; the track is then paused, rewound and unmuted,
+    // leaving it ready to start inside the press. Same measurement with this in
+    // place: 71ms.
+    var priming = false;
+    function primeBuffer(id){
+      if (!player || priming) return;
+      priming = true;
+      try { player.mute(); player.loadVideoById(id); }
+      catch(e){ priming = false; return; }
+      var tries = 0;
+      var iv = setInterval(function(){
+        tries++;
+        var frac = 0;
+        try { frac = player.getVideoLoadedFraction() || 0; } catch(_){}
+        // Give up after roughly six seconds and leave it cued as before, rather
+        // than holding a muted player open indefinitely on a bad connection.
+        if (frac <= 0.01 && tries <= 24) return;
+        clearInterval(iv);
+        try { player.pauseVideo(); } catch(_){}
+        setTimeout(function(){
+          try { player.seekTo(0, true); player.unMute(); } catch(_){}
+          setPlaying(false);
+          curEl.textContent = '0:00'; setSeekUI(0);
+          // Released a beat later so the pause and rewind above are not mistaken
+          // for the visitor doing something.
+          setTimeout(function(){ priming = false; }, 200);
+        }, 150);
+      }, 250);
+    }
+
     function onState(e){
+      // Priming drives the player itself. Those transitions are not the visitor
+      // pressing anything, so the widget must not react to them.
+      if (priming) return;
       if (e.data === 1){ setPlaying(true); startPoll(); }                         // playing
       else if (e.data === 2){ setPlaying(false); }                                // paused
       else if (e.data === 0){ setPlaying(false); stopPoll(); selectTrack(current+1, true); } // ended -> next
@@ -4305,7 +4350,11 @@
             var id = ytId(tracks[current].yt);
             if (!id) return;
             if (pendingPlay){ pendingPlay = false; player.loadVideoById(id); }
-            else player.cueVideoById(id);
+            // Warming path: prime rather than merely cue, so the track is ready
+            // to start the instant it is asked for. Only the opening track needs
+            // this — once anything has played, the player counts as user-started
+            // and later tracks begin promptly on their own.
+            else primeBuffer(id);
           },
           onStateChange: onState,
           onError: onError
