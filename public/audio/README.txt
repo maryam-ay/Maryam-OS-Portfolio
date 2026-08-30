@@ -1,26 +1,30 @@
 Cassette player — audio source
 ===============================
 
-Planned source: YouTube (to be wired up later).
+Source: YouTube. This is wired up and playing; nothing here is a placeholder.
 
-The "now playing" cassette widget in index-os.html is fully built — transport
-controls, seekable progress, spinning reels, and a 5-track playlist. It just
-needs audio hooked up. Right now the 5 tracks are placeholders (no sound).
+The "now playing" cassette widget has transport controls, a seekable progress
+bar, spinning reels and a 5-track playlist. Playback runs through the YouTube
+IFrame Player API. There is no <audio> element and no local-file path any more,
+so this folder holds no audio — it is kept only for this note.
 
-When you're ready to do YouTube
--------------------------------
-1. Get each song's YouTube video ID (the v=XXXXXXXXXXX part of the URL).
-2. Put the IDs into the `tracks` array in index-os.html
-   (search for "Playlist: 5 songs").
-3. The playback engine then swaps from the <audio> element to the YouTube
-   IFrame Player API — the existing controls/progress/playlist UI are reused.
+Changing the playlist
+---------------------
+The tracks live in the `tracks` array inside initCassette() in src/os.js
+(search for "var tracks"). NOT in index-os.html — the markup moved out to
+src/os.js and src/os.css a while back.
 
-Local-file fallback (optional)
-------------------------------
-If you'd rather host files instead of using YouTube, drop track1.mp3 ...
-track5.mp3 into this folder and set each track's `src` to
-"audio/track1.mp3" etc. — the cassette will play them inline with no other
-changes.
+Paste the whole YouTube link into `yt`; a watch URL, a youtu.be short link,
+/shorts/, /embed/ or the bare 11-character ID all work. Set `title` and
+`artist` to the real song names, because the video itself is never shown and
+those two fields are all a visitor sees.
 
-Either way, update the `title` / `artist` fields in that same array to show
-the real song names.
+Two things to know
+------------------
+1. An album or playlist link has no video ID in it, so it will not play. Open
+   the album and take the link to the single track you want.
+
+2. Not every video allows embedding, and permission can vary by country.
+   A blocked track is skipped automatically and the widget only says
+   "mixtape unavailable" if every track fails. Worth checking a new link
+   actually plays rather than assuming.

@@ -4158,12 +4158,14 @@
     //     short link, /shorts/, /embed/, or the bare 11-character ID all work.
     //     Set title and artist to the real song names; they are what visitors
     //     see, since the video itself never appears.
+    //     'SpaceFuji' arrived as an album playlist link; that album holds this
+    //     one track, so it is stored as the track itself rather than a list.
     var tracks = [
-      { title: 'track one',   artist: 'maryam’s pick', yt: '' },
-      { title: 'track two',   artist: 'maryam’s pick', yt: '' },
-      { title: 'track three', artist: 'maryam’s pick', yt: '' },
-      { title: 'track four',  artist: 'maryam’s pick', yt: '' },
-      { title: 'track five',  artist: 'maryam’s pick', yt: '' }
+      { title: 'Dangerous',        artist: 'Ayra Starr',      yt: 'qYiKAV7SKjU' },
+      { title: 'A Million Things', artist: 'taves',           yt: 'Jk4vaA85DAY' },
+      { title: 'SpaceFuji',        artist: 'Bloody Civilian', yt: '685mVo_cWio' },
+      { title: 'Earrings',         artist: 'Malcolm Todd',    yt: 'BI9HQCzpDgQ' },
+      { title: 'Crack Baby',       artist: 'Mitski',          yt: 'edEO9Ldb_VQ' }
     ];
 
     var current = 0, seeking = false, dragPct = 0;
