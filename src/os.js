@@ -587,7 +587,8 @@
     "Compass": {
       title: "Compass",
       kind: "case",
-      tag: "case study",
+      status: "coming-soon",
+      tag: "case study · coming soon",
       desc: "a campus super-app for nigerian universities. wallet, fees, grades and exeat requests in one place, with the guardian designed in as a full user instead of an afterthought.",
       meta: "product design · case study",
       outcome: "connected student, guardian and school workflows in one coherent product.",
@@ -598,7 +599,8 @@
     "Baby Steps": {
       title: "Baby Steps",
       kind: "case",
-      tag: "case study",
+      status: "coming-soon",
+      tag: "case study · coming soon",
       desc: "a pregnancy companion for tracking and managing a pregnancy from conception to due date, with antenatal booking, an in-app pharmacy and virtual therapy built in.",
       meta: "solo ux/ui design · case study",
       outcome: "turned seven survey pain points into five features that keep pregnant women out of avoidable trips.",
@@ -2673,7 +2675,25 @@
     readingContainer.appendChild(bottomRow);
   }
 
+  // A case study opens only when there is a written study behind it and it is
+  // not being held back. This sits here rather than on the individual cards
+  // because five separate places call openProject — the work rail, the desktop
+  // icons, the phone carousel and the marquee twice — and a check on any one of
+  // them would leave the others able to walk straight past it.
+  //
+  // It also closes a hole: renderCaseStudy falls back to its own template when a
+  // name has no study, so the marquee was opening a viewer full of scaffolding —
+  // "[hook line goes here]", "[lead designer]" — for every card without one.
+  function caseStudyReady(name){
+    var data = PROJECT_DATA[name];
+    if (data && data.status === 'coming-soon') return false;
+    var key = String(name || '').toLowerCase().trim();
+    if (key === 'babysteps' || key === 'baby-steps') key = 'baby steps';
+    return !!caseStudies[key];
+  }
+
   function openProject(name,cardEl){
+    if(!caseStudyReady(name)) return;
     if(!viewer){
       viewer=document.createElement('section');viewer.className='window pout';viewer.id='viewer';
       viewer.style.cssText='top:40px;left:130px;width:1100px;height:70vh;';
