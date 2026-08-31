@@ -581,7 +581,8 @@
       img: "images/optimized/vaxtrack-1200.webp",
       imgSmall: "images/optimized/vaxtrack-640.webp",
       actions: [
-        { label: "visit live site ↗", url: "https://vaxtrack.org" }
+        { label: "visit live site ↗", url: "https://vaxtrack.org" },
+        { label: "play store ↗", url: "https://play.google.com/store/apps/details?id=org.vaxtrack" }
       ]
     },
     "Compass": {
