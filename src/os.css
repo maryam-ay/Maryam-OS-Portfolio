@@ -5335,3 +5335,93 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #mobile-nav-scrim,
   #mobile-more-sheet { transition: none !important; }
 }
+
+/* ============================================================================
+   CASE STUDY — SCREEN ROW
+
+   A plain row of phone screens with no captions, from the BabySteps design.
+   Every other block pairs a screen with text; this one deliberately does not,
+   so a flow can be read at a glance.
+
+   The screens are 3x exports (720-798px wide) shown at the designed 240px, so
+   they stay sharp on a retina display. Widths are set on the row rather than
+   the image so a row of three and a row of four both fill the measure.
+   ========================================================================== */
+
+#viewer .cs-screenrow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 24px 0;
+}
+#viewer .cs-screenrow .cs-shot {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 240px;
+  margin: 0;
+}
+#viewer .cs-screenrow .cs-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+/* A screen that fails to load leaves a framed gap rather than collapsing the
+   row and shifting every sibling. */
+#viewer .cs-screenrow .cs-shot.missing {
+  aspect-ratio: 240 / 522;
+  background: var(--btn-hi);
+  border: 1px solid var(--bev-lo);
+  border-radius: 14px;
+}
+
+/* Phones keep the reader's existing behaviour: the row becomes a swipeable
+   strip rather than four screens crushed to 70px each. */
+@media (max-width: 767px) {
+  #viewer .cs-screenrow {
+    justify-content: flex-start;
+    gap: 12px;
+    margin: 18px 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #viewer .cs-screenrow::-webkit-scrollbar { display: none; }
+  #viewer .cs-screenrow .cs-shot {
+    flex: 0 0 auto;
+    width: 176px;
+    max-width: none;
+    scroll-snap-align: center;
+  }
+}
+
+/* One exported design panel per row, at its own proportions. The reader's
+   figure frame crops to 16/9, which would cut the wide research and paper
+   panels; these carry their layout inside the image, so the image sets the
+   height and nothing is cropped. */
+#viewer .cs-panel {
+  margin: 22px 0;
+}
+#viewer .cs-panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--bev-lo);
+  border-radius: 8px;
+}
+#viewer .cs-panel .cs-caption {
+  margin-top: 9px;
+}
+
+/* The shared figure grid is a fixed three columns, which is right where three
+   screens sit side by side. BabySteps pairs two half-width research panels
+   (545px + 581px in the design), so a two-child grid here takes two columns
+   instead of leaving a third of the row empty. Scoped to this case study so the
+   others keep the three-up they were built for. */
+#viewer .case-baby-steps .cs-figs:has(> :nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* The next-steps panel is 600px in the design, not the full measure. */
+#viewer .cs-panel--narrow { max-width: 600px; }

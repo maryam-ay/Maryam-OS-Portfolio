@@ -1556,8 +1556,12 @@
         }
       ]
     },
+    // Authored from the Figma case study window (node 248:3974). Every string
+    // here is the text in that file, not the earlier draft — the copy was
+    // revised, and the screens are 3x exports living in case-studies/babysteps/.
     'baby steps': {
       title: 'BabySteps',
+      summary: 'An app that helps pregnant women track and manage their pregnancies and health from conception till due date.',
       metadata: {
         role: 'Solo UX/UI Designer',
         timeline: '2 weeks',
@@ -1572,16 +1576,16 @@
           rail: 'Starting-point',
           statement: {
             label: 'BabySteps',
-            text: 'Pregnancy comes with enough to keep track of.',
+            text: 'Pregnancy comes with more than enough to keep track of.',
             sub: 'BabySteps is a mobile concept that brings pregnancy tracking, antenatal care, medication and wellbeing support into one place.'
           },
           blocks: [
-            { type: 'progression', stages: [
-              { label: 'home', file: 'baby-steps-home-clinic.png', alt: 'BabySteps home screen showing pregnancy progress and the next appointment', phone: true },
-              { label: 'clinic', file: 'baby-steps-clinic-hub.png', alt: 'BabySteps clinic screen with upcoming appointment and booking options', phone: true },
-              { label: 'pharmacy', file: 'baby-steps-pharmacy.png', alt: 'BabySteps in-app pharmacy screen', phone: true }
-            ] },
-            { type: 'note', label: 'start with the story', content: 'Scroll on for how the idea changed once I started asking questions.' }
+            { type: 'screenrow', screens: [
+              { file: 'babysteps/01-splash.png', alt: 'BabySteps splash screen' },
+              { file: 'babysteps/11-home.png', alt: 'BabySteps home screen showing pregnancy progress and the next appointment' },
+              { file: 'babysteps/12-clinic-hub.png', alt: 'BabySteps clinic screen with the upcoming appointment and booking options' },
+              { file: 'babysteps/12a-antenatal-visit.png', alt: 'BabySteps antenatal care screen with upcoming appointments and nearby clinics' }
+            ] }
           ]
         },
         {
@@ -1593,73 +1597,34 @@
             text: 'It started with something I kept noticing.'
           },
           blocks: [
-            { type: 'text', content: 'During visits to the hospital, I kept seeing heavily pregnant women moving between waiting areas, appointments and different parts of the hospital, often already tired.' },
+            { type: 'text', content: 'During my personal visits to the hospital, I kept seeing heavily pregnant women moving between waiting areas, appointments and different parts of the hospital, often already tired.' },
             { type: 'text', content: 'It made me think about everything they still had to manage once they left: appointments, changes in the pregnancy, medication, work and their own wellbeing.' },
             { type: 'text', content: 'BabySteps started as an attempt to make some of that easier to manage from a phone.' },
-            { type: 'image', file: 'baby-steps-problem.jpg', caption: 'Where the idea came from', wide: true },
-            { type: 'cardrow', items: [
-              { icon: '✦', title: 'Keep up', text: 'Pregnancy progress, baby development, due dates and appointments were all things women had to keep track of.' },
-              { icon: '✦', title: 'Get care', text: 'Booking antenatal appointments, finding suitable medication or getting access to a physician could require more effort when someone was already tired.' },
-              { icon: '✦', title: 'Keep going', text: 'Pregnancy was happening alongside work, everyday responsibilities and mental wellbeing.' }
-            ] }
+            { type: 'image', file: 'baby-steps-problem.jpg', caption: 'Where the idea came from', wide: true }
           ]
         },
         {
           type: 'turn',
-          title: 'I thought I was designing a pregnancy tracker',
+          title: 'The initial plan was for it to simply be a pregnancy tracker',
           rail: 'What-I-learned',
           statement: {
-            band: true,
-            tone: 'rose',
             label: 'the turning point',
-            text: 'I thought I was designing a pregnancy tracker.',
-            sub: 'The women I spoke to showed me that tracking was only one part of the problem.'
+            text: 'The initial plan was for it to simply be a pregnancy tracker.',
+            sub: 'But the women I spoke to showed me that tracking was just one part of the problem.'
           },
           blocks: [
-            { type: 'text', content: 'I used a Google Forms survey to hear from mothers and pregnant women about what had made pregnancy difficult to manage and what they wished had been easier.' },
-            { type: 'text', content: 'Tracking came up, but so did antenatal appointments, pregnancy-safe medication, fatigue, work and mental wellbeing.' },
-            { type: 'text', content: 'The project was starting to become less about counting weeks and more about reducing the number of things women had to manage separately.' },
-            { type: 'insights', items: [
-              { title: 'Knowing what is happening', text: 'Keeping track of baby development, pregnancy progress and appointments could easily become another thing to remember.' },
-              { title: 'Getting care', text: 'Booking antenatal care, choosing a physician or finding suitable medication could require extra effort.' },
-              { title: 'Managing everything else', text: 'Work, fatigue and mental wellbeing did not disappear because someone was pregnant.' }
-            ] },
-            { type: 'disclosure', label: 'Dig into the research', items: [
-              { label: 'Survey', html:
-                '<p>I used a Google Forms survey targeting mothers and pregnant women to better understand what they experienced during pregnancy and what they wished had been easier.</p>' +
-                '<p class="d-sub">Recurring issues included:</p>' +
-                '<ul class="d-list">' +
-                  '<li>difficulty finding pregnancy-safe medication</li>' +
-                  '<li>difficulty booking antenatal appointments</li>' +
-                  '<li>difficulty accurately following pregnancy and baby growth</li>' +
-                  '<li>difficulty maintaining work-life balance</li>' +
-                  '<li>limited choice of physician</li>' +
-                  '<li>fatigue making hospital visits more difficult</li>' +
-                  '<li>mental wellbeing</li>' +
-                '</ul>' +
-                '<p class="d-caveat">I did not record participant numbers or a demographic breakdown at the time, so I am not going to present one.</p>' },
-              { label: 'Competitive review', html:
-                '<div class="d-two">' +
-                  '<div><strong>BabyCenter</strong>' +
-                    '<p class="d-sub">What worked</p><ul class="d-list"><li>useful pregnancy information</li><li>pregnancy tracking</li><li>lots of resources</li><li>continued information after birth</li></ul>' +
-                    '<p class="d-sub">What I noticed</p><ul class="d-list"><li>crowded interface</li><li>navigation could feel harder to move through</li><li>advertising added more visual noise</li></ul>' +
-                  '</div>' +
-                  '<div><strong>My Pregnancy</strong>' +
-                    '<p class="d-sub">What worked</p><ul class="d-list"><li>clear pregnancy tracking</li><li>useful resources</li><li>easier navigation</li><li>cleaner interface</li></ul>' +
-                    '<p class="d-sub">What I noticed</p><ul class="d-list"><li>fewer features</li><li>limited personalisation</li><li>more limited resources</li></ul>' +
-                  '</div>' +
-                '</div>' +
-                '<p class="d-take"><strong>What I took from it</strong> BabySteps needed to be useful enough to support more of the pregnancy journey without making the interface feel like another thing the user had to manage.</p>' },
-              { label: 'Persona', html:
-                '<div class="d-persona">' +
-                  '<img referrerpolicy="no-referrer" loading="lazy" decoding="async" src="images/case-studies/baby-steps-persona.jpg" alt="Illustration of Amina, the persona for BabySteps" />' +
-                  '<div>' +
-                    '<strong>Amina</strong>' +
-                    '<p class="d-facts">27 &middot; Customer Support Agent &middot; Ilorin &middot; First pregnancy</p>' +
-                    '<p>Amina is trying to keep up with work while also keeping track of her pregnancy, appointments and her baby&rsquo;s development.</p>' +
-                    '<p>Her main need is not another complicated product. She needs something that helps her stay organised without adding more effort to her day.</p>' +
-                  '</div>' +
-                '</div>' }
+            { type: 'text', content: 'I spoke to some women at the hospital and also used a Google Form survey to hear from mothers and pregnant women about what had made pregnancy difficult to manage and what they wished had been easier.' },
+            { type: 'text', content: 'Tracking definitely came up, but so did antenatal appointments, pregnancy-safe medication, fatigue, work and most especially mental wellbeing.' },
+            { type: 'text', content: 'So the project was started to become less about tracking pregnancy and more about reducing the number of things women had to manage and think about separately.' },
+            // The three research panels are exported from the design rather than
+            // rebuilt: each is a composed layout of charts, quotes and personas.
+            { type: 'image', file: 'babysteps/research-survey.png', wide: true },
+            { type: 'image', file: 'babysteps/research-themes.png', wide: true },
+            { type: 'panel', file: 'babysteps/research-personas.png', alt: 'Research personas' },
+            { type: 'cardrow', items: [
+              { icon: '✦', title: 'Keep up with dates', text: 'Pregnancy progress, baby development, due dates and appointments were all things women had to keep track of.' },
+              { icon: '✦', title: 'Get accessible care', text: 'Booking antenatal appointments, finding suitable medication or getting access to a physician could require more effort when someone was already tired.' },
+              { icon: '✦', title: 'Keep going mentally', text: 'Pregnancy was happening alongside work, everyday responsibilities and mental wellbeing.' }
             ] }
           ]
         },
@@ -1670,22 +1635,13 @@
           statement: {
             label: 'the product model',
             text: 'BabySteps needed to do three things well.',
-            sub: 'Instead of treating every pain point as a separate feature, I grouped the experience around three jobs.'
+            sub: 'Instead of treating every pain point as a separate feature, it was really important I grouped the experience around three things to enable understand better how to structure and move things around..'
           },
-          blocks: [
-            { type: 'strip', items: [
-              { name: 'Know', desc: 'Help the user understand where she is in her pregnancy and keep important information close.',
-                features: ['Pregnancy timeline', 'Due-date calculator', 'Reminders'] },
-              { name: 'Care', desc: 'Reduce the effort involved in taking the first step towards care.',
-                features: ['Clinic discovery', 'Antenatal booking', 'In-app pharmacy'] },
-              { name: 'Support', desc: 'Make space for the mental and everyday side of pregnancy too.',
-                features: ['Virtual therapy', 'Prenatal yoga'] }
-            ] }
-          ]
+          blocks: []
         },
         {
-          type: 'know',
-          title: 'Know what is happening',
+          type: 'feature',
+          title: 'Know what is happening without having to look for it',
           rail: 'Know',
           statement: {
             label: '01 know',
@@ -1694,47 +1650,46 @@
           blocks: [
             { type: 'text', content: 'A lot of pregnancy information changes over time, so BabySteps gives the user one place to return to for a quick picture of where she is.' },
             { type: 'text', content: 'The due-date calculator helps establish the pregnancy timeline, while the home experience brings pregnancy progress and important information together.' },
+            // The onboarding trio are wider stills than the phone screens, so
+            // they keep their own labels the way the design does.
+            { type: 'progression', stages: [
+              { label: 'get started', file: 'baby-steps-onboarding.png', alt: 'BabySteps onboarding screen', phone: true },
+              { label: 'create account', file: 'baby-steps-auth.png', alt: 'BabySteps account creation screen', phone: true },
+              { label: 'due date', file: 'baby-steps-due-date.png', alt: 'BabySteps due date calculator', phone: true }
+            ] },
             { type: 'cardrow', items: [
               { icon: '✦', title: 'Pregnancy progress', text: 'See where the pregnancy currently sits.' },
               { icon: '✦', title: 'Baby development', text: 'Keep growth information connected to the pregnancy timeline.' },
               { icon: '✦', title: 'What is coming next', text: 'Appointments and reminders stay within the same experience.' }
-            ] },
-            { type: 'text', content: '<strong>Setting up the pregnancy timeline.</strong> The due-date calculator gives BabySteps the information it needs to place the user within her pregnancy journey.' },
-            { type: 'progression', stages: [
-              { label: 'get started', file: 'baby-steps-onboarding.png', alt: 'BabySteps onboarding screen', phone: true },
-              { label: 'create account', file: 'baby-steps-auth.png', alt: 'BabySteps account creation screen', phone: true },
-              { label: 'due date', file: 'baby-steps-due-date.png', alt: 'BabySteps due-date calculator screen', phone: true }
             ] }
           ]
         },
         {
-          type: 'care',
-          title: 'Get care without another hospital trip',
+          type: 'feature',
+          title: 'Accessible care without having to step into the hospital',
           rail: 'Care',
           statement: {
             label: '02 care',
-            text: 'Get care without making the first step another hospital trip.'
+            text: 'Accessible care without having to step into the hospital.'
           },
           blocks: [
-            { type: 'text', content: 'Some of the problems women raised were not about information. They were about access.' },
+            { type: 'text', content: 'Some of the problems women raised were not all about information. They were about access.' },
             { type: 'text', content: 'Booking antenatal care or finding medication could mean another task outside the home when someone was already tired. BabySteps brings those first steps into the same experience.' },
-            { type: 'walkthrough', steps: [
-              { title: 'Start from the clinic tab', text: 'The next appointment sits at the top, with antenatal visits, therapy, pharmacy and yoga underneath as things you can book.', file: 'baby-steps-clinic-hub.png', alt: 'Clinic screen showing the next antenatal appointment and four things to book' },
-              { title: 'Choose the clinic and the physician', text: 'Distance, rating and opening hours sit with the clinic, and each physician shows their specialism and next available day.', file: 'baby-steps-clinic-doctors.png', alt: 'Lagos Island Maternity Hospital with three physicians and their next available days' },
-              { title: 'Pick the appointment', text: 'The booking form carries the physician you chose through to the date and time.', file: 'baby-steps-anc-booking.png', alt: 'BabySteps antenatal booking form' },
-              { title: 'Review and confirm', text: 'One review before anything is booked, then confirmation without leaving BabySteps.', file: 'baby-steps-review.png', alt: 'BabySteps booking review sheet' },
-              { title: 'Booked', text: 'The confirmed appointment returns to the same place it started, on the clinic tab and the home screen.', file: 'baby-steps-confirmed.png', alt: 'BabySteps booking confirmation screen' }
+            { type: 'screenrow', screens: [
+              { file: 'babysteps/35-clinic-doctors.png', alt: 'Clinic with its physicians and their next available days' },
+              { file: 'babysteps/14-booking-form.png', alt: 'BabySteps antenatal booking form' },
+              { file: 'babysteps/15-review-sheet.png', alt: 'BabySteps booking review sheet' },
+              { file: 'babysteps/16-confirmed.png', alt: 'BabySteps booking confirmation screen' }
             ] },
-            { type: 'text', content: '<strong>Medication was part of the access problem too.</strong> Difficulty finding pregnancy-safe medication also came up during the research, so the concept included an in-app pharmacy alongside the care experience.' },
-            { type: 'annotated', file: 'baby-steps-pharmacy.png', alt: 'BabySteps in-app pharmacy: search, category filters, medication cards with dose and price, and a basket showing delivery timing', notes: [
-              { title: 'Search by drug or symptom', text: 'Someone who only knows what they are feeling can start there instead of needing the name of a medicine.' },
-              { title: 'Dose and price on the card', text: 'Strength, tablet count and price sit together, so a decision does not need a second screen.' },
-              { title: 'Delivery, not another trip', text: 'The basket states when the order arrives, which is the point of putting a pharmacy inside the app at all.' }
-            ] }
+            { type: 'screenrow', screens: [
+              { file: 'babysteps/37-pharmacy.png', alt: 'BabySteps in-app pharmacy' },
+              { file: 'babysteps/38-drug-page.png', alt: 'BabySteps medication detail page with dose and price' }
+            ] },
+            { type: 'note', label: 'notes', content: 'Booking carries the physician you chose through to the date, the time and the confirmation, so the appointment returns to the same place it started.' }
           ]
         },
         {
-          type: 'support',
+          type: 'feature',
           title: 'Look after yourself too',
           rail: 'Support',
           statement: {
@@ -1744,16 +1699,16 @@
           blocks: [
             { type: 'text', content: 'Pregnancy care is not only appointments and baby development. The research also raised fatigue, mental wellbeing and the difficulty of keeping everyday life moving at the same time.' },
             { type: 'text', content: 'BabySteps therefore explored ways for women to access some forms of support from home.' },
-            { type: 'annotated', file: 'baby-steps-clinic-hub.png', alt: 'Clinic screen with therapy and prenatal yoga sitting beside antenatal care and pharmacy as things to book', notes: [
-              { title: 'Virtual therapy', text: 'Talk to someone sits on the same shelf as an antenatal visit, so booking a 45 minute session is not a separate errand.' },
-              { title: 'Prenatal yoga', text: 'Live sessions on Wednesday evenings give users another way to access guided wellbeing support from home.' },
-              { title: 'Same place as the rest of care', text: 'Both sit on the clinic tab next to antenatal booking and pharmacy, rather than in a wellbeing section of their own.' }
+            { type: 'screenrow', screens: [
+              { file: 'babysteps/25-prenatal-yoga.png', alt: 'BabySteps prenatal yoga sessions' },
+              { file: 'babysteps/29a-talk-to-someone.png', alt: 'BabySteps talk to someone screen with midwives, doctors and counselling' },
+              { file: 'babysteps/26-one-session.png', alt: 'A single BabySteps wellbeing session' }
             ] },
-            { type: 'note', label: 'how far this got', content: 'Therapy and yoga were designed as far as their entry points on the clinic tab. I did not take either flow further than that in the two weeks, so there are no session screens to show.' }
+            { type: 'note', label: 'notes', content: 'Talk to someone sits on the same shelf as an antenatal visit, so booking a session is not a separate errand.' }
           ]
         },
         {
-          type: 'process',
+          type: 'craft',
           title: 'Working out how it all fits together',
           rail: 'Designing-it',
           statement: {
@@ -1761,16 +1716,23 @@
             text: 'Working out how it all fits together.'
           },
           blocks: [
+            { type: 'note', label: 'the challenge', content: 'Pregnancy tracking + clinics + pharmacy + therapy + wellbeing, without making BabySteps feel like five different apps.' },
             { type: 'text', content: 'Once BabySteps expanded beyond pregnancy tracking, the bigger challenge became connecting the different parts of the experience without making them feel like separate products.' },
             { type: 'text', content: 'I mapped how the main areas related to one another, then worked through the journeys in paper and low-fidelity wireframes before moving into the final interface.' },
-            { type: 'note', label: 'the challenge', content: 'Pregnancy tracking + clinics + pharmacy + therapy + wellbeing, without making BabySteps feel like five different apps.' },
-            { type: 'plate', file: 'baby-steps-ia.png', alt: 'BabySteps information architecture: homepage branching into home, clinic, to-do, community, tools, notifications and settings', caption: 'How the main areas relate to one another' },
-            { type: 'text', content: '<strong>From rough idea to interface.</strong> The paper and low-fidelity work covered the same ground as the final screens, though I did not keep a one-to-one record of which sketch became which screen, so these sit as a progression rather than a direct comparison.' },
-            { type: 'progression', layout: 'stack', caption: 'Paper → Low-fi → Final', stages: [
-              { label: 'paper', file: 'baby-steps-paper-1200.webp', alt: 'Paper wireframe sketches for the BabySteps screens' },
-              { label: 'low-fi', file: 'baby-steps-lowfi.png', alt: 'Low-fidelity wireframes for tracking, booking and account setup' },
-              { label: 'final', file: 'baby-steps-home-clinic.png', alt: 'The final BabySteps home screen', phone: true }
-            ] }
+            { type: 'image', file: 'baby-steps-problem.jpg', caption: 'How the main areas relate to one another', wide: true },
+            { type: 'screenrow', screens: [
+              { file: 'babysteps/07-set-up.png', alt: 'BabySteps set up screen' },
+              { file: 'babysteps/08-calculator.png', alt: 'Due date calculator in place' },
+              { file: 'babysteps/08b-conception-branch.png', alt: 'The conception date branch of the calculator' },
+              { file: 'babysteps/09-ready.png', alt: 'BabySteps ready state with no dead end' }
+            ] },
+            { type: 'screenrow', screens: [
+              { file: 'babysteps/02-track.png', alt: 'BabySteps tracking screen' },
+              { file: 'babysteps/18-community.png', alt: 'BabySteps community screen' },
+              { file: 'babysteps/20-tools.png', alt: 'BabySteps tools, ranked by week' },
+              { file: 'babysteps/22-lists.png', alt: 'BabySteps lists, ordered by deadline' }
+            ] },
+            { type: 'panel', file: 'babysteps/paper.jpg', caption: 'From rough idea to interface. The paper and low-fidelity work covered the same ground as the final screens, though I did not keep a one-to-one record of which sketch became which screen, so these sit as a progression rather than a direct comparison.' }
           ]
         },
         {
@@ -1783,14 +1745,16 @@
           },
           blocks: [
             { type: 'text', content: 'BabySteps was a two-week concept project, and looking back at it now, there are parts I would take much further before treating the product as finished.' },
-            { type: 'insights', items: [
-              { title: 'Validate the main journeys again', text: 'I would run another round of usability testing, especially around appointment booking, pharmacy and therapy. These are some of the more sensitive and involved parts of the product, so I would want stronger validation before expanding them further.' },
-              { title: 'Think more carefully about who else belongs in the experience', text: 'One of my original next steps was to consider fathers and partners. Today, I would first investigate what they actually need and whether that belongs inside the same BabySteps experience or requires something different.' },
-              { title: 'Expand only where the research supports it', text: 'The original concept also left room for areas such as community and additional pregnancy tools. I would research those needs properly before adding more functionality. Pregnancy touches so many parts of life that BabySteps could easily become overwhelming if every possible problem became another feature.' }
+            { type: 'image', file: 'baby-steps-problem.jpg', wide: true },
+            { type: 'cardrow', items: [
+              { icon: '✦', title: 'Validate the main journeys again', text: 'I would run another round of usability testing, especially around appointment booking, pharmacy and therapy. These are some of the more sensitive and involved parts of the product, so I would want stronger validation before expanding them further.' },
+              { icon: '✦', title: 'Think more carefully about who else belongs in the experience', text: 'One of my original next steps was to consider fathers and partners. Today, I would first investigate what they actually need and whether that belongs inside the same BabySteps experience or requires something different.' },
+              { icon: '✦', title: 'Expand only where the research supports it', text: 'The original concept also left room for areas such as community and additional pregnancy tools. I would research those needs properly before adding more functionality. Pregnancy touches so many parts of life that BabySteps could easily become overwhelming if every possible problem became another feature.' }
             ] },
-            { type: 'text', content: '<strong>What stayed with me.</strong> I started BabySteps with a fairly clear idea of what I thought I was going to design. Research pulled the project in a wider direction.' },
-            { type: 'text', content: 'The biggest lesson was learning not to become too attached to the first version of an idea. What started as a pregnancy tracker became a broader attempt to make some of the everyday work around pregnancy easier to manage.' },
-            { type: 'bigline', text: 'The first version of the problem is rarely the whole problem.' }
+            // The design's own "next steps" panel, exported rather than rebuilt.
+            { type: 'panel', file: 'babysteps/next-steps.png', alt: 'Next steps', narrow: true },
+            { type: 'text', content: 'I started BabySteps with a fairly clear idea of what I thought I was going to design. Research pulled the project in a wider direction.' },
+            { type: 'text', content: 'The biggest lesson was learning not to become too attached to the first version of an idea. What started as a pregnancy tracker became a broader attempt to make some of the everyday work around pregnancy easier to manage.' }
           ]
         }
       ]
@@ -2038,6 +2002,33 @@
 
     // A numbered strip: the same hairline row as the cards, but ordinal rather
     // than iconic, for a sequence or a set of named parts.
+    // One exported panel on its own row, at its natural proportions.
+    //
+    // Consecutive `image` blocks are buffered and laid out as a 2-up or 3-up
+    // grid, which is right for the pair of research panels but wrong for the
+    // wide ones that sit full-width in the design. This type is not buffered, so
+    // it always gets its own row, and it keeps the panel's own aspect rather
+    // than cropping it into the reader's 16/9 frame.
+    function panelHTML(b) {
+      return '<figure class="cs-panel wide' + (b.narrow ? ' cs-panel--narrow' : '') + '">' +
+          '<img referrerpolicy="no-referrer" loading="lazy" decoding="async" ' +
+            'src="images/case-studies/' + b.file + '" alt="' + (b.alt || '') + '" />' +
+          (b.caption ? '<figcaption class="cs-caption">' + b.caption + '</figcaption>' : '') +
+        '</figure>';
+    }
+
+    // A plain row of phone screens, evenly spaced, no captions — the device the
+    // BabySteps design uses to show a flow at a glance. The existing blocks all
+    // carry text alongside the screen (walkthrough steps, progression labels),
+    // and the design deliberately does not.
+    function screenRowHTML(b) {
+      var shots = (b.screens || []).map(function(s) {
+        return shotHTML(s.file, s.alt, 'phone');
+      }).join('');
+      return '<div class="cs-screenrow wide" data-count="' + (b.screens || []).length + '">' +
+        shots + '</div>';
+    }
+
     function stripHTML(b) {
       var items = b.items || [];
       return '<div class="bs-strip wide" data-count="' + items.length + '">' +
@@ -2581,6 +2572,10 @@
               parts.push(checklistHTML(b));
             } else if (b.type === 'note') {
               parts.push(noteHTML(b));
+            } else if (b.type === 'screenrow') {
+              parts.push(screenRowHTML(b));
+            } else if (b.type === 'panel') {
+              parts.push(panelHTML(b));
             } else if (b.type === 'cardrow') {              parts.push(cardRowHTML(b));            } else if (b.type === 'strip') {              parts.push(stripHTML(b));            } else if (b.type === 'statements') {              parts.push(statementsHTML(b));            } else if (b.type === 'insights') {              parts.push(insightsHTML(b));            } else if (b.type === 'disclosure') {              parts.push(disclosureHTML(b));            } else if (b.type === 'model') {              parts.push(modelHTML(b));            } else if (b.type === 'annotated') {              parts.push(annotatedHTML(b));            } else if (b.type === 'walkthrough') {              parts.push(walkthroughHTML(b));            } else if (b.type === 'duo') {              parts.push(duoHTML(b));            } else if (b.type === 'progression') {              parts.push(progressionHTML(b));            } else if (b.type === 'bigline') {              parts.push(biglineHTML(b));            } else if (b.type === 'plate') {              parts.push(plateHTML(b));            } else if (b.type === 'table') {              parts.push(tableHTML(b));            } else if (b.type === 'persona') {              parts.push(personaHTML(b));            } else if (b.type === 'process') {
               parts.push(processHTML(b));
             }
