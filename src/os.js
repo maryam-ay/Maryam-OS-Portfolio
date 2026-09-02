@@ -600,8 +600,7 @@
     "Baby Steps": {
       title: "Baby Steps",
       kind: "case",
-      status: "coming-soon",
-      tag: "case study · coming soon",
+      tag: "case study",
       desc: "a pregnancy companion for tracking and managing a pregnancy from conception to due date, with antenatal booking, an in-app pharmacy and virtual therapy built in.",
       meta: "solo ux/ui design · case study",
       outcome: "turned seven survey pain points into five features that keep pregnant women out of avoidable trips.",
@@ -632,7 +631,9 @@
       imgSmall: "images/optimized/vesti-ai-640.webp"
     }
   };
-  var PROJECT_NAMES = ["Vesti Mobile", "WGC App", "VaxTrack Live", "Compass", "Baby Steps", "VaxTrack Case Study", "Vesti AI"];
+  // Order matches the work rail: Baby Steps leads the case studies now that it
+  // is the published one.
+  var PROJECT_NAMES = ["Vesti Mobile", "WGC App", "VaxTrack Live", "Baby Steps", "Compass", "VaxTrack Case Study", "Vesti AI"];
   var selectedProjectName = "Vesti Mobile";
 
   function projectDisplayName(name) {
@@ -1841,6 +1842,13 @@
     }
   };
 
+  // Published case studies, in reading order. This is the single source of truth
+  // for what the reader may be sent to next; `caseStudies` above also holds
+  // drafts with no rail entry, and offering those is how Terminal kept turning
+  // up as "next" after it was taken off the work rail. Publishing one is adding
+  // its key here and dropping its coming-soon status in PROJECT_DATA.
+  var PUBLISHED_CASE_STUDIES = ['baby steps'];
+
   var viewer=null;
 
   function renderCaseStudy(name) {
@@ -2648,20 +2656,25 @@
     var bottomRow = document.createElement('div');
     bottomRow.className = 'cs-footer';
 
-    var csKeys = Object.keys(caseStudies);
-    var currentIdx = csKeys.indexOf(normName);
-    var nextKey = 'compass';
-    if (currentIdx !== -1) {
-      nextKey = csKeys[(currentIdx + 1) % csKeys.length];
-    }
-    var nextTitle = caseStudies[nextKey].title;
+    // Walk the published list in order rather than wrapping around every key in
+    // `caseStudies`. The old version wrapped, so the last study pointed back at
+    // the first and drafts were offered as though they were readable.
+    var csOrder = PUBLISHED_CASE_STUDIES.filter(function(k){ return caseStudies[k]; });
+    var currentIdx = csOrder.indexOf(normName);
+    var nextKey = (currentIdx !== -1 && currentIdx + 1 < csOrder.length)
+      ? csOrder[currentIdx + 1]
+      : null;
 
     bottomRow.innerHTML =
       '<button class="back-work-btn cs-btn secondary">← back to my work</button>' +
       '<span class="cs-eof">you’ve reached the end of ' + slug + '.hlp</span>' +
-      '<button class="next-cs-btn cs-btn primary">next: ' + nextTitle.toLowerCase() + ' →</button>';
+      // No next means no button at all, rather than a link to nowhere.
+      (nextKey
+        ? '<button class="next-cs-btn cs-btn primary">next: ' + caseStudies[nextKey].title.toLowerCase() + ' →</button>'
+        : '');
 
-    bottomRow.querySelector('.next-cs-btn').addEventListener('click', function() {
+    var nextCsBtn = bottomRow.querySelector('.next-cs-btn');
+    if (nextCsBtn) nextCsBtn.addEventListener('click', function() {
       readingPane.scrollTop = 0;
       renderCaseStudy(nextKey);
       Genie.invalidate('viewer');
