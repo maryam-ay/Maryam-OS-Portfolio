@@ -1590,7 +1590,7 @@
         },
         {
           type: 'origin',
-          title: 'It started with something I kept noticing',
+          title: 'It started with something I kept noticing.',
           rail: 'What-I-noticed',
           statement: {
             label: 'the starting point',
@@ -1600,12 +1600,12 @@
             { type: 'text', content: 'During my personal visits to the hospital, I kept seeing heavily pregnant women moving between waiting areas, appointments and different parts of the hospital, often already tired.' },
             { type: 'text', content: 'It made me think about everything they still had to manage once they left: appointments, changes in the pregnancy, medication, work and their own wellbeing.' },
             { type: 'text', content: 'BabySteps started as an attempt to make some of that easier to manage from a phone.' },
-            { type: 'image', file: 'baby-steps-problem.jpg', caption: 'Where the idea came from', wide: true }
+            { type: 'image', file: 'baby-steps-problem.jpg', wide: true }
           ]
         },
         {
           type: 'turn',
-          title: 'The initial plan was for it to simply be a pregnancy tracker',
+          title: 'The initial plan was for it to simply be a pregnancy tracker.',
           rail: 'What-I-learned',
           statement: {
             label: 'the turning point',
@@ -1630,7 +1630,7 @@
         },
         {
           type: 'model',
-          title: 'BabySteps needed to do three things well',
+          title: 'BabySteps needed to do three things well.',
           rail: 'Product-model',
           statement: {
             label: 'the product model',
@@ -1641,7 +1641,7 @@
         },
         {
           type: 'feature',
-          title: 'Know what is happening without having to look for it',
+          title: 'Know what is happening without having to look for it.',
           rail: 'Know',
           statement: {
             label: '01 know',
@@ -1666,7 +1666,7 @@
         },
         {
           type: 'feature',
-          title: 'Accessible care without having to step into the hospital',
+          title: 'Accessible care without having to step into the hospital.',
           rail: 'Care',
           statement: {
             label: '02 care',
@@ -1685,12 +1685,16 @@
               { file: 'babysteps/37-pharmacy.png', alt: 'BabySteps in-app pharmacy' },
               { file: 'babysteps/38-drug-page.png', alt: 'BabySteps medication detail page with dose and price' }
             ] },
-            { type: 'note', label: 'notes', content: 'Booking carries the physician you chose through to the date, the time and the confirmation, so the appointment returns to the same place it started.' }
+            { type: 'cardrow', items: [
+              { icon: '✦', title: 'SEARCH BY DRUG OR SYMPTOM', text: 'Someone who only knows what they are feeling can start there instead of needing the name of a medicine.' },
+              { icon: '✦', title: 'DOSE AND PRICE ON THE CARD', text: 'Strength, tablet count and price sit together, so a decision does not need a second screen.' },
+              { icon: '✦', title: 'DELIVERY, NOT ANOTHER TRIP', text: 'The basket states when the order arrives, which is the point of putting a pharmacy inside the app at all.' }
+            ] }
           ]
         },
         {
           type: 'feature',
-          title: 'Look after yourself too',
+          title: 'Look after yourself too.',
           rail: 'Support',
           statement: {
             label: '03 support',
@@ -1704,12 +1708,16 @@
               { file: 'babysteps/29a-talk-to-someone.png', alt: 'BabySteps talk to someone screen with midwives, doctors and counselling' },
               { file: 'babysteps/26-one-session.png', alt: 'A single BabySteps wellbeing session' }
             ] },
-            { type: 'note', label: 'notes', content: 'Talk to someone sits on the same shelf as an antenatal visit, so booking a session is not a separate errand.' }
+            { type: 'cardrow', items: [
+              { icon: '✦', title: 'VIRTUAL THERAPY', text: 'Talk to someone sits on the same shelf as an antenatal visit, so booking a 45 minute session is not a separate errand.' },
+              { icon: '✦', title: 'PRENATAL YOGA', text: 'Live sessions give users another way to access guided wellbeing support from home.' },
+              { icon: '✦', title: 'SAME PLACE AS THE REST OF CARE', text: 'Both sit on the clinic tab next to antenatal booking and pharmacy, rather than in a wellbeing section of their own.' }
+            ] }
           ]
         },
         {
           type: 'craft',
-          title: 'Working out how it all fits together',
+          title: 'Working out how it all fits together.',
           rail: 'Designing-it',
           statement: {
             label: 'structure',
@@ -1737,7 +1745,7 @@
         },
         {
           type: 'lookback',
-          title: 'If I picked BabySteps up again today',
+          title: 'If I picked BabySteps up again today.',
           rail: 'Looking-back',
           statement: {
             label: 'looking back',
