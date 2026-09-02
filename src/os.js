@@ -1247,6 +1247,130 @@
 
   // Metric VALUES are intentionally left as [ ] placeholders — fill in your
   // real numbers. Everything else is drafted copy.
+  // --- BabySteps: small builders for the Figma layout -----------------------
+  // These live beside the case study data because they only describe that one
+  // design. Each mirrors a named frame in the file.
+
+  function bsRaw(file, alt) {
+    return '<img referrerpolicy="no-referrer" loading="lazy" decoding="async" ' +
+      'src="images/case-studies/' + file + '" alt="' + (alt || '') + '" />';
+  }
+  function bsImg(file, alt) { return bsRaw(file, alt); }
+
+  // "screen row": a labelled still, label above, bottom aligned.
+  function bsScreen(label, file, alt) {
+    return '<figure>' + bsRaw(file, alt) + '<figcaption>' + label + '</figcaption></figure>';
+  }
+
+  // "card row": three cells with a sparkle mark, hairline divided.
+  function bsCards(items) {
+    return '<div class="bs-cardrow">' + items.map(function (it) {
+      return '<div><span class="bs-mark">✦</span><div><b>' + it[0] + '</b><p>' + it[1] + '</p></div></div>';
+    }).join('') + '</div>';
+  }
+
+  // "product model strip": number, name, description, feature list.
+  function bsModel(n, name, desc, features) {
+    return '<div><p class="n">' + n + '</p><p class="t">' + name + '</p><p class="d">' + desc + '</p>' +
+      '<ul>' + features.map(function (f) { return '<li>' + f + '</li>'; }).join('') + '</ul></div>';
+  }
+
+  // "booking flow": a numbered step with its own screen beneath it.
+  function bsStep(n, title, text, file) {
+    return '<div><p class="n">' + n + '</p><b>' + title + '</b><p>' + text + '</p>' +
+      bsRaw(file, title) + '</div>';
+  }
+
+  // "notes": labelled annotations beside a set of screens.
+  function bsNotes(items) {
+    return '<div class="bs-notes">' + items.map(function (it) {
+      return '<div><p class="k">' + it[0] + '</p><p>' + it[1] + '</p></div>';
+    }).join('') + '</div>';
+  }
+
+  // "next steps": numbered rows with an arrow.
+  function bsNext(n, title, text) {
+    return '<div><span class="n">' + n + '</span><span class="a">→</span>' +
+      '<div><b>' + title + '</b><p>' + text + '</p></div></div>';
+  }
+
+  // "research detail": one panel, three tab states. The design draws all three
+  // as separate frames; here they are panes behind real tabs, which is what the
+  // pills are for and what a flat export could never be.
+  function bsResearch() {
+    var tabs = [
+      { id: 'survey', label: 'Survey' },
+      { id: 'audit', label: 'Competitive audit' },
+      { id: 'persona', label: 'Persona' }
+    ];
+    var pills = tabs.map(function (t, i) {
+      return '<button type="button" class="bs-tab" role="tab" data-bs-tab="' + t.id + '" ' +
+        'aria-selected="' + (i === 0 ? 'true' : 'false') + '">' + t.label + '</button>';
+    }).join('');
+
+    var survey =
+      '<div class="bs-pane" data-bs-pane="survey">' +
+        '<p>I used a Google Forms survey targeting mothers and pregnant women to better understand what they experienced during pregnancy and what they wished had been easier.</p>' +
+        '<p class="k" style="margin:0;font:bold 9px/normal var(--font-mono);letter-spacing:.7px;color:var(--rose)">RECURRING ISSUES INCLUDED:</p>' +
+        '<ul>' +
+          '<li>•&nbsp;&nbsp; difficulty finding pregnancy-safe medication</li>' +
+          '<li>•&nbsp;&nbsp; difficulty booking antenatal appointments</li>' +
+          '<li>•&nbsp;&nbsp; difficulty accurately following pregnancy and baby growth</li>' +
+          '<li>•&nbsp;&nbsp; difficulty maintaining work-life balance</li>' +
+          '<li>•&nbsp;&nbsp; limited choice of physician</li>' +
+          '<li>•&nbsp;&nbsp; fatigue making hospital visits more difficult</li>' +
+          '<li>•&nbsp;&nbsp; mental wellbeing</li>' +
+        '</ul>' +
+      '</div>';
+
+    function audit(name, source, worked, notWorked) {
+      return '<div><h5>' + name + '</h5><p class="bs-src">' + source + '</p>' +
+        '<p class="bs-lab">WHAT WORKED</p><ul class="bul">' + worked.map(function (w) { return '<li>' + w + '</li>'; }).join('') + '</ul>' +
+        '<p class="bs-lab" style="margin-top:15px">WHAT WASN’T WORKING</p><ul class="bul">' + notWorked.map(function (w) { return '<li>' + w + '</li>'; }).join('') + '</ul></div>';
+    }
+    var auditPane =
+      '<div class="bs-pane" data-bs-pane="audit" hidden>' +
+        '<div class="bs-two">' +
+          audit('Baby Center', 'Baby Center - Mobile App, Website',
+            ['Free', 'Accurate pregnancy tracking', 'Provision of helpful resources', 'Continuous updates 3 years after birth'],
+            ['App is clustered', 'Poor navigation', 'Too much ads', 'User interface is not appealing']) +
+          audit('My pregnancy', 'Baby Center - Mobile App',
+            ['Free', 'Accurate pregnancy tracking', 'Provision of helpful resources', 'Navigation is excellent', 'User Interface is appealing'],
+            ['Limited Features', 'Lack of personalization', 'Resources available are too limited']) +
+        '</div>' +
+      '</div>';
+
+    var personaPane =
+      '<div class="bs-pane" data-bs-pane="persona" hidden>' +
+        '<div class="bs-persona">' +
+          '<div class="card">' +
+            '<div class="who">' +
+              bsRaw('baby-steps-persona.jpg', 'Amina') +
+              '<div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:28px">' +
+                '<h5 style="margin:0">Amina</h5>' +
+                '<div class="bs-facts">' +
+                  '<div><span>Work</span><span>Customer Support Agent</span></div>' +
+                  '<div><span>Location</span><span>Ilorin</span></div>' +
+                  '<div><span>Age</span><span>27</span></div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<p>Amina is a customer support agent and a pregnant woman in her late 20’s. This is her first pregnancy and she would like to be able to accurately track and record her pregnancy which she finds hard to do due to her busy schedule.</p>' +
+          '</div>' +
+          '<div class="bs-goals">' +
+            '<div><h5>Goals</h5><p>Wants to find an easy and stress free means of adequately tracking her pregnancy and balancing her busy schedule with every day life.</p></div>' +
+            '<div><h5>Frustrations</h5><p>it is difficult for her to keep track of her baby’s growth and antenatal appoinments</p></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    return '<div class="bs-research" data-bs-research>' +
+      '<p class="k">DIG INTO THE RESEARCH</p>' +
+      '<div class="bs-tabs" role="tablist">' + pills + '</div>' +
+      survey + auditPane + personaPane +
+    '</div>';
+  }
+
   var caseStudies = {
     'compass': {
       title: 'Compass',
@@ -1559,6 +1683,12 @@
     // Authored from the Figma case study window (node 248:3974). Every string
     // here is the text in that file, not the earlier draft — the copy was
     // revised, and the screens are 3x exports living in case-studies/babysteps/.
+    // Authored against the Figma case study window (node 248:3974). Each chapter
+    // carries the design's own structure — two-column claim/paragraphs headers,
+    // card rows, the product model strip, tabbed research panels, the numbered
+    // booking flow, notes and next steps — rather than being mapped onto the
+    // shared block types, none of which describe these layouts. Every string is
+    // the text in that file.
     'baby steps': {
       title: 'BabySteps',
       summary: 'An app that helps pregnant women track and manage their pregnancies and health from conception till due date.',
@@ -1572,198 +1702,257 @@
       sections: [
         {
           type: 'context',
-          title: 'BabySteps',
+          title: 'Pregnancy comes with more than enough to keep track of.',
           rail: 'Starting-point',
-          statement: {
-            label: 'BabySteps',
-            text: 'Pregnancy comes with more than enough to keep track of.',
-            sub: 'BabySteps is a mobile concept that brings pregnancy tracking, antenatal care, medication and wellbeing support into one place.'
-          },
-          blocks: [
-            { type: 'screenrow', screens: [
-              { file: 'babysteps/01-splash.png', alt: 'BabySteps splash screen' },
-              { file: 'babysteps/11-home.png', alt: 'BabySteps home screen showing pregnancy progress and the next appointment' },
-              { file: 'babysteps/12-clinic-hub.png', alt: 'BabySteps clinic screen with the upcoming appointment and booking options' },
-              { file: 'babysteps/12a-antenatal-visit.png', alt: 'BabySteps antenatal care screen with upcoming appointments and nearby clinics' }
-            ] }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-claim" style="flex:1 1 auto;max-width:none">' +
+                '<p class="bs-kicker">BABYSTEPS</p>' +
+                '<p class="bs-head">Pregnancy comes with more than enough to keep track of.</p>' +
+                '<p class="bs-sub">BabySteps is a mobile concept that brings pregnancy tracking, antenatal care, medication and wellbeing support into one place.</p>' +
+              '</div>' +
+              '<div class="bs-phones">' +
+                bsImg('babysteps/01-splash.png', 'BabySteps splash screen') +
+                bsImg('babysteps/11-home.png', 'BabySteps home screen') +
+                bsImg('babysteps/12-clinic-hub.png', 'BabySteps clinic screen') +
+                bsImg('babysteps/12a-antenatal-visit.png', 'BabySteps antenatal care screen') +
+              '</div>' +
+            '</div>'
+          }]
         },
         {
           type: 'origin',
           title: 'It started with something I kept noticing.',
           rail: 'What-I-noticed',
-          statement: {
-            label: 'the starting point',
-            text: 'It started with something I kept noticing.'
-          },
-          blocks: [
-            { type: 'text', content: 'During my personal visits to the hospital, I kept seeing heavily pregnant women moving between waiting areas, appointments and different parts of the hospital, often already tired.' },
-            { type: 'text', content: 'It made me think about everything they still had to manage once they left: appointments, changes in the pregnancy, medication, work and their own wellbeing.' },
-            { type: 'text', content: 'BabySteps started as an attempt to make some of that easier to manage from a phone.' },
-            { type: 'image', file: 'baby-steps-problem.jpg', wide: true }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-claim" style="flex:1 1 auto;max-width:none">' +
+                '<p class="bs-kicker">THE STARTING POINT</p>' +
+                '<p class="bs-head">It started with something I kept noticing.</p>' +
+              '</div>' +
+              '<div class="bs-split">' +
+                '<figure class="bs-still">' + bsRaw('baby-steps-problem.jpg', 'Where the idea came from') + '</figure>' +
+                '<div class="bs-paras bs-paras--lg">' +
+                  '<p>During my personal visits to the hospital, I kept seeing heavily pregnant women moving between waiting areas, appointments and different parts of the hospital, often already tired.</p>' +
+                  '<p>It made me think about everything they still had to manage once they left: appointments, changes in the pregnancy, medication, work and their own wellbeing.</p>' +
+                  '<p>BabySteps started as an attempt to make some of that easier to manage from a phone.</p>' +
+                '</div>' +
+              '</div>' +
+            '</div>'
+          }]
         },
         {
           type: 'turn',
           title: 'The initial plan was for it to simply be a pregnancy tracker.',
           rail: 'What-I-learned',
-          statement: {
-            label: 'the turning point',
-            text: 'The initial plan was for it to simply be a pregnancy tracker.',
-            sub: 'But the women I spoke to showed me that tracking was just one part of the problem.'
-          },
-          blocks: [
-            { type: 'text', content: 'I spoke to some women at the hospital and also used a Google Form survey to hear from mothers and pregnant women about what had made pregnancy difficult to manage and what they wished had been easier.' },
-            { type: 'text', content: 'Tracking definitely came up, but so did antenatal appointments, pregnancy-safe medication, fatigue, work and most especially mental wellbeing.' },
-            { type: 'text', content: 'So the project was started to become less about tracking pregnancy and more about reducing the number of things women had to manage and think about separately.' },
-            // The three research panels are exported from the design rather than
-            // rebuilt: each is a composed layout of charts, quotes and personas.
-            { type: 'image', file: 'babysteps/research-survey.png', wide: true },
-            { type: 'image', file: 'babysteps/research-themes.png', wide: true },
-            { type: 'panel', file: 'babysteps/research-personas.png', alt: 'Research personas' },
-            { type: 'cardrow', items: [
-              { icon: '✦', title: 'Keep up with dates', text: 'Pregnancy progress, baby development, due dates and appointments were all things women had to keep track of.' },
-              { icon: '✦', title: 'Get accessible care', text: 'Booking antenatal appointments, finding suitable medication or getting access to a physician could require more effort when someone was already tired.' },
-              { icon: '✦', title: 'Keep going mentally', text: 'Pregnancy was happening alongside work, everyday responsibilities and mental wellbeing.' }
-            ] }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-cols">' +
+                '<div class="bs-claim">' +
+                  '<p class="bs-kicker">THE TURNING POINT</p>' +
+                  '<p class="bs-head">The initial plan was for it to simply be a pregnancy tracker.</p>' +
+                  '<p class="bs-sub">But the women I spoke to showed me that tracking was just one part of the problem.</p>' +
+                '</div>' +
+                '<div class="bs-paras">' +
+                  '<p>I spoke to some women at the hospital and also used a Google Form survey to hear from mothers and pregnant women about what had made pregnancy difficult to manage and what they wished had been easier.</p>' +
+                  '<p>Tracking definitely came up, but so did antenatal appointments, pregnancy-safe medication, fatigue, work and most especially mental wellbeing.</p>' +
+                  '<p>So the project was started to become less about tracking pregnancy and more about reducing the number of things women had to manage and think about separately.</p>' +
+                '</div>' +
+              '</div>' +
+              bsCards([
+                ['Keep up with dates', 'Pregnancy progress, baby development, due dates and appointments were all things women had to keep track of.'],
+                ['Get accessible care', 'Booking antenatal appointments, finding suitable medication or getting access to a physician could require more effort when someone was already tired.'],
+                ['Keep going mentally', 'Pregnancy was happening alongside work, everyday responsibilities and mental wellbeing.']
+              ]) +
+              bsResearch() +
+            '</div>'
+          }]
         },
         {
           type: 'model',
           title: 'BabySteps needed to do three things well.',
           rail: 'Product-model',
-          statement: {
-            label: 'the product model',
-            text: 'BabySteps needed to do three things well.',
-            sub: 'Instead of treating every pain point as a separate feature, it was really important I grouped the experience around three things to enable understand better how to structure and move things around..'
-          },
-          blocks: []
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-claim" style="flex:1 1 auto;max-width:869px">' +
+                '<p class="bs-kicker">THE PRODUCT MODEL</p>' +
+                '<p class="bs-head">BabySteps needed to do three things well.</p>' +
+                '<p class="bs-sub">Instead of treating every pain point as a separate feature, it was really important I grouped the experience around three things to enable understand better how to structure and move things around..</p>' +
+              '</div>' +
+              '<div class="bs-model">' +
+                bsModel('01', 'KNOW', 'Help the user understand where she is in her pregnancy and keep important information close.', ['Pregnancy timeline', 'Due-date calculator', 'Reminders']) +
+                bsModel('02', 'CARE', 'Reduce the effort involved in taking the first step towards care.', ['Clinic discovery', 'Antenatal booking', 'In-app pharmacy']) +
+                bsModel('03', 'SUPPORT', 'Make space for the mental and everyday side of pregnancy too.', ['Virtual therapy', 'Prenatal yoga']) +
+              '</div>' +
+            '</div>'
+          }]
         },
         {
           type: 'feature',
           title: 'Know what is happening without having to look for it.',
           rail: 'Know',
-          statement: {
-            label: '01 know',
-            text: 'Know what is happening without having to look for it.'
-          },
-          blocks: [
-            { type: 'text', content: 'A lot of pregnancy information changes over time, so BabySteps gives the user one place to return to for a quick picture of where she is.' },
-            { type: 'text', content: 'The due-date calculator helps establish the pregnancy timeline, while the home experience brings pregnancy progress and important information together.' },
-            // The onboarding trio are wider stills than the phone screens, so
-            // they keep their own labels the way the design does.
-            { type: 'progression', stages: [
-              { label: 'get started', file: 'baby-steps-onboarding.png', alt: 'BabySteps onboarding screen', phone: true },
-              { label: 'create account', file: 'baby-steps-auth.png', alt: 'BabySteps account creation screen', phone: true },
-              { label: 'due date', file: 'baby-steps-due-date.png', alt: 'BabySteps due date calculator', phone: true }
-            ] },
-            { type: 'cardrow', items: [
-              { icon: '✦', title: 'Pregnancy progress', text: 'See where the pregnancy currently sits.' },
-              { icon: '✦', title: 'Baby development', text: 'Keep growth information connected to the pregnancy timeline.' },
-              { icon: '✦', title: 'What is coming next', text: 'Appointments and reminders stay within the same experience.' }
-            ] }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-cols">' +
+                '<div class="bs-claim">' +
+                  '<p class="bs-kicker">01 KNOW</p>' +
+                  '<p class="bs-head">Know what is happening without having to look for it.</p>' +
+                '</div>' +
+                '<div class="bs-paras">' +
+                  '<p>A lot of pregnancy information changes over time, so BabySteps gives the user one place to return to for a quick picture of where she is.</p>' +
+                  '<p>The due-date calculator helps establish the pregnancy timeline, while the home experience brings pregnancy progress and important information together.</p>' +
+                '</div>' +
+              '</div>' +
+              bsCards([
+                ['Pregnancy progress', 'See where the pregnancy currently sits.'],
+                ['Baby development', 'Keep growth information connected to the pregnancy timeline.'],
+                ['What is coming next', 'Appointments and reminders stay within the same experience.']
+              ]) +
+              '<p class="bs-lead">Setting up the pregnancy timeline. The due-date calculator gives BabySteps the information it needs to place the user within her pregnancy journey.</p>' +
+              '<div class="bs-screens">' +
+                bsScreen('GET STARTED', 'baby-steps-onboarding.png', 'BabySteps onboarding') +
+                bsScreen('CREATE ACCOUNT', 'baby-steps-auth.png', 'BabySteps account creation') +
+                bsScreen('DUE DATE', 'baby-steps-due-date.png', 'BabySteps due date calculator') +
+              '</div>' +
+            '</div>'
+          }]
         },
         {
           type: 'feature',
           title: 'Accessible care without having to step into the hospital.',
           rail: 'Care',
-          statement: {
-            label: '02 care',
-            text: 'Accessible care without having to step into the hospital.'
-          },
-          blocks: [
-            { type: 'text', content: 'Some of the problems women raised were not all about information. They were about access.' },
-            { type: 'text', content: 'Booking antenatal care or finding medication could mean another task outside the home when someone was already tired. BabySteps brings those first steps into the same experience.' },
-            { type: 'screenrow', screens: [
-              { file: 'babysteps/35-clinic-doctors.png', alt: 'Clinic with its physicians and their next available days' },
-              { file: 'babysteps/14-booking-form.png', alt: 'BabySteps antenatal booking form' },
-              { file: 'babysteps/15-review-sheet.png', alt: 'BabySteps booking review sheet' },
-              { file: 'babysteps/16-confirmed.png', alt: 'BabySteps booking confirmation screen' }
-            ] },
-            { type: 'screenrow', screens: [
-              { file: 'babysteps/37-pharmacy.png', alt: 'BabySteps in-app pharmacy' },
-              { file: 'babysteps/38-drug-page.png', alt: 'BabySteps medication detail page with dose and price' }
-            ] },
-            { type: 'cardrow', items: [
-              { icon: '✦', title: 'SEARCH BY DRUG OR SYMPTOM', text: 'Someone who only knows what they are feeling can start there instead of needing the name of a medicine.' },
-              { icon: '✦', title: 'DOSE AND PRICE ON THE CARD', text: 'Strength, tablet count and price sit together, so a decision does not need a second screen.' },
-              { icon: '✦', title: 'DELIVERY, NOT ANOTHER TRIP', text: 'The basket states when the order arrives, which is the point of putting a pharmacy inside the app at all.' }
-            ] }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-cols">' +
+                '<div class="bs-claim">' +
+                  '<p class="bs-kicker">02 CARE</p>' +
+                  '<p class="bs-head">Accessible care without having to step into the hospital.</p>' +
+                '</div>' +
+                '<div class="bs-paras">' +
+                  '<p>Some of the problems women raised were not all about information. They were about access.</p>' +
+                  '<p>Booking antenatal care or finding medication could mean another task outside the home when someone was already tired. BabySteps brings those first steps into the same experience.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="bs-flow">' +
+                bsStep('01', 'Choose a clinic and physician', 'Distance, rating and opening hours sit with the clinic, and each physician shows their specialism and next available day.', 'babysteps/35-clinic-doctors.png') +
+                bsStep('02', 'Pick the appointment', 'The booking form carries the physician you chose through to the date and time.', 'babysteps/14-booking-form.png') +
+                bsStep('03', 'Review and confirm', 'One review before anything is booked, then confirmation without leaving BabySteps.', 'babysteps/15-review-sheet.png') +
+                bsStep('04', 'Booked', 'The confirmed appointment returns to the same place it started, on the clinic tab and the home screen.', 'babysteps/16-confirmed.png') +
+              '</div>' +
+              '<p class="bs-lead">Medication was part of the access problem too. Difficulty finding pregnancy-safe medication also came up during the research, so the concept included an in-app pharmacy alongside the care experience.</p>' +
+              '<div class="bs-split bs-split--between">' +
+                '<div class="bs-phones" style="flex:0 0 auto;padding:0">' +
+                  bsImg('babysteps/37-pharmacy.png', 'BabySteps in-app pharmacy') +
+                  bsImg('babysteps/38-drug-page.png', 'BabySteps medication detail page') +
+                '</div>' +
+                bsNotes([
+                  ['SEARCH BY DRUG OR SYMPTOM', 'Someone who only knows what they are feeling can start there instead of needing the name of a medicine.'],
+                  ['DOSE AND PRICE ON THE CARD', 'Strength, tablet count and price sit together, so a decision does not need a second screen.'],
+                  ['DELIVERY, NOT ANOTHER TRIP', 'The basket states when the order arrives, which is the point of putting a pharmacy inside the app at all.']
+                ]) +
+              '</div>' +
+            '</div>'
+          }]
         },
         {
           type: 'feature',
           title: 'Look after yourself too.',
           rail: 'Support',
-          statement: {
-            label: '03 support',
-            text: 'Look after yourself too.'
-          },
-          blocks: [
-            { type: 'text', content: 'Pregnancy care is not only appointments and baby development. The research also raised fatigue, mental wellbeing and the difficulty of keeping everyday life moving at the same time.' },
-            { type: 'text', content: 'BabySteps therefore explored ways for women to access some forms of support from home.' },
-            { type: 'screenrow', screens: [
-              { file: 'babysteps/25-prenatal-yoga.png', alt: 'BabySteps prenatal yoga sessions' },
-              { file: 'babysteps/29a-talk-to-someone.png', alt: 'BabySteps talk to someone screen with midwives, doctors and counselling' },
-              { file: 'babysteps/26-one-session.png', alt: 'A single BabySteps wellbeing session' }
-            ] },
-            { type: 'cardrow', items: [
-              { icon: '✦', title: 'VIRTUAL THERAPY', text: 'Talk to someone sits on the same shelf as an antenatal visit, so booking a 45 minute session is not a separate errand.' },
-              { icon: '✦', title: 'PRENATAL YOGA', text: 'Live sessions give users another way to access guided wellbeing support from home.' },
-              { icon: '✦', title: 'SAME PLACE AS THE REST OF CARE', text: 'Both sit on the clinic tab next to antenatal booking and pharmacy, rather than in a wellbeing section of their own.' }
-            ] }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-cols">' +
+                '<div class="bs-claim" style="flex:0 0 325px">' +
+                  '<p class="bs-kicker">03 SUPPORT</p>' +
+                  '<p class="bs-head">Look after yourself too.</p>' +
+                '</div>' +
+                '<div class="bs-paras">' +
+                  '<p>Pregnancy care is not only appointments and baby development. The research also raised fatigue, mental wellbeing and the difficulty of keeping everyday life moving at the same time.</p>' +
+                  '<p>BabySteps therefore explored ways for women to access some forms of support from home.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="bs-split bs-split--between">' +
+                '<div class="bs-phones" style="flex:0 0 auto;padding:0">' +
+                  bsImg('babysteps/25-prenatal-yoga.png', 'BabySteps prenatal yoga') +
+                  bsImg('babysteps/29a-talk-to-someone.png', 'BabySteps talk to someone') +
+                  bsImg('babysteps/26-one-session.png', 'A single BabySteps session') +
+                '</div>' +
+                bsNotes([
+                  ['VIRTUAL THERAPY', 'Talk to someone sits on the same shelf as an antenatal visit, so booking a 45 minute session is not a separate errand.'],
+                  ['PRENATAL YOGA', 'Live sessions give users another way to access guided wellbeing support from home.'],
+                  ['SAME PLACE AS THE REST OF CARE', 'Both sit on the clinic tab next to antenatal booking and pharmacy, rather than in a wellbeing section of their own.']
+                ]) +
+              '</div>' +
+            '</div>'
+          }]
         },
         {
           type: 'craft',
           title: 'Working out how it all fits together.',
           rail: 'Designing-it',
-          statement: {
-            label: 'structure',
-            text: 'Working out how it all fits together.'
-          },
-          blocks: [
-            { type: 'note', label: 'the challenge', content: 'Pregnancy tracking + clinics + pharmacy + therapy + wellbeing, without making BabySteps feel like five different apps.' },
-            { type: 'text', content: 'Once BabySteps expanded beyond pregnancy tracking, the bigger challenge became connecting the different parts of the experience without making them feel like separate products.' },
-            { type: 'text', content: 'I mapped how the main areas related to one another, then worked through the journeys in paper and low-fidelity wireframes before moving into the final interface.' },
-            { type: 'image', file: 'baby-steps-problem.jpg', caption: 'How the main areas relate to one another', wide: true },
-            { type: 'screenrow', screens: [
-              { file: 'babysteps/07-set-up.png', alt: 'BabySteps set up screen' },
-              { file: 'babysteps/08-calculator.png', alt: 'Due date calculator in place' },
-              { file: 'babysteps/08b-conception-branch.png', alt: 'The conception date branch of the calculator' },
-              { file: 'babysteps/09-ready.png', alt: 'BabySteps ready state with no dead end' }
-            ] },
-            { type: 'screenrow', screens: [
-              { file: 'babysteps/02-track.png', alt: 'BabySteps tracking screen' },
-              { file: 'babysteps/18-community.png', alt: 'BabySteps community screen' },
-              { file: 'babysteps/20-tools.png', alt: 'BabySteps tools, ranked by week' },
-              { file: 'babysteps/22-lists.png', alt: 'BabySteps lists, ordered by deadline' }
-            ] },
-            { type: 'panel', file: 'babysteps/paper.jpg', caption: 'From rough idea to interface. The paper and low-fidelity work covered the same ground as the final screens, though I did not keep a one-to-one record of which sketch became which screen, so these sit as a progression rather than a direct comparison.' }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-cols">' +
+                '<div class="bs-claim">' +
+                  '<p class="bs-kicker">STRUCTURE</p>' +
+                  '<p class="bs-head">Working out how it all fits together.</p>' +
+                  '<div class="bs-challenge">' +
+                    '<p class="k">THE CHALLENGE</p>' +
+                    '<p>Pregnancy tracking + clinics + pharmacy + therapy + wellbeing, without making BabySteps feel like five different apps.</p>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="bs-paras">' +
+                  '<p>Once BabySteps expanded beyond pregnancy tracking, the bigger challenge became connecting the different parts of the experience without making them feel like separate products.</p>' +
+                  '<p>I mapped how the main areas related to one another, then worked through the journeys in paper and low-fidelity wireframes before moving into the final interface.</p>' +
+                '</div>' +
+              '</div>' +
+              '<figure class="bs-still">' + bsRaw('baby-steps-problem.jpg', 'How the main areas relate to one another') +
+                '<figcaption class="bs-cap">How the main areas relate to one another</figcaption></figure>' +
+              '<div class="bs-phones">' +
+                bsImg('babysteps/07-set-up.png', 'BabySteps set up') +
+                bsImg('babysteps/08-calculator.png', 'Due date calculator in place') +
+                bsImg('babysteps/08b-conception-branch.png', 'Conception date branch') +
+                bsImg('babysteps/09-ready.png', 'BabySteps ready state') +
+              '</div>' +
+              '<div class="bs-phones">' +
+                bsImg('babysteps/02-track.png', 'BabySteps tracking screen') +
+                bsImg('babysteps/18-community.png', 'BabySteps community') +
+                bsImg('babysteps/20-tools.png', 'BabySteps tools, ranked by week') +
+                bsImg('babysteps/22-lists.png', 'BabySteps lists, by deadline') +
+              '</div>' +
+              '<figure class="bs-still">' + bsRaw('babysteps/paper.jpg', 'Paper and low-fidelity work') +
+                '<figcaption class="bs-cap">From rough idea to interface. The paper and low-fidelity work covered the same ground as the final screens, though I did not keep a one-to-one record of which sketch became which screen, so these sit as a progression rather than a direct comparison.</figcaption></figure>' +
+            '</div>'
+          }]
         },
         {
           type: 'lookback',
           title: 'If I picked BabySteps up again today.',
           rail: 'Looking-back',
-          statement: {
-            label: 'looking back',
-            text: 'If I picked BabySteps up again today.'
-          },
-          blocks: [
-            { type: 'text', content: 'BabySteps was a two-week concept project, and looking back at it now, there are parts I would take much further before treating the product as finished.' },
-            { type: 'image', file: 'baby-steps-problem.jpg', wide: true },
-            { type: 'cardrow', items: [
-              { icon: '✦', title: 'Validate the main journeys again', text: 'I would run another round of usability testing, especially around appointment booking, pharmacy and therapy. These are some of the more sensitive and involved parts of the product, so I would want stronger validation before expanding them further.' },
-              { icon: '✦', title: 'Think more carefully about who else belongs in the experience', text: 'One of my original next steps was to consider fathers and partners. Today, I would first investigate what they actually need and whether that belongs inside the same BabySteps experience or requires something different.' },
-              { icon: '✦', title: 'Expand only where the research supports it', text: 'The original concept also left room for areas such as community and additional pregnancy tools. I would research those needs properly before adding more functionality. Pregnancy touches so many parts of life that BabySteps could easily become overwhelming if every possible problem became another feature.' }
-            ] },
-            // The design's own "next steps" panel, exported rather than rebuilt.
-            { type: 'panel', file: 'babysteps/next-steps.png', alt: 'Next steps', narrow: true },
-            { type: 'text', content: 'I started BabySteps with a fairly clear idea of what I thought I was going to design. Research pulled the project in a wider direction.' },
-            { type: 'text', content: 'The biggest lesson was learning not to become too attached to the first version of an idea. What started as a pregnancy tracker became a broader attempt to make some of the everyday work around pregnancy easier to manage.' }
-          ]
+          blocks: [{ type: 'raw', html:
+            '<div class="bs bs-ch">' +
+              '<div class="bs-cols">' +
+                '<div class="bs-claim">' +
+                  '<p class="bs-kicker">LOOKING BACK</p>' +
+                  '<p class="bs-head">If I picked BabySteps up again today.</p>' +
+                '</div>' +
+                '<div class="bs-paras">' +
+                  '<p>BabySteps was a two-week concept project, and looking back at it now, there are parts I would take much further before treating the product as finished.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="bs-split bs-split--wide bs-split--between">' +
+                '<figure class="bs-still">' + bsRaw('baby-steps-problem.jpg', 'Looking back on BabySteps') + '</figure>' +
+                '<div class="bs-next">' +
+                  bsNext('01', 'Validate the main journeys again', 'I would run another round of usability testing, especially around appointment booking, pharmacy and therapy. These are some of the more sensitive and involved parts of the product, so I would want stronger validation before expanding them further.') +
+                  bsNext('02', 'Think more carefully about who else belongs in the experience', 'One of my original next steps was to consider fathers and partners. Today, I would first investigate what they actually need and whether that belongs inside the same BabySteps experience or requires something different.') +
+                  bsNext('03', 'Expand only where the research supports it', 'The original concept also left room for areas such as community and additional pregnancy tools. I would research those needs properly before adding more functionality. Pregnancy touches so many parts of life that BabySteps could easily become overwhelming if every possible problem became another feature.') +
+                '</div>' +
+              '</div>' +
+              '<div class="bs-closing">' +
+                '<p>I started BabySteps with a fairly clear idea of what I thought I was going to design. Research pulled the project in a wider direction.</p>' +
+                '<p>The biggest lesson was learning not to become too attached to the first version of an idea. What started as a pregnancy tracker became a broader attempt to make some of the everyday work around pregnancy easier to manage.</p>' +
+              '</div>' +
+            '</div>'
+          }]
         }
       ]
     },
@@ -2584,6 +2773,10 @@
               parts.push(screenRowHTML(b));
             } else if (b.type === 'panel') {
               parts.push(panelHTML(b));
+            } else if (b.type === 'raw') {
+              // Markup authored directly against a design, for a chapter whose
+              // layout none of the shared blocks describes.
+              parts.push(b.html);
             } else if (b.type === 'cardrow') {              parts.push(cardRowHTML(b));            } else if (b.type === 'strip') {              parts.push(stripHTML(b));            } else if (b.type === 'statements') {              parts.push(statementsHTML(b));            } else if (b.type === 'insights') {              parts.push(insightsHTML(b));            } else if (b.type === 'disclosure') {              parts.push(disclosureHTML(b));            } else if (b.type === 'model') {              parts.push(modelHTML(b));            } else if (b.type === 'annotated') {              parts.push(annotatedHTML(b));            } else if (b.type === 'walkthrough') {              parts.push(walkthroughHTML(b));            } else if (b.type === 'duo') {              parts.push(duoHTML(b));            } else if (b.type === 'progression') {              parts.push(progressionHTML(b));            } else if (b.type === 'bigline') {              parts.push(biglineHTML(b));            } else if (b.type === 'plate') {              parts.push(plateHTML(b));            } else if (b.type === 'table') {              parts.push(tableHTML(b));            } else if (b.type === 'persona') {              parts.push(personaHTML(b));            } else if (b.type === 'process') {
               parts.push(processHTML(b));
             }
@@ -4451,6 +4644,26 @@
     renderList();
     updateMeta();
   })();
+
+  // ===== BabySteps research tabs =====
+  // Delegated, so it survives the reader re-rendering its article. The design
+  // draws Survey, Competitive audit and Persona as three separate frames; here
+  // they are three panes behind the pills the design already shows.
+  document.addEventListener('click', function(e){
+    var tab = e.target.closest && e.target.closest('[data-bs-tab]');
+    if (!tab) return;
+    var panel = tab.closest('[data-bs-research]');
+    if (!panel) return;
+    var want = tab.getAttribute('data-bs-tab');
+    panel.querySelectorAll('[data-bs-tab]').forEach(function(t){
+      t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+    });
+    panel.querySelectorAll('[data-bs-pane]').forEach(function(p){
+      p.hidden = p.getAttribute('data-bs-pane') !== want;
+    });
+    // The article just changed height, so the genie texture is stale.
+    if (window.Genie && Genie.invalidate) Genie.invalidate('viewer');
+  });
 
   // ===== Widget column placement =====
   // The desktop floats the widgets in a rail on the right. A phone has no room
