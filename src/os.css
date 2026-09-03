@@ -5660,71 +5660,269 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   border-radius: 14px;
 }
 
-/* --- research detail: a tinted panel with tab pills --- */
+/* ----------------------------------------------------------------------------
+   research detail — node 535:2439
+
+   Three tinted panels: survey and competitive audit side by side, persona
+   full width beneath. Every value here is measured off that node at its own
+   1153px width, which is the chapter's content width, so the panels render
+   1:1 with the file.
+   -------------------------------------------------------------------------- */
+#viewer .case-baby-steps .bs-research-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  width: 100%;
+}
+#viewer .case-baby-steps .bs-research-row {
+  display: flex;
+  gap: 26px;
+  align-items: stretch;
+  width: 100%;
+}
+/* The two panels are not halves: the file gives the survey 581.5 and the audit
+   545.5 of 1153, the audit being sized by the pair of 250px cards it holds.
+   Grow factors in that ratio reproduce the split and keep it at any width. */
+#viewer .case-baby-steps .bs-research--survey {
+  flex: 0 1 calc((100% - 26px) * .515972); /* 581.5 of 1127 */
+  min-width: 0;
+}
+#viewer .case-baby-steps .bs-research--audit {
+  flex: 0 1 calc((100% - 26px) * .484028); /* 545.5 of 1127 */
+  min-width: 0;
+}
+
 #viewer .case-baby-steps .bs-research {
   display: flex;
   flex-direction: column;
   gap: 15px;
   padding: 17px;
   background: var(--tint);
-  border: 1px solid var(--bev-lo);
+  /* The file measures its 17px padding from the frame edge, so the stroke sits
+     inside the box without taking content width. A border would; an inset ring
+     does not, which is what keeps the persona row at its designed 1119. */
+  box-shadow: inset 0 0 0 1px var(--bev-lo);
   border-radius: 8px;
 }
-#viewer .case-baby-steps .bs-research > .k {
-  margin: 0; font: bold 9px/normal var(--font-mono);
-  letter-spacing: .8px; color: var(--rose);
+#viewer .case-baby-steps .bs-research-head {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex: 0 0 auto;
 }
+#viewer .case-baby-steps .bs-research .k {
+  margin: 0;
+  font: bold 9px/normal var(--font-mono);
+  letter-spacing: .8px;
+  color: var(--rose);
+}
+
+/* tab pills: a picture of the control, not the control */
 #viewer .case-baby-steps .bs-tabs { display: flex; gap: 7px; flex-wrap: wrap; }
 #viewer .case-baby-steps .bs-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 7px 13px;
+  /* Inside stroke again: the file's pill is 26 tall and 66 wide for "Survey",
+     which is padding + text with the stroke laid over it, not added to it. */
+  box-shadow: inset 0 0 0 1px var(--bev-lo);
   border-radius: 999px;
-  border: 1px solid var(--bev-lo);
   background: var(--paper);
-  font: 11px/normal var(--font-mono);
+  /* 7 + 12 + 7 = the file's 26px pill; "normal" leading overshoots it. */
+  font: 11px/12px var(--font-mono);
   color: var(--ink-soft);
-  cursor: pointer;
+  white-space: nowrap;
+  cursor: default;
 }
-#viewer .case-baby-steps .bs-tab[aria-selected="true"] {
+#viewer .case-baby-steps .bs-tab.is-active {
   background: var(--rose);
-  border-color: var(--rose-dark);
+  box-shadow: inset 0 0 0 1px var(--rose-dark);
   color: #fff;
-  font-weight: bold;
+  font-weight: 700;
 }
-#viewer .case-baby-steps .bs-research p { margin: 0; font: 14px/1.6 Inter, Tahoma, sans-serif; color: var(--ink-soft); }
-#viewer .case-baby-steps .bs-research ul { margin: 0; padding-left: 4px; list-style: none; display: flex; flex-direction: column; gap: 5px; }
-#viewer .case-baby-steps .bs-research ul li { font: 14px/1.6 Inter, Tahoma, sans-serif; color: var(--ink-soft); }
-#viewer .case-baby-steps .bs-research .bul li { list-style: disc; margin-left: 21px; }
-#viewer .case-baby-steps .bs-pane[hidden] { display: none !important; }
-#viewer .case-baby-steps .bs-pane { display: flex; flex-direction: column; gap: 15px; }
-#viewer .case-baby-steps .bs-two { display: flex; gap: 60px; align-items: flex-start; flex-wrap: wrap; }
-#viewer .case-baby-steps .bs-two h5 {
-  margin: 0 0 15px;
+
+/* --- survey panel --- */
+#viewer .case-baby-steps .bs-r-copy {
+  margin: 0;
+  font: 14px/1.6 Inter, Tahoma, sans-serif;
+  color: var(--ink-soft);
+}
+#viewer .case-baby-steps .bs-r-lab {
+  margin: 0;
+  font: bold 9px/normal var(--font-mono);
+  letter-spacing: .7px;
+  color: var(--rose);
+}
+#viewer .case-baby-steps .bs-r-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 4px;
+  width: 100%;
+}
+#viewer .case-baby-steps .bs-r-list p {
+  margin: 0;
+  font: 14px/1.6 Inter, Tahoma, sans-serif;
+  color: var(--ink-soft);
+}
+
+/* --- competitive audit: two hairline boxes pushed to the panel edges --- */
+#viewer .case-baby-steps .bs-audit {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+}
+#viewer .case-baby-steps .bs-comp {
+  flex: 0 1 250px;
+  max-width: 250px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: .5px solid rgba(196, 77, 114, .71);
+  border-radius: 1px;
+}
+#viewer .case-baby-steps .bs-comp--a { padding: 12px 8px; }
+#viewer .case-baby-steps .bs-comp--b { padding: 12px; }
+#viewer .case-baby-steps .bs-comp-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+#viewer .case-baby-steps .bs-comp--a .bs-comp-head { align-items: center; }
+#viewer .case-baby-steps .bs-comp--b .bs-comp-head { align-items: flex-start; }
+#viewer .case-baby-steps .bs-comp h5 {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-style: italic; font-weight: 700; line-height: 1.16;
+  color: var(--rose-dark);
+  white-space: nowrap;
+}
+#viewer .case-baby-steps .bs-comp .src {
+  margin: 0;
+  font: bold 9px/normal var(--font-mono);
+  letter-spacing: .7px;
+  color: var(--rose);
+  white-space: nowrap;
+}
+#viewer .case-baby-steps .bs-comp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 4px;
+}
+#viewer .case-baby-steps .bs-comp-list .lab {
+  margin: 0;
+  font: bold 12px/normal var(--font-mono);
+  letter-spacing: .7px;
+  color: var(--rose);
+}
+#viewer .case-baby-steps .bs-comp-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: disc;
+}
+#viewer .case-baby-steps .bs-comp-list li {
+  margin-left: 18px;
+  font: 12px/1.6 Inter, Tahoma, sans-serif;
+  color: var(--ink-soft);
+}
+
+/* --- persona: a 512px card beside the goals column, 40px apart --- */
+#viewer .case-baby-steps .bs-persona {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+#viewer .case-baby-steps .bs-persona-card {
+  flex: 0 1 512px;
+  max-width: 512px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: var(--paper);
+  border-radius: 14.231px;
+}
+#viewer .case-baby-steps .bs-persona .who {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+#viewer .case-baby-steps .bs-persona .who img {
+  flex: 0 0 150px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6.419px;
+  background: #f4f4ff;
+}
+#viewer .case-baby-steps .bs-persona-id {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28.461px;
+}
+#viewer .case-baby-steps .bs-persona-id h5,
+#viewer .case-baby-steps .bs-goals h5 {
+  margin: 0;
   font-family: 'Playfair Display', serif;
   font-size: 16px; font-style: italic; font-weight: 700; line-height: 1.16;
   color: var(--rose-dark);
 }
-#viewer .case-baby-steps .bs-src { margin: 0 0 15px; font: bold 9px/normal var(--font-mono); letter-spacing: .7px; color: var(--rose); }
-#viewer .case-baby-steps .bs-lab { font-size: 12px !important; }
-
-/* --- persona card --- */
-#viewer .case-baby-steps .bs-persona { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
-#viewer .case-baby-steps .bs-persona > .card {
-  flex: 1 1 420px;
-  display: flex; flex-direction: column; gap: 16px;
-  padding: 20px; background: var(--paper); border-radius: 14px;
-}
-#viewer .case-baby-steps .bs-persona .who { display: flex; gap: 16px; align-items: center; }
-#viewer .case-baby-steps .bs-persona .who img {
-  width: 150px; height: 150px; object-fit: cover; border-radius: 6px; flex: 0 0 150px;
-}
 #viewer .case-baby-steps .bs-facts {
-  display: flex; flex-direction: column; gap: 8px;
-  padding: 16px; background: var(--tint); border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: var(--tint);
+  border-radius: 12px;
 }
-#viewer .case-baby-steps .bs-facts div { display: flex; gap: 12px; }
-#viewer .case-baby-steps .bs-facts span:first-child { flex: 0 0 60px; }
-#viewer .case-baby-steps .bs-goals { flex: 1 1 300px; display: flex; flex-direction: column; gap: 21px; }
-#viewer .case-baby-steps .bs-goals > div { padding: 28px; background: var(--paper); border-radius: 14px; }
+#viewer .case-baby-steps .bs-facts > div {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+#viewer .case-baby-steps .bs-facts span {
+  font: 14px/1.6 var(--font-mono);
+  color: var(--ink-soft);
+  white-space: nowrap; /* the file keeps "Customer Support Agent" on one line */
+}
+#viewer .case-baby-steps .bs-facts span:first-child { flex: 0 0 80px; width: 80px; }
+#viewer .case-baby-steps .bs-persona-card > p {
+  margin: 0;
+  font: 14px/1.6 Inter, Tahoma, sans-serif;
+  color: var(--ink-soft);
+}
+#viewer .case-baby-steps .bs-goals {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 21.346px;
+}
+#viewer .case-baby-steps .bs-goals > div {
+  display: flex;
+  flex-direction: column;
+  gap: 14.231px;
+  padding: 28.461px;
+  background: var(--paper);
+  border-radius: 14.231px;
+}
+#viewer .case-baby-steps .bs-goals p {
+  margin: 0;
+  font: 14px/1.6 Inter, Tahoma, sans-serif;
+  color: var(--ink-soft);
+}
 
 /* --- notes: labelled annotations --- */
 #viewer .case-baby-steps .bs-notes { display: flex; flex-direction: column; gap: 18px; width: 100%; }
@@ -5815,7 +6013,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 @media (max-width: 767px) {
   #viewer .case-baby-steps .bs-cols,
   #viewer .case-baby-steps .bs-split,
-  #viewer .case-baby-steps .bs-two,
+  #viewer .case-baby-steps .bs-audit,
   #viewer .case-baby-steps .bs-persona { flex-direction: column; gap: 18px; align-items: stretch; }
   #viewer .case-baby-steps .bs-claim,
   #viewer .case-baby-steps .bs-split .bs-still { flex: 1 1 auto; max-width: none; }
@@ -5840,6 +6038,22 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #viewer .case-baby-steps .bs-screens figure { flex: 0 0 auto; width: 176px; max-width: none; scroll-snap-align: center; }
   #viewer .case-baby-steps .bs-next { width: 100%; }
   #viewer .case-baby-steps .bs-persona .who img { width: 96px; height: 96px; flex: 0 0 96px; }
+  /* The persona card is 512 wide in the file, so its portrait-beside-details row
+     and the one-line fact values only work at that width. On a phone the
+     portrait goes above the details and the values are allowed to wrap. */
+  #viewer .case-baby-steps .bs-persona .who { flex-direction: column; align-items: flex-start; }
+  #viewer .case-baby-steps .bs-persona-id { width: 100%; gap: 16px; }
+  #viewer .case-baby-steps .bs-facts span { white-space: normal; }
+  #viewer .case-baby-steps .bs-facts span:first-child { flex: 0 0 64px; width: 64px; }
+  #viewer .case-baby-steps .bs-goals > div { padding: 18px; }
+  /* The competitor name and its platform share a line at 250px; on a phone card
+     they do not fit, so the platform drops beneath the name. */
+  #viewer .case-baby-steps .bs-comp--a .bs-comp-head,
+  #viewer .case-baby-steps .bs-comp--b .bs-comp-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
 }
 /* The design sets the metadata labels uppercase. Scoped so the other case
    studies keep the lowercase labels they were built with. */
@@ -5851,48 +6065,11 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   border: 0;
 }
 
-#viewer .case-baby-steps .bs-research-stack,
 #viewer .case-baby-steps .bs-final {
   display: flex;
   flex-direction: column;
   gap: 26px;
   width: 100%;
-}
-#viewer .case-baby-steps .bs-research-row {
-  display: flex;
-  gap: 26px;
-  align-items: stretch;
-  width: 100%;
-}
-#viewer .case-baby-steps .bs-research-row > .bs-research {
-  flex: 1 1 0;
-  min-width: 0;
-}
-#viewer .case-baby-steps .bs-tab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: default;
-}
-#viewer .case-baby-steps .bs-tab.is-active {
-  background: var(--rose);
-  border-color: var(--rose-dark);
-  color: var(--paper);
-  font-weight: 700;
-}
-#viewer .case-baby-steps .bs-research-row .bs-two {
-  flex-wrap: nowrap;
-}
-#viewer .case-baby-steps .bs-research-row .bs-two > div {
-  flex: 1 1 0;
-  min-width: 0;
-}
-#viewer .case-baby-steps .bs-persona {
-  flex-wrap: nowrap;
-  justify-content: center;
-}
-#viewer .case-baby-steps .bs-persona > .card {
-  flex: 0 0 512px;
 }
 #viewer .case-baby-steps .bs-process-plate,
 #viewer .case-baby-steps .bs-stage,
@@ -6389,7 +6566,8 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #viewer .case-baby-steps .bs-pharmacy,
   #viewer .case-baby-steps .bs-support { flex-direction: column; height: auto; }
   #viewer .case-baby-steps .bs-relate figure,
-  #viewer .case-baby-steps .bs-persona > .card { width: 100%; flex-basis: auto; }
+  #viewer .case-baby-steps .bs-persona-card,
+  #viewer .case-baby-steps .bs-comp { width: 100%; max-width: none; flex-basis: auto; }
   #viewer .case-baby-steps .bs-final-row {
     width: 100%;
     overflow-x: auto;

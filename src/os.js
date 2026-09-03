@@ -1294,61 +1294,80 @@
       '<div><b>' + title + '</b><p>' + text + '</p></div></div>';
   }
 
-  // "research detail": the Figma file deliberately shows all three research
-  // states at once: survey and audit side-by-side, then the persona below.
+  // "research detail": node 535:2439. The file shows all three research states
+  // at once — survey and competitive audit side by side, persona full width
+  // beneath — each in its own tinted panel with its own tab row. The pills are
+  // a picture of a control, not a control, which is why they are spans.
   function bsResearch() {
-    var tabs = [
-      { id: 'survey', label: 'Survey' },
-      { id: 'audit', label: 'Competitive audit' },
+    var TABS = [
+      { id: 'survey',  label: 'Survey' },
+      { id: 'audit',   label: 'Competitive audit' },
       { id: 'persona', label: 'Persona' }
     ];
+    // The survey panel labels the middle pill "Competitive review"; the other
+    // two panels call it "Competitive audit". The file does that, so it stays.
     function pills(active) {
-      return '<div class="bs-tabs" aria-label="Research view">' + tabs.map(function (t) {
-        var label = active === 'survey' && t.id === 'audit' ? 'Competitive review' : t.label;
+      return '<div class="bs-tabs" aria-hidden="true">' + TABS.map(function (t) {
+        var label = (active === 'survey' && t.id === 'audit') ? 'Competitive review' : t.label;
         return '<span class="bs-tab' + (t.id === active ? ' is-active' : '') + '">' + label + '</span>';
       }).join('') + '</div>';
     }
 
-    var survey =
-      '<div class="bs-pane" data-bs-pane="survey">' +
-        '<p>I used a Google Forms survey targeting mothers and pregnant women to better understand what they experienced during pregnancy and what they wished had been easier.</p>' +
-        '<p class="k" style="margin:0;font:bold 9px/normal var(--font-mono);letter-spacing:.7px;color:var(--rose)">RECURRING ISSUES INCLUDED:</p>' +
-        '<ul>' +
-          '<li>•&nbsp;&nbsp; difficulty finding pregnancy-safe medication</li>' +
-          '<li>•&nbsp;&nbsp; difficulty booking antenatal appointments</li>' +
-          '<li>•&nbsp;&nbsp; difficulty accurately following pregnancy and baby growth</li>' +
-          '<li>•&nbsp;&nbsp; difficulty maintaining work-life balance</li>' +
-          '<li>•&nbsp;&nbsp; limited choice of physician</li>' +
-          '<li>•&nbsp;&nbsp; fatigue making hospital visits more difficult</li>' +
-          '<li>•&nbsp;&nbsp; mental wellbeing</li>' +
-        '</ul>' +
-      '</div>';
+    var ISSUES = [
+      'difficulty finding pregnancy-safe medication',
+      'difficulty booking antenatal appointments',
+      'difficulty accurately following pregnancy and baby growth',
+      'difficulty maintaining work-life balance',
+      'limited choice of physician',
+      'fatigue making hospital visits more difficult',
+      'mental wellbeing'
+    ];
+    var surveyPanel =
+      '<section class="bs-research bs-research--survey">' +
+        '<p class="k">WHAT I ACTUALLY USED</p>' +
+        pills('survey') +
+        '<p class="bs-r-copy">I spoke to some women in the hospital and also used a Google Forms survey targeting mothers and pregnant women to better understand what they experienced during pregnancy and what they wished had been easier.</p>' +
+        '<p class="bs-r-lab">RECURRING ISSUES INCLUDED:</p>' +
+        '<div class="bs-r-list">' + ISSUES.map(function (t) {
+          return '<p>•&nbsp;&nbsp;&nbsp;' + t + '</p>';
+        }).join('') + '</div>' +
+      '</section>';
 
-    function audit(name, source, worked, notWorked) {
-      return '<div><h5>' + name + '</h5><p class="bs-src">' + source + '</p>' +
-        '<p class="bs-lab">WHAT WORKED</p><ul class="bul">' + worked.map(function (w) { return '<li>' + w + '</li>'; }).join('') + '</ul>' +
-        '<p class="bs-lab" style="margin-top:15px">WHAT WASN’T WORKING</p><ul class="bul">' + notWorked.map(function (w) { return '<li>' + w + '</li>'; }).join('') + '</ul></div>';
+    // Each competitor sits in its own hairline box, 250px wide, the pair pushed
+    // to the outer edges of the panel.
+    function competitor(mod, name, platform, worked, notWorked) {
+      function list(label, items) {
+        return '<div class="bs-comp-list"><p class="lab">' + label + '</p><ul>' +
+          items.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul></div>';
+      }
+      return '<div class="bs-comp bs-comp--' + mod + '">' +
+        '<div class="bs-comp-head"><h5>' + name + '</h5><p class="src">' + platform + '</p></div>' +
+        list('WHAT WORKED', worked) +
+        list('WHAT WASN’T WORKING', notWorked) +
+      '</div>';
     }
-    var auditPane =
-      '<div class="bs-pane" data-bs-pane="audit">' +
-        '<div class="bs-two">' +
-          audit('Baby Center', 'Baby Center - Mobile App, Website',
+    var auditPanel =
+      '<section class="bs-research bs-research--audit">' +
+        '<div class="bs-research-head"><p class="k">DIG INTO THE RESEARCH</p>' + pills('audit') + '</div>' +
+        '<div class="bs-audit">' +
+          competitor('a', 'Baby Center', 'Mobile App, Website',
             ['Free', 'Accurate pregnancy tracking', 'Provision of helpful resources', 'Continuous updates 3 years after birth'],
             ['App is clustered', 'Poor navigation', 'Too much ads', 'User interface is not appealing']) +
-          audit('My pregnancy', 'Baby Center - Mobile App',
+          competitor('b', 'My pregnancy', 'Mobile App',
             ['Free', 'Accurate pregnancy tracking', 'Provision of helpful resources', 'Navigation is excellent', 'User Interface is appealing'],
             ['Limited Features', 'Lack of personalization', 'Resources available are too limited']) +
         '</div>' +
-      '</div>';
+      '</section>';
 
-    var personaPane =
-      '<div class="bs-pane" data-bs-pane="persona">' +
+    var personaPanel =
+      '<section class="bs-research bs-research--persona">' +
+        '<div class="bs-research-head"><p class="k">DIG INTO THE RESEARCH</p>' + pills('persona') + '</div>' +
         '<div class="bs-persona">' +
-          '<div class="card">' +
+          '<div class="bs-persona-card">' +
             '<div class="who">' +
-              bsRaw('baby-steps-persona.jpg', 'Amina') +
-              '<div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:28px">' +
-                '<h5 style="margin:0">Amina</h5>' +
+              bsRaw('babysteps/persona-amina.jpg', 'Amina') +
+              '<div class="bs-persona-id">' +
+                '<h5>Amina</h5>' +
                 '<div class="bs-facts">' +
                   '<div><span>Work</span><span>Customer Support Agent</span></div>' +
                   '<div><span>Location</span><span>Ilorin</span></div>' +
@@ -1363,20 +1382,11 @@
             '<div><h5>Frustrations</h5><p>it is difficult for her to keep track of her baby’s growth and antenatal appoinments</p></div>' +
           '</div>' +
         '</div>' +
-      '</div>';
+      '</section>';
 
     return '<div class="bs-research-stack">' +
-      '<div class="bs-research-row">' +
-        '<section class="bs-research">' +
-          '<p class="k">WHAT I ACTUALLY USED</p>' + pills('survey') + survey +
-        '</section>' +
-        '<section class="bs-research">' +
-          '<p class="k">DIG INTO THE RESEARCH</p>' + pills('audit') + auditPane +
-        '</section>' +
-      '</div>' +
-      '<section class="bs-research">' +
-        '<p class="k">DIG INTO THE RESEARCH</p>' + pills('persona') + personaPane +
-      '</section>' +
+      '<div class="bs-research-row">' + surveyPanel + auditPanel + '</div>' +
+      personaPanel +
     '</div>';
   }
 
