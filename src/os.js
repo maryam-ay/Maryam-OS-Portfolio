@@ -1294,19 +1294,20 @@
       '<div><b>' + title + '</b><p>' + text + '</p></div></div>';
   }
 
-  // "research detail": one panel, three tab states. The design draws all three
-  // as separate frames; here they are panes behind real tabs, which is what the
-  // pills are for and what a flat export could never be.
+  // "research detail": the Figma file deliberately shows all three research
+  // states at once: survey and audit side-by-side, then the persona below.
   function bsResearch() {
     var tabs = [
       { id: 'survey', label: 'Survey' },
       { id: 'audit', label: 'Competitive audit' },
       { id: 'persona', label: 'Persona' }
     ];
-    var pills = tabs.map(function (t, i) {
-      return '<button type="button" class="bs-tab" role="tab" data-bs-tab="' + t.id + '" ' +
-        'aria-selected="' + (i === 0 ? 'true' : 'false') + '">' + t.label + '</button>';
-    }).join('');
+    function pills(active) {
+      return '<div class="bs-tabs" aria-label="Research view">' + tabs.map(function (t) {
+        var label = active === 'survey' && t.id === 'audit' ? 'Competitive review' : t.label;
+        return '<span class="bs-tab' + (t.id === active ? ' is-active' : '') + '">' + label + '</span>';
+      }).join('') + '</div>';
+    }
 
     var survey =
       '<div class="bs-pane" data-bs-pane="survey">' +
@@ -1329,7 +1330,7 @@
         '<p class="bs-lab" style="margin-top:15px">WHAT WASN’T WORKING</p><ul class="bul">' + notWorked.map(function (w) { return '<li>' + w + '</li>'; }).join('') + '</ul></div>';
     }
     var auditPane =
-      '<div class="bs-pane" data-bs-pane="audit" hidden>' +
+      '<div class="bs-pane" data-bs-pane="audit">' +
         '<div class="bs-two">' +
           audit('Baby Center', 'Baby Center - Mobile App, Website',
             ['Free', 'Accurate pregnancy tracking', 'Provision of helpful resources', 'Continuous updates 3 years after birth'],
@@ -1341,7 +1342,7 @@
       '</div>';
 
     var personaPane =
-      '<div class="bs-pane" data-bs-pane="persona" hidden>' +
+      '<div class="bs-pane" data-bs-pane="persona">' +
         '<div class="bs-persona">' +
           '<div class="card">' +
             '<div class="who">' +
@@ -1364,10 +1365,18 @@
         '</div>' +
       '</div>';
 
-    return '<div class="bs-research" data-bs-research>' +
-      '<p class="k">DIG INTO THE RESEARCH</p>' +
-      '<div class="bs-tabs" role="tablist">' + pills + '</div>' +
-      survey + auditPane + personaPane +
+    return '<div class="bs-research-stack">' +
+      '<div class="bs-research-row">' +
+        '<section class="bs-research">' +
+          '<p class="k">WHAT I ACTUALLY USED</p>' + pills('survey') + survey +
+        '</section>' +
+        '<section class="bs-research">' +
+          '<p class="k">DIG INTO THE RESEARCH</p>' + pills('audit') + auditPane +
+        '</section>' +
+      '</div>' +
+      '<section class="bs-research">' +
+        '<p class="k">DIG INTO THE RESEARCH</p>' + pills('persona') + personaPane +
+      '</section>' +
     '</div>';
   }
 
@@ -1839,17 +1848,19 @@
                 bsStep('03', 'Review and confirm', 'One review before anything is booked, then confirmation without leaving BabySteps.', 'babysteps/15-review-sheet.png') +
                 bsStep('04', 'Booked', 'The confirmed appointment returns to the same place it started, on the clinic tab and the home screen.', 'babysteps/16-confirmed.png') +
               '</div>' +
-              '<p class="bs-lead">Medication was part of the access problem too. Difficulty finding pregnancy-safe medication also came up during the research, so the concept included an in-app pharmacy alongside the care experience.</p>' +
-              '<div class="bs-split bs-split--between">' +
-                '<div class="bs-phones" style="flex:0 0 auto;padding:0">' +
+              '<div class="bs-pharmacy">' +
+                '<div class="bs-pharmacy-screens">' +
                   bsImg('babysteps/37-pharmacy.png', 'BabySteps in-app pharmacy') +
                   bsImg('babysteps/38-drug-page.png', 'BabySteps medication detail page') +
                 '</div>' +
-                bsNotes([
-                  ['SEARCH BY DRUG OR SYMPTOM', 'Someone who only knows what they are feeling can start there instead of needing the name of a medicine.'],
-                  ['DOSE AND PRICE ON THE CARD', 'Strength, tablet count and price sit together, so a decision does not need a second screen.'],
-                  ['DELIVERY, NOT ANOTHER TRIP', 'The basket states when the order arrives, which is the point of putting a pharmacy inside the app at all.']
-                ]) +
+                '<div class="bs-pharmacy-copy">' +
+                  '<p class="bs-lead">Medication was part of the access problem too. Difficulty finding pregnancy-safe medication also came up during the research, so the concept included an in-app pharmacy alongside the care experience.</p>' +
+                  bsNotes([
+                    ['SEARCH BY DRUG OR SYMPTOM', 'Someone who only knows what they are feeling can start there instead of needing the name of a medicine.'],
+                    ['DOSE AND PRICE ON THE CARD', 'Strength, tablet count and price sit together, so a decision does not need a second screen.'],
+                    ['DELIVERY, NOT ANOTHER TRIP', 'The basket states when the order arrives, which is the point of putting a pharmacy inside the app at all.']
+                  ]) +
+                '</div>' +
               '</div>' +
             '</div>'
           }]
@@ -1870,17 +1881,17 @@
                   '<p>BabySteps therefore explored ways for women to access some forms of support from home.</p>' +
                 '</div>' +
               '</div>' +
-              '<div class="bs-split bs-split--between">' +
-                '<div class="bs-phones" style="flex:0 0 auto;padding:0">' +
-                  bsImg('babysteps/25-prenatal-yoga.png', 'BabySteps prenatal yoga') +
-                  bsImg('babysteps/29a-talk-to-someone.png', 'BabySteps talk to someone') +
-                  bsImg('babysteps/26-one-session.png', 'A single BabySteps session') +
-                '</div>' +
+              '<div class="bs-support">' +
                 bsNotes([
                   ['VIRTUAL THERAPY', 'Talk to someone sits on the same shelf as an antenatal visit, so booking a 45 minute session is not a separate errand.'],
                   ['PRENATAL YOGA', 'Live sessions give users another way to access guided wellbeing support from home.'],
                   ['SAME PLACE AS THE REST OF CARE', 'Both sit on the clinic tab next to antenatal booking and pharmacy, rather than in a wellbeing section of their own.']
                 ]) +
+                '<div class="bs-support-screens">' +
+                  bsImg('babysteps/25-prenatal-yoga.png', 'BabySteps prenatal yoga') +
+                  bsImg('babysteps/29a-talk-to-someone.png', 'BabySteps talk to someone') +
+                  bsImg('babysteps/26-one-session.png', 'A single BabySteps session') +
+                '</div>' +
               '</div>' +
             '</div>'
           }]
@@ -1896,8 +1907,9 @@
                   '<p class="bs-kicker">STRUCTURE</p>' +
                   '<p class="bs-head">Working out how it all fits together.</p>' +
                   '<div class="bs-challenge">' +
-                    '<p class="k">THE CHALLENGE</p>' +
-                    '<p>Pregnancy tracking + clinics + pharmacy + therapy + wellbeing, without making BabySteps feel like five different apps.</p>' +
+                    '<span class="bs-challenge-mark">✦</span>' +
+                    '<div><p class="k">THE CHALLENGE</p>' +
+                    '<p>Pregnancy tracking + clinics + pharmacy + therapy + wellbeing, without making BabySteps feel like five different apps.</p></div>' +
                   '</div>' +
                 '</div>' +
                 '<div class="bs-paras">' +
@@ -1905,22 +1917,31 @@
                   '<p>I mapped how the main areas related to one another, then worked through the journeys in paper and low-fidelity wireframes before moving into the final interface.</p>' +
                 '</div>' +
               '</div>' +
-              '<figure class="bs-still">' + bsRaw('baby-steps-problem.jpg', 'How the main areas relate to one another') +
-                '<figcaption class="bs-cap">How the main areas relate to one another</figcaption></figure>' +
-              '<div class="bs-phones">' +
-                bsImg('babysteps/07-set-up.png', 'BabySteps set up') +
-                bsImg('babysteps/08-calculator.png', 'Due date calculator in place') +
-                bsImg('babysteps/08b-conception-branch.png', 'Conception date branch') +
-                bsImg('babysteps/09-ready.png', 'BabySteps ready state') +
+              '<figure class="bs-process-plate">' + bsRaw('baby-steps-ia-figma.png', 'BabySteps information architecture') + '</figure>' +
+              '<div class="bs-relate">' +
+                '<div>' +
+                  '<p class="bs-head">How the main areas relate to one another</p>' +
+                  '<p>From rough idea to interface. The paper and low-fidelity work covered the same ground as the final screens, though I did not keep a one-to-one record of which sketch became which screen, so these sit as a progression rather than a direct comparison.</p>' +
+                '</div>' +
+                '<figure>' + bsRaw('baby-steps-impact.webp', 'Pregnant woman resting while using BabySteps') + '</figure>' +
               '</div>' +
-              '<div class="bs-phones">' +
-                bsImg('babysteps/02-track.png', 'BabySteps tracking screen') +
-                bsImg('babysteps/18-community.png', 'BabySteps community') +
-                bsImg('babysteps/20-tools.png', 'BabySteps tools, ranked by week') +
-                bsImg('babysteps/22-lists.png', 'BabySteps lists, by deadline') +
+              '<figure class="bs-stage">' + bsRaw('baby-steps-paper-figma.webp', 'Paper sketches from the BabySteps design process') + '</figure>' +
+              '<figure class="bs-stage">' + bsRaw('baby-steps-lowfi-figma.png', 'Low-fidelity BabySteps wireframes') + '</figure>' +
+              '<div class="bs-final">' +
+                '<p class="bs-stage-label">FINAL</p>' +
+                '<div class="bs-final-row">' +
+                  bsImg('babysteps/02-track.png', 'BabySteps tracking screen') +
+                  bsImg('babysteps/18-community.png', 'BabySteps community') +
+                  bsImg('babysteps/20-tools.png', 'BabySteps tools, ranked by week') +
+                  bsImg('babysteps/22-lists.png', 'BabySteps lists, by deadline') +
+                '</div>' +
+                '<div class="bs-final-row">' +
+                  bsImg('babysteps/07-set-up.png', 'BabySteps set up') +
+                  bsImg('babysteps/08-calculator.png', 'Due date calculator in place') +
+                  bsImg('babysteps/08b-conception-branch.png', 'Conception date branch') +
+                  bsImg('babysteps/09-ready.png', 'BabySteps ready state') +
+                '</div>' +
               '</div>' +
-              '<figure class="bs-still">' + bsRaw('babysteps/paper.jpg', 'Paper and low-fidelity work') +
-                '<figcaption class="bs-cap">From rough idea to interface. The paper and low-fidelity work covered the same ground as the final screens, though I did not keep a one-to-one record of which sketch became which screen, so these sit as a progression rather than a direct comparison.</figcaption></figure>' +
             '</div>'
           }]
         },
@@ -1940,7 +1961,7 @@
                 '</div>' +
               '</div>' +
               '<div class="bs-split bs-split--wide bs-split--between">' +
-                '<figure class="bs-still">' + bsRaw('baby-steps-problem.jpg', 'Looking back on BabySteps') + '</figure>' +
+                '<figure class="bs-still">' + bsRaw('baby-steps-goal.webp', 'Looking back on BabySteps') + '</figure>' +
                 '<div class="bs-next">' +
                   bsNext('01', 'Validate the main journeys again', 'I would run another round of usability testing, especially around appointment booking, pharmacy and therapy. These are some of the more sensitive and involved parts of the product, so I would want stronger validation before expanding them further.') +
                   bsNext('02', 'Think more carefully about who else belongs in the experience', 'One of my original next steps was to consider fathers and partners. Today, I would first investigate what they actually need and whether that belongs inside the same BabySteps experience or requires something different.') +
@@ -2070,8 +2091,12 @@
 
     var slug = normName.replace(/\s+/g, '-');
     var isBabySteps = normName === 'baby steps';
-    viewer.querySelector('.vname').textContent = slug + '.hlp ♡';
-    viewer.querySelector('.hlp-doc-name').textContent = slug + '.hlp';
+    var viewerIcon = viewer.querySelector('.tt .ti');
+    if (viewerIcon) viewerIcon.className = isBabySteps ? 'ti ti-circle-plus' : 'ti ti-help-circle';
+    viewer.querySelector('.vname').textContent = isBabySteps ? 'Babysteps ♡' : slug + '.hlp ♡';
+    viewer.querySelector('.hlp-doc-name').textContent = isBabySteps ? 'Overview' : slug + '.hlp';
+    var railHeading = viewer.querySelector('.hlp-rail-title');
+    if (railHeading) railHeading.textContent = isBabySteps ? 'CONTENT✦' : 'contents ✦';
 
     var railList = viewer.querySelector('.hlp-rail-list');
     var readingContainer = viewer.querySelector('.reading-container');
@@ -2555,8 +2580,9 @@
       // Sidebar reads as the project's files: 01_context, 02_approach, ...
       var railSlug = section.rail ? String(section.rail) : String(section.title || '')
         .toLowerCase().replace(/^the\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      btn.innerHTML = '<span class="rn">' + numStr + '</span>' +
-        '<span class="rf">' + numStr + '_' + railSlug + '</span>';
+      btn.innerHTML = isBabySteps
+        ? '<span class="rail-orb">◎</span><span class="rf">' + numStr + '-' + railSlug + '</span><span class="rail-dot">•</span>'
+        : '<span class="rn">' + numStr + '</span><span class="rf">' + numStr + '_' + railSlug + '</span>';
       btn.setAttribute('aria-label', numStr + ' ' + section.title);
 
       btn.addEventListener('click', function() {
@@ -2573,7 +2599,7 @@
           });
           btn.classList.add('active-rose');
           var cur = viewer.querySelector('.hlp-cur');
-          if (cur) cur.textContent = '· ' + (idx === 0 ? 'overview' : section.title);
+          if (cur && !isBabySteps) cur.textContent = '· ' + (idx === 0 ? 'overview' : section.title);
 
           // Keep the selected file visible in the compact horizontal rail.
           var railScroller = viewer.querySelector('.hlp-rail');
@@ -2650,7 +2676,7 @@
                        norm(claimText).indexOf(norm(section.title) + ' ') === 0 ||
                        saysTheSame(section.title, claimText))) ||
         (claimLabel && norm(claimLabel) === norm(section.title)));
-      var headerHTML =
+      var headerHTML = isBabySteps ? '' :
         '<h3 class="cs-head"' + (isEcho ? ' data-echo' : '') + '>' +
           '<span class="num">' + numStr + '</span>' +
           '<span class="cs-head-label">' + section.title + '</span>' +
@@ -2816,12 +2842,17 @@
     });
 
     // Case study info card, pinned under the file list in the sidebar.
-    var infoRows = [
+    var infoRows = (isBabySteps ? [
+      { k: 'role', v: 'UX/UI Designer' },
+      { k: 'platform', v: 'Mobile' },
+      { k: 'team', v: 'Solo Project' },
+      { k: 'timeline', v: '2 weeks' }
+    ] : [
       { k: 'role', v: cs.metadata && cs.metadata.role },
       { k: 'platform', v: cs.metadata && cs.metadata.platform },
       { k: 'team', v: cs.metadata && cs.metadata.team },
       { k: 'timeline', v: cs.metadata && cs.metadata.timeline }
-    ].filter(function(r) { return r.v; });
+    ]).filter(function(r) { return r.v; });
     if (infoRows.length) {
       var infoCard = document.createElement('div');
       infoCard.className = 'cs-rail-info';
@@ -2835,7 +2866,7 @@
 
     // Seed the toolbar indicator so it reads correctly before any scroll
     var curEl = viewer.querySelector('.hlp-cur');
-    if (curEl) curEl.textContent = '· overview';
+    if (curEl) curEl.textContent = isBabySteps ? '' : '· overview';
 
     initStoryInteractions(readingContainer);
 
@@ -2862,19 +2893,24 @@
       : null;
 
     bottomRow.innerHTML =
-      '<button class="back-work-btn cs-btn secondary">← back to my work</button>' +
-      '<span class="cs-eof">you’ve reached the end of ' + slug + '.hlp</span>' +
+      '<button class="back-work-btn cs-btn secondary">' + (isBabySteps ? '← back to work' : '← back to my work') + '</button>' +
+      '<span class="cs-eof">' + (isBabySteps ? '— end of file —' : 'you’ve reached the end of ' + slug + '.hlp') + '</span>' +
       // No next means no button at all, rather than a link to nowhere.
       (nextKey
         ? '<button class="next-cs-btn cs-btn primary">next: ' + caseStudies[nextKey].title.toLowerCase() + ' →</button>'
-        : '');
+        : (isBabySteps ? '<button class="next-cs-btn cs-btn primary">next case study →</button>' : ''));
 
     var nextCsBtn = bottomRow.querySelector('.next-cs-btn');
     if (nextCsBtn) nextCsBtn.addEventListener('click', function() {
-      readingPane.scrollTop = 0;
-      renderCaseStudy(nextKey);
-      Genie.invalidate('viewer');
-      Genie.warm(viewer);
+      if (nextKey) {
+        readingPane.scrollTop = 0;
+        renderCaseStudy(nextKey);
+        Genie.invalidate('viewer');
+        Genie.warm(viewer);
+      } else {
+        closeWin(viewer);
+        openWin('work');
+      }
     });
 
     bottomRow.querySelector('.back-work-btn').addEventListener('click', function() {
@@ -3010,7 +3046,7 @@
           railScroller.scrollTo({ left: Math.max(0, left), behavior: reducedMotion() ? 'instant' : 'smooth' });
         }
         var cur = viewer.querySelector('.hlp-cur');
-        if (cur && viewer._csTitles && viewer._csTitles[activeIdx]) {
+        if (cur && viewer.getAttribute('data-case-study') !== 'baby-steps' && viewer._csTitles && viewer._csTitles[activeIdx]) {
           cur.textContent = '· ' + viewer._csTitles[activeIdx];
         }
       }
