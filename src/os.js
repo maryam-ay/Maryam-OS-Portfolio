@@ -1734,17 +1734,21 @@
           title: 'It started with something I kept noticing.',
           rail: 'What-I-noticed',
           blocks: [{ type: 'raw', html:
+            // Node 248:4453 "claim" wraps the whole chapter: the kicker, then a
+            // stack that holds the headline 32px above the image/prose row.
             '<div class="bs bs-ch">' +
-              '<div class="bs-claim" style="flex:1 1 auto;max-width:none">' +
+              '<div class="bs-claim bs-claim--full">' +
                 '<p class="bs-kicker">THE STARTING POINT</p>' +
-                '<p class="bs-head">It started with something I kept noticing.</p>' +
-              '</div>' +
-              '<div class="bs-split">' +
-                '<figure class="bs-still">' + bsRaw('baby-steps-problem.jpg', 'Where the idea came from') + '</figure>' +
-                '<div class="bs-paras bs-paras--lg">' +
-                  '<p>During my personal visits to the hospital, I kept seeing heavily pregnant women moving between waiting areas, appointments and different parts of the hospital, often already tired.</p>' +
-                  '<p>It made me think about everything they still had to manage once they left: appointments, changes in the pregnancy, medication, work and their own wellbeing.</p>' +
-                  '<p>BabySteps started as an attempt to make some of that easier to manage from a phone.</p>' +
+                '<div class="bs-stack32">' +
+                  '<p class="bs-head">It started with something I kept noticing.</p>' +
+                  '<div class="bs-split">' +
+                    '<figure class="bs-still bs-still--crop">' + bsRaw('baby-steps-problem.jpg', 'Where the idea came from') + '</figure>' +
+                    '<div class="bs-paras bs-paras--lg">' +
+                      '<p>During my personal visits to the hospital, I kept seeing heavily pregnant women moving between waiting areas, appointments and different parts of the hospital, often already tired.</p>' +
+                      '<p>It made me think about everything they still had to manage once they left: appointments, changes in the pregnancy, medication, work and their own wellbeing.</p>' +
+                      '<p>BabySteps started as an attempt to make some of that easier to manage from a phone.</p>' +
+                    '</div>' +
+                  '</div>' +
                 '</div>' +
               '</div>' +
             '</div>'

@@ -5758,6 +5758,25 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 #viewer .case-baby-steps .bs-split .bs-still { flex: 0 0 481px; max-width: 481px; }
 #viewer .case-baby-steps .bs-split--wide .bs-still { flex: 0 0 513px; max-width: 513px; }
 #viewer .case-baby-steps .bs-split--between { justify-content: space-between; gap: 26px; }
+
+/* Chapter 02 nests its row under the headline instead of beside it (node
+   248:4453): the claim runs full width, and the stack below the kicker holds
+   the headline 32px above the image row. */
+#viewer .case-baby-steps .bs-claim--full { flex: 1 1 auto; max-width: none; width: 100%; }
+#viewer .case-baby-steps .bs-stack32 {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+/* The design crops this still into a 481x378 box. The source file is 1600x1073,
+   so left to its own ratio the image lands 55px short and the prose beside it
+   stops lining up; cropping to the designed ratio is what squares the row. */
+#viewer .case-baby-steps .bs-still--crop img {
+  height: auto;
+  aspect-ratio: 481 / 378;
+  object-fit: cover;
+}
 #viewer .case-baby-steps .bs-cap {
   margin: 9px 0 0; font: 13px/1.6 Inter, Tahoma, sans-serif; color: var(--muted);
 }
@@ -5772,6 +5791,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #viewer .case-baby-steps .bs-claim,
   #viewer .case-baby-steps .bs-split .bs-still { flex: 1 1 auto; max-width: none; }
   #viewer .case-baby-steps .bs-head { font-size: 24px; }
+  #viewer .case-baby-steps .bs-stack32 { gap: 18px; }
   #viewer .case-baby-steps .bs-paras--lg p,
   #viewer .case-baby-steps .bs-lead,
   #viewer .case-baby-steps .bs-closing p { font-size: 16px; }
