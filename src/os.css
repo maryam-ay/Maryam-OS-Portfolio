@@ -6516,19 +6516,13 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     border-bottom: 1px solid var(--bev-lo);
     background: var(--paper);
   }
-  #viewer .case-baby-steps #cs-sec-0 { height: 763px; }
-  #viewer .case-baby-steps #cs-sec-1 { height: 543px; }
-  #viewer .case-baby-steps #cs-sec-2 { height: 1422.461px; }
-  #viewer .case-baby-steps #cs-sec-3 { height: 421px; }
-  #viewer .case-baby-steps #cs-sec-3 .bs-model { height: 204px; overflow: hidden; }
-  #viewer .case-baby-steps #cs-sec-4 { height: 1310px; }
-  #viewer .case-baby-steps #cs-sec-5 { height: 1643.065px; }
-  #viewer .case-baby-steps #cs-sec-6 { height: 755.791px; }
-  #viewer .case-baby-steps #cs-sec-7 { height: 4451.625px; }
-  #viewer .case-baby-steps #cs-sec-8 {
-    height: 860px;
-    border-bottom: 0;
-  }
+  /* The chapter heights in the file (763, 543, 1422.461, ...) are a result of
+     the content at 1153px in Inter, not an input. Pinning them here with
+     overflow:hidden meant any reflow -- a narrower window, a longer line --
+     was cut off at the frame edge, taking the 38px bottom padding with it. At
+     1280 that clipped The turning point by 37px, 02 Care by 73 and Looking
+     back by 148. The sections size to their own content instead. */
+  #viewer .case-baby-steps #cs-sec-8 { border-bottom: 0; }
   #viewer .case-baby-steps .cs-footer {
     flex: 0 0 69px;
     height: 69px;
