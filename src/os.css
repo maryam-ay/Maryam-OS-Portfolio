@@ -5777,6 +5777,35 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   aspect-ratio: 481 / 378;
   object-fit: cover;
 }
+
+/* The design is a fixed composition 1153px wide: a 481px still, a 48px gap and
+   a 624px measure, sized so the prose wraps to 4/3/2 lines and lands just
+   inside the height of the still beside it. Held in fixed pixels that survives
+   at exactly one window width — narrow the window and the still keeps its
+   481px while the measure shrinks, the prose wraps onto more lines, and the
+   still ends up shorter than the text it is meant to anchor.
+
+   So the chapter is sized in proportions of its own width instead. The three
+   columns keep their designed share and the type scales with them, which holds
+   the line breaks and therefore the whole composition. Every value clamps to
+   the pixel value in the file once there is room for it.
+
+   The container is the claim rather than the stack because an element cannot
+   query itself: cqw used on the stack's own gap would resolve against the
+   viewport instead. */
+#viewer .case-baby-steps .bs-claim--full { container-type: inline-size; }
+
+@media (min-width: 768px) {
+  #viewer .case-baby-steps .bs-stack32 { gap: min(32px, 2.7754cqw); }
+  #viewer .case-baby-steps .bs-stack32 .bs-head { font-size: min(31px, 2.6887cqw); }
+  #viewer .case-baby-steps .bs-stack32 .bs-split { gap: min(48px, 4.1630cqw); }
+  #viewer .case-baby-steps .bs-stack32 .bs-split .bs-still {
+    flex: 0 0 min(481px, 41.7172%);
+    max-width: min(481px, 41.7172%);
+  }
+  #viewer .case-baby-steps .bs-stack32 .bs-paras { gap: min(16px, 1.3877cqw); }
+  #viewer .case-baby-steps .bs-stack32 .bs-paras--lg p { font-size: min(22px, 1.9081cqw); }
+}
 #viewer .case-baby-steps .bs-cap {
   margin: 9px 0 0; font: 13px/1.6 Inter, Tahoma, sans-serif; color: var(--muted);
 }
