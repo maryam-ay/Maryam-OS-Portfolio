@@ -6633,6 +6633,36 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     border-radius: min(20px, 1.7346cqw);
   }
   #viewer .case-baby-steps .bs-support .bs-notes p:not(.k) { font-size: min(18px, 1.5611cqw); }
+
+  /* --------------------------------------------------------------------------
+     FINAL (other screens) — node 248:4707
+
+     1153 wide: the label, then two rows 9px apart, each 1102.7 wide with 16px
+     padding around four 239.176x520 screens 38 apart, sitting at x=0. Held in
+     fixed pixels the four screens came to 1102 whatever the window did, so
+     below the design width the fourth ran past the edge and the section's
+     overflow:hidden cut it off. Shares of the row's own width instead: four
+     lots of 20.7439 plus three gaps and the padding comes back to the file's
+     95.6% every time.
+     -------------------------------------------------------------------------- */
+  #viewer .case-baby-steps .bs-final { container-type: inline-size; }
+  #viewer .case-baby-steps .bs-final .bs-stage-label {
+    margin: 0 0 min(9px, .7806cqw);
+    font-size: min(24px, 2.0815cqw);
+  }
+  #viewer .case-baby-steps .bs-final-row {
+    margin: 0;                       /* the file left-aligns the row, not centred */
+    gap: min(38px, 3.2957cqw);
+    padding: min(16px, 1.3877cqw);
+  }
+  #viewer .case-baby-steps .bs-final-row + .bs-final-row { margin-top: min(9px, .7806cqw); }
+  #viewer .case-baby-steps .bs-final-row img {
+    flex: 0 1 min(239.176px, 20.7439cqw);
+    width: 100%;
+    max-width: min(239.176px, 20.7439cqw);
+    height: auto;
+    border-radius: min(20px, 1.7346cqw);
+  }
   #viewer .case-baby-steps .cs-footer .primary { background: var(--rose); color: var(--paper); }
 }
 

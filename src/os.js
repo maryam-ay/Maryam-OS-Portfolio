@@ -1942,7 +1942,7 @@
               '<figure class="bs-stage">' + bsRaw('baby-steps-paper-figma.webp', 'Paper sketches from the BabySteps design process') + '</figure>' +
               '<figure class="bs-stage">' + bsRaw('baby-steps-lowfi-figma.png', 'Low-fidelity BabySteps wireframes') + '</figure>' +
               '<div class="bs-final">' +
-                '<p class="bs-stage-label">FINAL</p>' +
+                '<p class="bs-stage-label">FINAL (other screens)</p>' +
                 '<div class="bs-final-row">' +
                   bsImg('babysteps/02-track.png', 'BabySteps tracking screen') +
                   bsImg('babysteps/18-community.png', 'BabySteps community') +
