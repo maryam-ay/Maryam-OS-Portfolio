@@ -6145,7 +6145,6 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   align-items: center;
   width: 100%;
 }
-#viewer .case-baby-steps .bs-support { overflow: hidden; }
 /* The file sets the booking flow 53px above the pharmacy, not the chapter's
    usual 26. */
 #viewer .case-baby-steps .bs-pharmacy { gap: 38px; margin-top: 27px; }
@@ -6189,14 +6188,13 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   font-size: 9px;
   letter-spacing: .6px;
 }
-#viewer .case-baby-steps .bs-support {
-  gap: 16px;
-  height: 554px;
-}
+/* 554 is what this row happens to measure at 1153 in the file, not a height
+   it must hold. Pinned with overflow:hidden it cut the section short at any
+   narrower window, the same way the chapter frames did. */
+#viewer .case-baby-steps .bs-support { gap: 16px; }
 #viewer .case-baby-steps .bs-support > .bs-notes {
   flex: 1 1 0;
   min-width: 0;
-  height: 100%;
   padding: 16px 0;
   justify-content: center;
 }
@@ -6557,6 +6555,81 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
     letter-spacing: .4px;
   }
   #viewer .case-baby-steps .cs-footer .secondary { background: var(--btn); color: var(--ink); }
+
+  /* --------------------------------------------------------------------------
+     06 — Care, held to the file's proportions (nodes 248:4606, 248:4635)
+
+     Both rows are fixed compositions 1153px wide: four 288px step columns whose
+     261.75px measure sets "Choose a clinic and physician" on one line and its
+     body on four, and a 550/38/565 pharmacy row. In fixed pixels that is only
+     true at 1153 -- at 1280 the step columns come out 221 wide, the first title
+     wraps onto a second line and the four screens stop aligning.
+
+     So both rows are sized as shares of their own width, type included, which
+     holds the line breaks and therefore the structure. Every value clamps to
+     the file's pixel value once there is room for it. 1cqw is 11.53px at the
+     design width, so 16px is 1.3877cqw, 130px is 11.2749cqw, and so on.
+     -------------------------------------------------------------------------- */
+  #viewer .case-baby-steps .bs-flow { container-type: inline-size; }
+  #viewer .case-baby-steps .bs-flow > div {
+    gap: min(6px, .5204cqw);
+    padding: min(17px, 1.4744cqw) min(13px, 1.1274cqw);
+  }
+  #viewer .case-baby-steps .bs-flow .n { font-size: min(9px, .7806cqw); }
+  #viewer .case-baby-steps .bs-flow b { font-size: min(16px, 1.3877cqw); }
+  #viewer .case-baby-steps .bs-flow p:not(.n) {
+    height: min(130px, 11.2749cqw);
+    font-size: min(16px, 1.3877cqw);
+  }
+  #viewer .case-baby-steps .bs-flow img {
+    max-width: min(260px, 22.5499cqw);
+    border-radius: min(20px, 1.7346cqw);
+  }
+
+  /* The pharmacy row: 550 of screens, 38 of gap, 565 of copy. A percentage gap
+     resolves against the row itself, so it needs no container of its own. */
+  #viewer .case-baby-steps .bs-pharmacy {
+    container-type: inline-size;
+    gap: 3.2957%;
+  }
+  #viewer .case-baby-steps .bs-pharmacy-screens {
+    gap: min(38px, 3.2957cqw);
+    padding: min(16px, 1.3877cqw);
+  }
+  #viewer .case-baby-steps .bs-pharmacy-screens img {
+    flex: 0 1 min(240px, 20.815cqw);
+    max-width: min(240px, 20.815cqw);
+    border-radius: min(20px, 1.7346cqw);
+  }
+  #viewer .case-baby-steps .bs-pharmacy-copy { gap: min(38px, 3.2957cqw); }
+  #viewer .case-baby-steps .bs-pharmacy .bs-lead { font-size: min(24px, 2.0815cqw); }
+  #viewer .case-baby-steps .bs-pharmacy .bs-notes { gap: min(9px, .7806cqw); }
+  #viewer .case-baby-steps .bs-pharmacy .bs-notes > div {
+    gap: min(5px, .4337cqw);
+    padding: min(13px, 1.1274cqw) min(14px, 1.2142cqw);
+    border-radius: min(7px, .6071cqw);
+  }
+  #viewer .case-baby-steps .bs-pharmacy .bs-notes .k { font-size: min(9px, .7806cqw); }
+  #viewer .case-baby-steps .bs-pharmacy .bs-notes p:not(.k) { font-size: min(14px, 1.2142cqw); }
+
+  /* 03 — Support is the same shape: three fixed 240px screens beside a notes
+     column that takes what is left. Unpinning its height showed what the clip
+     had been hiding -- at 1280 the screens still claimed 828 and the notes were
+     squeezed to 149px and ran to 1054 tall. It scales like the pharmacy row. */
+  #viewer .case-baby-steps .bs-support {
+    container-type: inline-size;
+    gap: 1.3877%;
+  }
+  #viewer .case-baby-steps .bs-support-screens {
+    gap: min(38px, 3.2957cqw);
+    padding: min(16px, 1.3877cqw);
+  }
+  #viewer .case-baby-steps .bs-support-screens img {
+    flex: 0 1 min(240px, 20.815cqw);
+    max-width: min(240px, 20.815cqw);
+    border-radius: min(20px, 1.7346cqw);
+  }
+  #viewer .case-baby-steps .bs-support .bs-notes p:not(.k) { font-size: min(18px, 1.5611cqw); }
   #viewer .case-baby-steps .cs-footer .primary { background: var(--rose); color: var(--paper); }
 }
 
