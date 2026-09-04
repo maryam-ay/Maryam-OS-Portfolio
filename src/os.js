@@ -1011,6 +1011,9 @@
       updateTasks();syncMaxed();
       if(!target||target==='home'||!document.getElementById(target)){
         showMobileHome();
+        // Going home has no openWin to ride on, so the URL is squared up here
+        // instead -- replacing, not pushing, because this is a step back.
+        syncRoute(true);
         return;
       }
       mobileBackNavigating=true;
@@ -1129,6 +1132,19 @@
     win.classList.add('open');setActive(win);syncMaxed();
     Genie.play(win,anchorCenter(origin),'in',function(){win.classList.remove('genie-prep');},clickTs);
   }
+
+  // openWin and openProject each have several early returns -- the phone path,
+  // the no-animation path, the cold-texture path -- so the URL is kept in step
+  // by wrapping them once here rather than by repeating a call before every
+  // one of those returns and eventually missing one.
+  var openWinInner = openWin;
+  openWin = function(id, srcEl, noAnim){
+    var out = openWinInner(id, srcEl, noAnim);
+    // Coming back on the phone must not push a fresh entry on top of the one we
+    // are returning to, so that case replaces instead.
+    syncRoute(mobileBackNavigating);
+    return out;
+  };
   function closeWin(win){
     SoundSystem.playClick();
     function finish(){
@@ -1136,6 +1152,7 @@
       openOrder=openOrder.filter(function(x){return x!==win.id;});
       var last=openOrder[openOrder.length-1];setActive(last?document.getElementById(last):null);
       syncMaxed();
+      syncRoute();
     }
     if(!win.classList.contains('open')){finish();return;}
     if(isPhoneOS()){playPhoneWindow(win,false,finish);return;}
@@ -1145,7 +1162,7 @@
   }
   function minWin(win){
     SoundSystem.playClick();
-    function finish(){win.classList.add('min','inactive');win.classList.remove('genie-prep');updateTasks();syncMaxed();}
+    function finish(){win.classList.add('min','inactive');win.classList.remove('genie-prep');updateTasks();syncMaxed();syncRoute();}
     if(isPhoneOS()){playPhoneWindow(win,false,finish);return;}
     if(!Genie.ready(win.id)){finish();Genie.warm(win);return;}
     var btn=tasks.querySelector('[data-win="'+win.id+'"]');
@@ -3019,7 +3036,14 @@
       viewer.addEventListener('mousedown',function(){setActive(viewer);},true);
       viewer.querySelector('.cl').addEventListener('click',function(e){e.stopPropagation();closeWin(viewer);});
       addBackControl(viewer);
-      viewer.querySelector('.mn').addEventListener('click',function(e){e.stopPropagation();minWin(viewer);});
+      // The reader is built long after the phone chrome was first synced, so it
+      // needs its own pass or its control keeps the desktop minimise icon.
+      syncMobileChrome();
+      // Matching every other window: on a phone this control is Back, not
+      // Minimise. The reader was the one window that still minimised, which
+      // left the study on screen behind Work and the URL pointing at a study
+      // you had already left.
+      viewer.querySelector('.mn').addEventListener('click',function(e){e.stopPropagation();if(isPhoneOS())goMobileBack(viewer,e.currentTarget);else minWin(viewer);});
       viewer.querySelector('.mx').addEventListener('click',function(e){e.stopPropagation();maxWin(viewer);});
 
       var rp = viewer.querySelector('.hlp-reading-pane');
@@ -3132,6 +3156,13 @@
     if(cardEl)viewer._origin=cardEl;
     viewer.classList.add('open');viewer.classList.remove('min');fadeIn(viewer);setActive(viewer);Genie.warm(viewer);
   }
+
+  var openProjectInner = openProject;
+  openProject = function(name, cardEl){
+    var out = openProjectInner(name, cardEl);
+    syncRoute();
+    return out;
+  };
 
   function makeDraggable(win){
     var bar=win.querySelector('.tbar');var dragging=false,ox=0,oy=0;
@@ -4852,4 +4883,140 @@
     }, true);
   })();
 
+
+  /* ==========================================================================
+     ROUTING
+
+     The windows were only ever DOM state, so the browser never learned that
+     anything had happened. Back left the site entirely, a refresh dropped you
+     on a bare desktop, and there was no way to send anyone a link to a case
+     study -- the best thing here.
+
+     The URL mirrors the top of the stack rather than trying to encode all of
+     it. openOrder already models that stack, and back already means something
+     on this site: it is what the pill in every title bar does. So the browser
+     button and the pill now do the same thing -- close the top window and
+     reveal whatever is under it -- and the site only exits when there is
+     genuinely nothing left to go back to.
+
+     Hi There is deliberately unrouted. It opens itself on a desktop load, so
+     it is the landing state, and the landing state is "/".
+     ========================================================================== */
+  var ROUTE_OF = {
+    work:    '/work',
+    builds:  '/ai-builds',
+    about:   '/about',
+    xp:      '/experience',
+    contact: '/say-hi',
+    game:    '/game'
+  };
+  var WIN_OF = {};
+  Object.keys(ROUTE_OF).forEach(function(id){ WIN_OF[ROUTE_OF[id]] = id; });
+
+  // Set while a URL is being turned back into windows, so opening and closing
+  // during that never pushes a fresh entry and starts a loop.
+  var routing = false;
+
+  function slugOfProject(name){
+    return String(name || '').toLowerCase().trim().replace(/\s+/g, '-');
+  }
+  // Go back through the cards rather than guessing at capitalisation: the rail
+  // already carries the exact name openProject expects.
+  function projectForSlug(slug){
+    var found = null;
+    document.querySelectorAll('[data-project]').forEach(function(el){
+      var n = el.getAttribute('data-project') || '';
+      if(!found && slugOfProject(n) === slug) found = n;
+    });
+    return found;
+  }
+
+  function currentRoute(){
+    if(viewer && viewer.classList.contains('open') && !viewer.classList.contains('min')){
+      var slug = viewer.getAttribute('data-case-study');
+      return slug ? '/work/' + slug : '/work';
+    }
+    for(var i = openOrder.length - 1; i >= 0; i--){
+      var win = document.getElementById(openOrder[i]);
+      if(win && win.classList.contains('open') && !win.classList.contains('min') && ROUTE_OF[win.id]){
+        return ROUTE_OF[win.id];
+      }
+    }
+    return '/';
+  }
+
+  function syncRoute(replace){
+    // ROUTE_OF is declared below, and the desktop opens Hi There before that
+    // line runs, so the table is checked for existence and not just content.
+    if(routing || !ROUTE_OF || !window.history || !history.pushState) return;
+    var next = currentRoute();
+    if(next === location.pathname) return;
+    try {
+      history[replace ? 'replaceState' : 'pushState']({ route: next }, '', next);
+    } catch(_){}
+  }
+
+  function applyRoute(path){
+    if(routing) return;
+    routing = true;
+    try {
+      var parts = String(path || '/').split('?')[0].replace(/\/+$/, '').split('/').filter(Boolean);
+      var wantWin = null, wantSlug = null;
+      if(parts[0] === 'work' && parts[1]){ wantWin = 'work'; wantSlug = parts[1]; }
+      else if(parts.length){ wantWin = WIN_OF['/' + parts[0]] || null; }
+
+      // A URL must not conjure up a study that is not published.
+      var wantName = wantSlug ? projectForSlug(wantSlug) : null;
+      if(wantName && !caseStudyReady(wantName)) { wantName = null; wantSlug = null; }
+
+      var viewerOpen = viewer && viewer.classList.contains('open');
+      if(viewerOpen && viewer.getAttribute('data-case-study') !== wantSlug) closeWin(viewer);
+
+      windows().forEach(function(win){
+        if(ROUTE_OF[win.id] && win.id !== wantWin && win.classList.contains('open')) closeWin(win);
+      });
+
+      if(wantWin){
+        var w = document.getElementById(wantWin);
+        if(w && (!w.classList.contains('open') || w.classList.contains('min'))) openWin(wantWin, null, true);
+      }
+      if(wantName){
+        var already = viewer && viewer.classList.contains('open') &&
+                      viewer.getAttribute('data-case-study') === wantSlug;
+        if(!already) openProject(wantName);
+      }
+    } finally {
+      routing = false;
+    }
+  }
+
+  // <base href="/"> makes a bare "#foo" resolve to "/#foo", which would leave
+  // the route and reload the page. These are in-page jump links inside the
+  // Experience window and have no handler of their own, so scrolling is done
+  // here and the URL is left alone.
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if(!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if(!id) return;
+    var target = document.getElementById(id);
+    if(!target) return;
+    e.preventDefault();
+    target.scrollIntoView({
+      block: 'start',
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+    });
+  });
+
+  window.addEventListener('popstate', function(){ applyRoute(location.pathname); });
+
+  // The desktop opens Hi There for itself just above; let that settle, record
+  // where we are, and only then act on a deep link.
+  (function initRouting(){
+    if(!window.history || !history.replaceState) return;
+    try { history.replaceState({ route: location.pathname }, '', location.pathname); } catch(_){}
+    if(location.pathname !== '/' && location.pathname !== '/index-os.html'){
+      applyRoute(location.pathname);
+    }
+  })();
 })();

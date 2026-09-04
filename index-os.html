@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- The site now lives at real paths (/work, /work/baby-steps), and almost every
+     asset here is referenced relatively, so without this an image at /work/... is
+     looked for under /work/images/... and 404s. One line beats rewriting 54 paths.
+     In-page # links are handled in os.js so they keep scrolling instead of
+     navigating to the root. -->
+<base href="/">
 <title>maryam ♡ product designer</title>
 
 <!-- Icons. The SVG is what modern browsers use and scales to any size; the .ico
