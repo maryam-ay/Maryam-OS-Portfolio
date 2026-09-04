@@ -1029,6 +1029,30 @@
       if(icon)icon.className=phone?'ti ti-chevron-left':'ti ti-minus';
     });
   }
+
+  // A worded way out. The × in the corner reads as "exit" to anyone who grew up
+  // with this chrome and as nothing in particular to everyone else, so each
+  // window also carries a labelled back control at the left of its title bar.
+  // It closes the window, which is already what going back means here: closeWin
+  // pops openOrder and hands focus to whatever sits underneath, so the case
+  // study returns you to Work and Work returns you to the desktop.
+  //
+  // Hi There is left out on Maryam's call: it is the first thing you meet and
+  // has nothing behind it. The rejected About block is skipped because it never
+  // renders and is not ours to touch.
+  var NO_BACK_CONTROL={welcome:true,'about-character-rejected':true};
+  function addBackControl(win){
+    if(!win||NO_BACK_CONTROL[win.id])return;
+    var bar=win.querySelector('.tbar');
+    if(!bar||bar.querySelector('.tbar-back'))return;
+    var btn=document.createElement('button');
+    btn.type='button';
+    btn.className='pout tbar-back';
+    btn.setAttribute('aria-label','Back');
+    btn.innerHTML='<i class="ti ti-chevron-left" aria-hidden="true"></i>back';
+    btn.addEventListener('click',function(e){e.stopPropagation();closeWin(win);});
+    bar.insertBefore(btn,bar.firstChild);
+  }
   function openWin(id,srcEl,noAnim){
     var win=document.getElementById(id);if(!win)return;
     if(isPhoneOS())applyMobileTypeFloor(win);
@@ -1222,6 +1246,7 @@
 
   windows().forEach(function(win){
     win.addEventListener('mousedown',function(){setActive(win);},true);
+    addBackControl(win);
     win.querySelector('.cl').addEventListener('click',function(e){e.stopPropagation();closeWin(win);});
     win.querySelector('.mn').addEventListener('click',function(e){e.stopPropagation();if(isPhoneOS())goMobileBack(win,e.currentTarget);else minWin(win);});
     win.querySelector('.mx').addEventListener('click',function(e){e.stopPropagation();maxWin(win);});
@@ -2993,6 +3018,7 @@
       desktop.appendChild(viewer);
       viewer.addEventListener('mousedown',function(){setActive(viewer);},true);
       viewer.querySelector('.cl').addEventListener('click',function(e){e.stopPropagation();closeWin(viewer);});
+      addBackControl(viewer);
       viewer.querySelector('.mn').addEventListener('click',function(e){e.stopPropagation();minWin(viewer);});
       viewer.querySelector('.mx').addEventListener('click',function(e){e.stopPropagation();maxWin(viewer);});
 
@@ -3110,7 +3136,7 @@
   function makeDraggable(win){
     var bar=win.querySelector('.tbar');var dragging=false,ox=0,oy=0;
     bar.addEventListener('pointerdown',function(e){
-      if(e.target.closest('.tctl'))return;if(win.classList.contains('maxed'))return;
+      if(e.target.closest('.tctl,.tbar-back'))return;if(win.classList.contains('maxed'))return;
       if(window.matchMedia('(max-width:767px)').matches)return;
       dragging=true;setActive(win);var r=win.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;
       bar.setPointerCapture(e.pointerId);
