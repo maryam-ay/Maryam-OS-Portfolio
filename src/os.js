@@ -4817,4 +4817,39 @@
     window.addEventListener('orientationchange', place);
   })();
 
+  // A heart lifts off wherever you click. It is a picture, not a control: it
+  // never takes a pointer event and it takes itself off the page again.
+  //
+  // Title bars are left out on purpose. Dragging a window starts with a press,
+  // and a flourish on every drag turns the chrome noisy; the mark belongs to
+  // reading and clicking through work, not to moving furniture.
+  //
+  // Nothing runs at all without a real pointer, or for anyone who has asked for
+  // less motion — this is decoration, and decoration is the first thing that
+  // should go quiet when someone says they do not want it.
+  (function initClickHearts(){
+    if(!window.matchMedia) return;
+    if(!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var calm = matchMedia('(prefers-reduced-motion: reduce)');
+    var LIFE = 780; // the animation is 620ms plus the last 120ms of stagger
+
+    document.addEventListener('pointerdown', function(e){
+      if(calm.matches) return;
+      if(e.button !== 0) return;
+      if(e.target && e.target.closest && e.target.closest('.tbar')) return;
+      for(var i = 0; i < 3; i++){
+        var h = document.createElement('span');
+        h.className = 'click-heart';
+        h.setAttribute('aria-hidden','true');
+        h.textContent = '♡';
+        h.style.left = (e.clientX + (Math.random()*20 - 10)) + 'px';
+        h.style.top  = (e.clientY + (Math.random()*8 - 4)) + 'px';
+        h.style.setProperty('--tilt', (Math.random()*40 - 20).toFixed(0) + 'deg');
+        h.style.animationDelay = (i * 60) + 'ms';
+        document.body.appendChild(h);
+        setTimeout(function(node){ return function(){ node.remove(); }; }(h), LIFE);
+      }
+    }, true);
+  })();
+
 })();
