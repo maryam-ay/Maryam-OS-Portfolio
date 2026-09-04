@@ -1989,13 +1989,13 @@
           title: 'If I picked BabySteps up again today.',
           rail: 'Looking-back',
           blocks: [{ type: 'raw', html:
-            '<div class="bs bs-ch">' +
+            '<div class="bs bs-ch bs-ch--lookback">' +
               '<div class="bs-cols">' +
                 '<div class="bs-claim">' +
                   '<p class="bs-kicker">LOOKING BACK</p>' +
                   '<p class="bs-head">If I picked BabySteps up again today.</p>' +
                 '</div>' +
-                '<div class="bs-paras">' +
+                '<div class="bs-paras bs-paras--sm">' +
                   '<p>BabySteps was a two-week concept project, and looking back at it now, there are parts I would take much further before treating the product as finished.</p>' +
                 '</div>' +
               '</div>' +

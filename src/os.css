@@ -6645,6 +6645,68 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #viewer .case-baby-steps .bs-support .bs-notes p:not(.k) { font-size: min(18px, 1.5611cqw); }
 
   /* --------------------------------------------------------------------------
+     09 — Looking back, node 248:4710
+
+     1153 wide: a 520 claim beside its paragraphs 40 apart, then a 513 still and
+     a 600 next-steps column pushed to the edges, then the closing pair. The
+     still is h-full in the file, so it stretches to the height the three steps
+     set rather than keeping its own.
+
+     Held in pixels the two columns kept 513 and 520 while everything beside
+     them shrank, so at 1280 the still took 51.7% of the row where the file
+     gives it 44.5% and the proportions inverted. Shares of the chapter's own
+     width instead, type included.
+     -------------------------------------------------------------------------- */
+  #viewer .case-baby-steps .bs-ch--lookback { container-type: inline-size; }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-cols { gap: min(40px, 3.4692cqw); }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-claim {
+    flex: 0 1 min(520px, 45.1006cqw);
+    max-width: min(520px, 45.1006cqw);
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-kicker { font-size: min(10px, .8673cqw); }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-head { font-size: min(31px, 2.6887cqw); }
+  /* The file sets this chapter's opening paragraph at 13.5, not the 16 the
+     other chapters use. */
+  #viewer .case-baby-steps .bs-ch--lookback .bs-paras--sm p { font-size: min(13.5px, 1.1709cqw); }
+
+  #viewer .case-baby-steps .bs-ch--lookback .bs-split--wide .bs-still {
+    flex: 0 1 min(513px, 44.4926cqw);
+    max-width: min(513px, 44.4926cqw);
+    align-self: stretch;          /* h-full in the file */
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-split--wide .bs-still img {
+    height: 100%;
+    object-fit: cover;
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-next {
+    flex: 0 1 min(600px, 52.0382cqw);
+    max-width: min(600px, 52.0382cqw);
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-next > div {
+    gap: min(8px, .6938cqw);
+    padding: min(10px, .8673cqw) 0;
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-next .n {
+    flex: 0 0 min(27px, 2.3417cqw);
+    font-size: min(20px, 1.7346cqw);
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-next .a { font-size: min(10px, .8673cqw); }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-next b {
+    margin-bottom: min(5px, .4337cqw);
+    font-size: min(18px, 1.5611cqw);
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-next p { font-size: min(15px, 1.3009cqw); }
+  /* The file draws step 02's heading in a 529px box, narrower than the column
+     it sits in, which is what puts "in the experience" onto a second line. */
+  #viewer .case-baby-steps .bs-ch--lookback .bs-next > div:nth-of-type(2) b {
+    max-width: min(529px, 45.8803cqw);
+  }
+  #viewer .case-baby-steps .bs-ch--lookback .bs-closing p {
+    margin-bottom: min(16px, 1.3877cqw);
+    font-size: min(20px, 1.7346cqw);
+  }
+
+  /* --------------------------------------------------------------------------
      FINAL (other screens) — node 248:4707
 
      1153 wide: the label, then two rows 9px apart, each 1102.7 wide with 16px
