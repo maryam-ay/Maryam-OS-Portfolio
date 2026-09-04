@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "_comment_rewrites": "Vercel checks the filesystem before rewrites, so /assets, /images and /audio still resolve to real files; only routes fall through to the app.",
   "rewrites": [
     { "source": "/", "destination": "/index-os.html" },
     { "source": "/(.*)", "destination": "/index-os.html" }
