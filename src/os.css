@@ -5640,7 +5640,10 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   padding: 17px 13px;
 }
 #viewer .case-baby-steps .bs-flow .n {
-  margin: 0 auto;
+  /* The file left-aligns 02, 03 and 04 at the padding edge and centres only
+     01, which reads as a stray rather than a rhythm. All four sit left, in
+     line with the title and body beneath them. */
+  margin: 0;
   font: bold 10px/normal var(--font-mono);
   letter-spacing: .6px;
   color: var(--rose);
