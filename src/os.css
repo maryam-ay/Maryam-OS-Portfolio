@@ -6802,10 +6802,11 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
    cursor that arrives a moment late flickers, and one that 404s leaves the
    desktop wearing the visitor's own arrow.
 
-   It replaces the default arrow only. The other five states this site already
-   speaks -- pointer on controls, text in fields, grab and grabbing on title
-   bars, se-resize on the window corner -- are re-stated below so nothing
-   inherits the arrow where it should say something else.
+   It is the only pointer the site shows. The hand, the I-beam, the grab hand
+   and the resize arrow are all overridden: the arrow is the OS, and handing it
+   back to the browser at every button and field kept breaking that. The cost
+   is that a text field no longer announces itself by the cursor, so it leans
+   on its inset border and caret to do that instead.
 
    The white fill and dark outline are what let one drawing work on both the
    cream desktop and the dark one, which is why real OS pointers are built the
@@ -6814,22 +6815,15 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
    Gated to devices with a real pointer, so the phone OS never sees it.
    ========================================================================== */
 @media (hover: hover) and (pointer: fine) {
-  html, body {
-    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAmCAYAAACsyDmTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC/SURBVFhH3c7LDYMwEIRhmqCH9ILSDDWmpUhcIqIcBiUTjRbD2uz6l3wxj/mGabytnzNEKSwoDCwsCF0OCw+6HJYGhJrD0oFQM1haEKoOSw9C1WDdgJA7rDsQcoN1C0KnYd2A8J06vLO7NCDrnv/jljXMNQfxID9X76ke93n9Ptb93yAP8XP1nkoNq/ttUA0cBWHo9Vx+jnUfF8Q/5EphaliduKC9lYKQBSuGoHAg5AU7DUHhQAgAC8K5Q1At0Bv81Y0HLQYQ8AAAAABJRU5ErkJggg==") 1 1, auto;
+  /* One pointer, everywhere. The arrow is the OS, and swapping it out for a
+     hand or an I-beam kept breaking that, so nothing swaps it now.
+
+     !important is doing real work here rather than papering over a specificity
+     mistake: there are twelve inline cursor:pointer styles in the markup, and
+     an inline style cannot be beaten from a stylesheet any other way. */
+  * {
+    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAmCAYAAACsyDmTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC/SURBVFhH3c7LDYMwEIRhmqCH9ILSDDWmpUhcIqIcBiUTjRbD2uz6l3wxj/mGabytnzNEKSwoDCwsCF0OCw+6HJYGhJrD0oFQM1haEKoOSw9C1WDdgJA7rDsQcoN1C0KnYd2A8J06vLO7NCDrnv/jljXMNQfxID9X76ke93n9Ptb93yAP8XP1nkoNq/ttUA0cBWHo9Vx+jnUfF8Q/5EphaliduKC9lYKQBSuGoHAg5AU7DUHhQAgAC8K5Q1At0Bv81Y0HLQYQ8AAAAABJRU5ErkJggg==") 1 1, auto !important;
   }
-  /* Keep the states that carry meaning. */
-  a[href], button, summary, [role="button"], .pdi, .pf, .rail-entry,
-  .marquee-card, .cs-btn, .mobile-nav-item {
-    cursor: pointer;
-  }
-  input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
-  textarea, [contenteditable="true"] {
-    cursor: text;
-  }
-  .tbar { cursor: grab; }
-  .tbar:active { cursor: grabbing; }
-  .win-resize-handle { cursor: se-resize; }
-  [disabled], [aria-disabled="true"] { cursor: not-allowed; }
 }
 
 /* The heart that lifts off on a click. Nothing here is interactive: it never
