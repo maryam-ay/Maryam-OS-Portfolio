@@ -6144,13 +6144,16 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   display: flex;
   align-items: center;
   width: 100%;
-  overflow: hidden;
 }
-#viewer .case-baby-steps .bs-pharmacy { gap: 38px; }
+#viewer .case-baby-steps .bs-support { overflow: hidden; }
+/* The file sets the booking flow 53px above the pharmacy, not the chapter's
+   usual 26. */
+#viewer .case-baby-steps .bs-pharmacy { gap: 38px; margin-top: 27px; }
 #viewer .case-baby-steps .bs-pharmacy-screens,
 #viewer .case-baby-steps .bs-support-screens {
   display: flex;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
   gap: 38px;
   align-items: center;
   padding: 16px;
@@ -6158,10 +6161,10 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 #viewer .case-baby-steps .bs-pharmacy-screens img,
 #viewer .case-baby-steps .bs-support-screens img {
   display: block;
-  flex: 0 0 240px;
-  width: 240px;
-  height: 522px;
-  object-fit: cover;
+  flex: 0 1 240px;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
   border-radius: 20px;
 }
 #viewer .case-baby-steps .bs-pharmacy-copy {
@@ -6206,8 +6209,6 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 #viewer .case-baby-steps .bs-flow > div {
   gap: 6px;
   padding: 17px 13px;
-  align-items: flex-start;
-  overflow: hidden;
 }
 #viewer .case-baby-steps .bs-flow > div + div { border-left: 1px solid var(--bev-lo); }
 #viewer .case-baby-steps .bs-flow .n { font-size: 9px; }
@@ -6216,11 +6217,16 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   height: 130px;
   font-size: 16px;
 }
+/* The screen is 260 wide in the file, which is all but the whole column once
+   its 13px sides are taken off. Pinned at 260 it stayed 260 while the column
+   shrank with the window, and the step's overflow:hidden sliced the phone --
+   which is why "How would you like to meet?" lost its H. It scales with the
+   column instead, capped at the file's 260, and is never cropped. */
 #viewer .case-baby-steps .bs-flow img {
-  width: 260px;
-  height: 565px;
-  margin: 0;
-  object-fit: cover;
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  margin: 0 auto;
   border-radius: 20px;
 }
 #viewer .case-baby-steps .bs-challenge {
@@ -6559,6 +6565,9 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #viewer .case-baby-steps .bs-relate,
   #viewer .case-baby-steps .bs-pharmacy,
   #viewer .case-baby-steps .bs-support { flex-direction: column; height: auto; }
+  /* The 53px the file puts between the flow and the pharmacy belongs to the
+     desktop composition; the phone keeps the chapter's own rhythm. */
+  #viewer .case-baby-steps .bs-pharmacy { margin-top: 0; }
   #viewer .case-baby-steps .bs-relate figure,
   #viewer .case-baby-steps .bs-persona-card,
   #viewer .case-baby-steps .bs-comp { width: 100%; max-width: none; flex-basis: auto; }
