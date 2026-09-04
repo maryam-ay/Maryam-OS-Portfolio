@@ -1774,7 +1774,7 @@
               '</div>' +
               '<div class="bs-phones">' +
                 bsImg('babysteps/01-splash.png', 'BabySteps splash screen') +
-                bsImg('babysteps/11-home.png', 'BabySteps home screen') +
+                bsImg('babysteps/11-home-v2.png', 'BabySteps home screen') +
                 bsImg('babysteps/12-clinic-hub.png', 'BabySteps clinic screen') +
                 bsImg('babysteps/12a-antenatal-visit.png', 'BabySteps antenatal care screen') +
               '</div>' +
