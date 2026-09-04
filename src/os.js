@@ -1168,6 +1168,54 @@
     var btn=tasks.querySelector('[data-win="'+win.id+'"]');
     Genie.play(win,anchorCenter(btn||win._origin),'out',finish);
   }
+
+  // Was this page reloaded, rather than arrived at? The Navigation Timing entry
+  // says so directly; the deprecated performance.navigation is the fallback for
+  // anything that does not carry it.
+  function isReload(){
+    try {
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      if(nav && nav.type) return nav.type === 'reload';
+      return !!(performance.navigation && performance.navigation.type === 1);
+    } catch(_) { return false; }
+  }
+
+  // Put a window under whatever is currently on top and hand focus back, so the
+  // stacking and the active title bar agree. Welcome is unrouted, so it also
+  // goes to the bottom of the stack the back button walks rather than the top.
+  function sendToBack(win){
+    var top = null, topZ = -1;
+    windows().forEach(function(w){
+      if(w === win || !w.classList.contains('open') || w.classList.contains('min')) return;
+      var v = parseInt(w.style.zIndex || 0, 10);
+      if(v > topZ){ topZ = v; top = w; }
+    });
+    if(top) setActive(top);      // marks the rest inactive and re-raises the top
+    openOrder = openOrder.filter(function(id){ return id !== win.id; });
+    openOrder.unshift(win.id);
+    updateTasks();
+  }
+
+  // Hi There is a greeting, so it leads on a first visit and gets out of the
+  // way afterwards. This runs behind the boot screen's timeout, which is well
+  // after the router, so anything the URL asked for is already open -- and it
+  // used to open straight on top of it, covering the very thing someone had
+  // linked to. Now it goes behind whenever there is something to go behind:
+  // a routed window, or anything still open after a reload.
+  //
+  // Alone on the desktop it opens in front as it always did. There is nothing
+  // for it to be behind, and a lone window with a greyed title bar reads as
+  // broken rather than polite.
+  function openWelcome(){
+    var win = document.getElementById('welcome');
+    if(!win) return;
+    var others = windows().filter(function(w){
+      return w !== win && w.classList.contains('open') && !w.classList.contains('min');
+    });
+    var routed = typeof ROUTE_OF !== 'undefined' && ROUTE_OF && others.some(function(w){ return ROUTE_OF[w.id]; });
+    openWin('welcome', null, true);
+    if(others.length && (routed || isReload())) sendToBack(win);
+  }
   function restoreWin(win,fromEl){
     SoundSystem.playOpen();
     if (window.innerWidth <= 767) {
@@ -4315,7 +4363,7 @@
         var wp = document.getElementById('widget-column');
         if (wp) wp.classList.add('show');
       },reducedMotion()?0:220);
-      if(window.innerWidth>767)openWin('welcome',null,true);
+      if(window.innerWidth>767)openWelcome();
     }, reducedMotion() ? 40 : 360);
   }
 
