@@ -2452,6 +2452,27 @@ body.dark .cs-cover .cs-title {
   font-size: 10.5px;
   letter-spacing: .04em;
 }
+/* The next slot when there is no next: a note, not a control. A greyed-out
+   button would still be shaped like a promise, and could not be focused to
+   explain itself; a span cannot be clicked or tabbed onto at all. */
+.reading-container .cs-footer .cs-next-empty {
+  justify-self: end;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  cursor: default;
+}
+@media (max-width: 767px) {
+  /* Three columns leave the middle one about 31px on a phone, which stacks
+     "— end of file —" into five lines. The two ends share the top row and the
+     line drops underneath them. */
+  .reading-container .cs-footer { grid-template-columns: auto auto; row-gap: 10px; }
+  .reading-container .cs-footer .back-work-btn { grid-column: 1; grid-row: 1; }
+  .reading-container .cs-footer .next-cs-btn,
+  .reading-container .cs-footer .cs-next-empty { grid-column: 2; grid-row: 1; justify-self: end; }
+  .reading-container .cs-footer .cs-eof { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
+}
 
 /* Nothing in the reader may push the pane sideways: a frame that derives its
    width from an aspect ratio and a min-height can otherwise exceed a narrow
@@ -6556,6 +6577,10 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   #viewer .case-baby-steps .cs-footer .cs-eof {
     justify-self: center;
     color: var(--muted);
+    font: 9px/normal var(--font-mono);
+    letter-spacing: .4px;
+  }
+  #viewer .case-baby-steps .cs-footer .cs-next-empty {
     font: 9px/normal var(--font-mono);
     letter-spacing: .4px;
   }

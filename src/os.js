@@ -2934,22 +2934,22 @@
     bottomRow.innerHTML =
       '<button class="back-work-btn cs-btn secondary">' + (isBabySteps ? '← back to work' : '← back to my work') + '</button>' +
       '<span class="cs-eof">' + (isBabySteps ? '— end of file —' : 'you’ve reached the end of ' + slug + '.hlp') + '</span>' +
-      // No next means no button at all, rather than a link to nowhere.
+      // Nothing to go to means nothing to press. The slot keeps its place so the
+      // row stays balanced, but as a plain note rather than a control that
+      // promises a study which does not exist -- the old version rendered a full
+      // primary button here and then did what the back button beside it already
+      // does. It gives way to the real link as soon as a second study is out.
       (nextKey
         ? '<button class="next-cs-btn cs-btn primary">next: ' + caseStudies[nextKey].title.toLowerCase() + ' →</button>'
-        : (isBabySteps ? '<button class="next-cs-btn cs-btn primary">next case study →</button>' : ''));
+        : '<span class="cs-next-empty">next: nothing here yet</span>');
 
+    // The button only exists when there is somewhere to go.
     var nextCsBtn = bottomRow.querySelector('.next-cs-btn');
     if (nextCsBtn) nextCsBtn.addEventListener('click', function() {
-      if (nextKey) {
-        readingPane.scrollTop = 0;
-        renderCaseStudy(nextKey);
-        Genie.invalidate('viewer');
-        Genie.warm(viewer);
-      } else {
-        closeWin(viewer);
-        openWin('work');
-      }
+      readingPane.scrollTop = 0;
+      renderCaseStudy(nextKey);
+      Genie.invalidate('viewer');
+      Genie.warm(viewer);
     });
 
     bottomRow.querySelector('.back-work-btn').addEventListener('click', function() {
