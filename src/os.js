@@ -856,7 +856,9 @@
   function windows(){return Array.prototype.slice.call(document.querySelectorAll('.window'));}
 
   // Windows that keep their authored size instead of launching full screen
-  var NO_AUTO_MAX={welcome:true,contact:true};
+  // picture-viewer is a 340px print on the desk, not an app — filling the
+  // screen with it would bury the line you just clicked from.
+  var NO_AUTO_MAX={welcome:true,contact:true,'picture-viewer':true};
 
   // --- taskbar auto-hide while a window is maximized ---
   var taskbarEl=document.getElementById('taskbar');
@@ -4195,15 +4197,12 @@
   }
 
   function initPhotoViewer() {
-    var photos = [
-      { src: 'images/optimized/about-interest-painting-720.webp', cap: '[caption: me pretending i can paint]' },
-      { src: 'images/optimized/about-interest-baking-720.webp', cap: '[caption: attempt #4 at macarons]' },
-      { src: 'images/optimized/about-interest-cooking-720.webp', cap: '[caption: experiments in the kitchen]' },
-      { src: 'images/optimized/about-interest-nollywood-720.webp', cap: '[caption: on set looking busy]' },
-      { src: 'images/optimized/about-interest-scifi-720.webp', cap: '[caption: exploring infinite shapes and space]' },
-      { src: 'images/optimized/about-interest-short-films-720.webp', cap: '[caption: storytelling behind the lens]' },
-      { src: 'images/optimized/about-interest-comedy-720.webp', cap: '[caption: sunday morning laughs]' }
-    ];
+    // Keep the viewer and carousel in sync when the placeholder images change.
+    var photos = [].slice.call(document.querySelectorAll('#about-album-thumbs .about-thumb-btn:not(.is-clone)')).map(function(button) {
+      var image = button.querySelector('img');
+      return { src: image.getAttribute('src'), alt: image.alt, cap: '[interest: ' + button.querySelector('strong').textContent + ']' };
+    });
+    if (!photos.length) return;
     var currentPhotoIndex = 0;
 
     function updatePhoto(index, bypassAbout) {
@@ -4224,6 +4223,7 @@
         };
 
         img.src = p.src;
+        img.alt = p.alt;
         cap.textContent = p.cap;
         counter.textContent = (index + 1) + ' / ' + photos.length;
 
@@ -4241,41 +4241,20 @@
 
     function updateAboutGallery(index, bypassPhoto) {
       currentPhotoIndex = index;
-      var p = photos[index];
-      var img = document.getElementById('about-gallery-img');
-      var fallback = document.getElementById('about-gallery-fallback');
-      var cap = document.getElementById('about-gallery-caption');
-      if (img) {
-        img.style.display = 'block';
-        fallback.style.display = 'none';
 
-        img.onerror = function() {
-          img.style.display = 'none';
-          fallback.style.display = 'flex';
-        };
+      // The repeated prints are the same photos, so keep their visual state
+      // together. These open a viewer; they are actions, not selectable options.
+      var thumbBtns = document.querySelectorAll('#about .about-thumb-btn');
+      thumbBtns.forEach(function(btn) {
+        var on = parseInt(btn.getAttribute('data-photo-idx'), 10) === index;
+        btn.classList.toggle('selected', on);
+        btn.removeAttribute('aria-selected');
+      });
 
-        img.src = p.src;
-        cap.textContent = p.cap;
-
-        var thumbBtns = document.querySelectorAll('.about-thumb-btn');
-        thumbBtns.forEach(function(btn, idx) {
-          if (idx === index) {
-            btn.classList.add('selected');
-            btn.setAttribute('aria-selected', 'true');
-            if (typeof btn.scrollIntoView === 'function') {
-              btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-            }
-          } else {
-            btn.classList.remove('selected');
-            btn.setAttribute('aria-selected', 'false');
-          }
-        });
-
-        var aboutWin = document.getElementById('about');
-        if (aboutWin && aboutWin.classList.contains('open') && typeof Genie !== 'undefined' && Genie.invalidate) {
-          Genie.invalidate('about');
-          Genie.warm(aboutWin);
-        }
+      var aboutWin = document.getElementById('about');
+      if (aboutWin && aboutWin.classList.contains('open') && typeof Genie !== 'undefined' && Genie.invalidate) {
+        Genie.invalidate('about');
+        Genie.warm(aboutWin);
       }
 
       if (!bypassPhoto) {
@@ -4300,29 +4279,307 @@
       });
     }
 
-    var thumbBtns = document.querySelectorAll('.about-thumb-btn');
-    thumbBtns.forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
+    // Delegated, because the clones that make the loop seamless are built
+    // after this runs — and because adding a print to the markup should not
+    // also mean remembering to wire it up.
+    var photoLine = document.getElementById('about-album-thumbs');
+    if (photoLine) {
+      photoLine.addEventListener('click', function(e) {
+        var btn = e.target.closest && e.target.closest('.about-thumb-btn');
+        if (!btn) return;
         e.stopPropagation();
         var idx = parseInt(btn.getAttribute('data-photo-idx'), 10);
+        if (isNaN(idx)) return;
         updateAboutGallery(idx);
+        // The line is the gallery now, not a picker for a panel beside it,
+        // so a click has to go somewhere: open the print full size.
+        openWin('picture-viewer', btn);
       });
-    });
+    }
+
+    // The photos travel together like a line being drawn gently past the
+    // window. Repeated sets make its hand-off seamless; only originals enter
+    // the keyboard order or accessibility tree.
+    function initPhotoLine() {
+      var line = document.getElementById('about-album-thumbs');
+      if (!line) return;
+      var track = line.querySelector('.about-line__track');
+      if (!track || track.getAttribute('data-cloned')) return;
+      var about = document.getElementById('about');
+      var section = line.closest('.about2-interests');
+      var originals = [].slice.call(track.querySelectorAll('.about-thumb-btn'));
+      if (!about || !section || !originals.length) return;
+      var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var pause = section.querySelector('#about-photo-pause');
+      var previous = section.querySelector('#about-photo-prev');
+      var next = section.querySelector('#about-photo-next');
+      function cloneSet() {
+        return originals.map(function(node) {
+          var clone = node.cloneNode(true);
+          clone.classList.add('is-clone');
+          clone.setAttribute('aria-hidden', 'true');
+          clone.setAttribute('tabindex', '-1');
+          clone.removeAttribute('id');
+          clone.querySelectorAll('[id]').forEach(function(child) { child.removeAttribute('id'); });
+          track.appendChild(clone);
+          return clone;
+        });
+      }
+      var cloneSets = [cloneSet()];
+      track.setAttribute('data-cloned', '1');
+      line.classList.add('is-enhanced');
+      line.style.touchAction = 'pan-y pinch-zoom';
+
+      var speed = 26;
+      var cycle = 0;
+      var offset = 0;
+      var frame = 0;
+      var lastTime = 0;
+      var tween = null;
+      var userPaused = false;
+      var hovered = false;
+      var intersecting = false;
+      var pointer = null;
+      var suppressClickUntil = 0;
+
+      function visible() {
+        return !document.hidden && about.classList.contains('open') &&
+          !about.classList.contains('min') && !about.classList.contains('inactive') && intersecting;
+      }
+
+      function autoPlaying() {
+        return cycle > 0 && visible() && !motionQuery.matches && !userPaused &&
+          !hovered && !pointer && !line.querySelector('.about-thumb-btn:focus-visible');
+      }
+
+      function wrap(value) { return cycle ? ((value % cycle) + cycle) % cycle : 0; }
+
+      function render(value) {
+        offset = wrap(value);
+        track.style.transform = 'translate3d(' + (-offset).toFixed(3) + 'px,0,0)';
+      }
+
+      function updateControl() {
+        section.classList.toggle('is-paused', !autoPlaying());
+        if (!pause) return;
+        var stopped = userPaused || motionQuery.matches;
+        pause.disabled = motionQuery.matches;
+        pause.setAttribute('aria-pressed', stopped ? 'true' : 'false');
+        pause.setAttribute('aria-label', motionQuery.matches ? 'Automatic scrolling off: reduced motion enabled' :
+          (userPaused ? 'Play automatic photo scrolling' : 'Pause automatic photo scrolling'));
+        var label = pause.querySelector('[data-photo-play-label]');
+        var icon = pause.querySelector('[data-photo-play-icon]');
+        if (label) label.textContent = motionQuery.matches ? 'motion off' : (userPaused ? 'play' : 'pause');
+        if (icon) icon.className = stopped ? 'ti ti-player-play' : 'ti ti-player-pause';
+      }
+
+      function tick(time) {
+        frame = 0;
+        if (tween) {
+          var progress = Math.min(1, (time - tween.time) / 320);
+          render(tween.start + tween.distance * (1 - Math.pow(1 - progress, 3)));
+          if (progress === 1) tween = null;
+        } else if (autoPlaying()) {
+          if (lastTime) render(offset + speed * Math.min(time - lastTime, 50) / 1000);
+        }
+        lastTime = time;
+        if (tween || autoPlaying()) frame = requestAnimationFrame(tick);
+        else lastTime = 0;
+      }
+
+      function sync() {
+        if (!visible()) tween = null;
+        updateControl();
+        if (tween || autoPlaying()) {
+          if (!frame) frame = requestAnimationFrame(tick);
+        } else {
+          cancelAnimationFrame(frame);
+          frame = 0;
+          lastTime = 0;
+        }
+      }
+
+      function measure() {
+        var width = cloneSets[0][0].offsetLeft - originals[0].offsetLeft;
+        if (width > 0 && line.clientWidth > 0) {
+          var fraction = cycle ? offset / cycle : 0;
+          cycle = width;
+          // Keep the visible width plus one whole cycle covered, including
+          // wide monitors and browser zoom-out. The extra margin covers the
+          // rotated print edges at the hand-off.
+          var copiesNeeded = Math.max(1, Math.ceil((line.clientWidth + 64) / cycle));
+          while (cloneSets.length < copiesNeeded) cloneSets.push(cloneSet());
+          while (cloneSets.length > copiesNeeded) {
+            cloneSets.pop().forEach(function(node) { node.remove(); });
+          }
+          tween = null;
+          render(fraction * cycle);
+          var focused = document.activeElement;
+          if (originals.indexOf(focused) !== -1 && focused.matches(':focus-visible')) reveal(focused);
+        }
+        sync();
+      }
+
+      function travel(destination) {
+        if (!cycle) return;
+        if (motionQuery.matches) {
+          tween = null;
+          render(destination);
+        } else {
+          tween = { start: offset, distance: destination - offset, time: performance.now() };
+        }
+        sync();
+      }
+
+      function step(direction) {
+        if (!cycle) return;
+        var starts = originals.map(function(node) { return node.offsetLeft - originals[0].offsetLeft; });
+        var destination;
+        if (direction > 0) {
+          destination = starts.find(function(value) { return value > offset + 2; });
+          if (destination === undefined) destination = cycle;
+        } else {
+          destination = starts.slice().reverse().find(function(value) { return value < offset - 2; });
+          if (destination === undefined) destination = starts[starts.length - 1] - cycle;
+        }
+        travel(destination);
+      }
+
+      // Native Tab can scroll an overflow:hidden ancestor before focusin.
+      // Clear that scroll and reveal the original, even when its clone is the
+      // copy currently passing the window. Up/down remain native page scroll.
+      function reveal(button) {
+        if (!cycle) return;
+        line.scrollLeft = 0;
+        var viewport = line.getBoundingClientRect();
+        var print = button.getBoundingClientRect();
+        var left = print.left - viewport.left + offset;
+        var right = print.right - viewport.left + offset;
+        var destination = offset;
+        if (left < offset + 20) destination = left - 20;
+        else if (right > offset + line.clientWidth - 20) destination = right - line.clientWidth + 20;
+        tween = null;
+        render(Math.max(0, Math.min(cycle - 1, destination)));
+      }
+
+      if (pause) pause.addEventListener('click', function() { userPaused = !userPaused; sync(); });
+      if (previous) previous.addEventListener('click', function() { step(-1); });
+      if (next) next.addEventListener('click', function() { step(1); });
+      line.addEventListener('pointerenter', function(e) {
+        if (e.pointerType !== 'touch') { hovered = true; sync(); }
+      });
+      line.addEventListener('pointerleave', function(e) {
+        if (e.pointerType !== 'touch') { hovered = false; sync(); }
+      });
+      section.addEventListener('focusin', function(e) {
+        var button = e.target.closest('.about-thumb-btn');
+        // Pointer focus must not leave the conveyor stopped after closing the
+        // viewer. Keyboard focus, however, keeps its print steady and visible.
+        if (button && !button.matches(':focus-visible')) {
+          if (button.classList.contains('is-clone')) button.blur();
+          sync();
+          return;
+        }
+        if (button && button.classList.contains('is-clone')) {
+          button = originals.find(function(node) { return node.dataset.photoIdx === button.dataset.photoIdx; });
+          if (button) button.focus({ preventScroll: true });
+        }
+        if (button) reveal(button);
+        sync();
+      });
+      section.addEventListener('focusout', function() { queueMicrotask(sync); });
+      line.addEventListener('scroll', function() { if (line.scrollLeft) line.scrollLeft = 0; }, { passive: true });
+      line.addEventListener('dragstart', function(e) { e.preventDefault(); });
+
+      // Determine the gesture before capture so a vertical touch still scrolls
+      // the About page. Horizontal dragging follows the hand without inertia.
+      line.addEventListener('pointerdown', function(e) {
+        if (!e.isPrimary || e.button !== 0) return;
+        if (about.classList.contains('inactive')) setActive(about);
+        tween = null;
+        pointer = { id: e.pointerId, x: e.clientX, y: e.clientY, offset: offset, dragging: false };
+        if (e.pointerType !== 'touch') e.preventDefault();
+        sync();
+      });
+      line.addEventListener('pointermove', function(e) {
+        if (!pointer || pointer.id !== e.pointerId) return;
+        if (pointer.vertical) return;
+        var dx = e.clientX - pointer.x;
+        var dy = e.clientY - pointer.y;
+        if (!pointer.dragging) {
+          if (Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)) {
+            pointer.vertical = true;
+            return;
+          }
+          if (Math.abs(dx) < 7) return;
+          pointer.dragging = true;
+          line.classList.add('is-dragging');
+          line.setPointerCapture(e.pointerId);
+        }
+        e.preventDefault();
+        render(pointer.offset - dx);
+      });
+      function release(e) {
+        if (!pointer || pointer.id !== e.pointerId) return;
+        if (pointer.dragging) suppressClickUntil = performance.now() + 400;
+        pointer = null;
+        line.classList.remove('is-dragging');
+        if (line.hasPointerCapture(e.pointerId)) line.releasePointerCapture(e.pointerId);
+        sync();
+      }
+      window.addEventListener('pointerup', release);
+      window.addEventListener('pointercancel', release);
+      line.addEventListener('lostpointercapture', release);
+      line.addEventListener('click', function(e) {
+        if (performance.now() < suppressClickUntil) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
+      }, true);
+
+      motionQuery.addEventListener('change', function() {
+        tween = null;
+        sync();
+      });
+      document.addEventListener('visibilitychange', sync);
+      new MutationObserver(function() {
+        hovered = line.matches(':hover');
+        measure();
+      }).observe(about, { attributes: true, attributeFilter: ['class'] });
+      new ResizeObserver(measure).observe(line);
+      new IntersectionObserver(function(entries) {
+        intersecting = entries[0].isIntersecting;
+        sync();
+      }).observe(line);
+      window.addEventListener('resize', measure);
+      measure();
+    }
+    initPhotoLine();
 
     var aboutWin = document.getElementById('about');
     if (aboutWin) {
       aboutWin.addEventListener('keydown', function(e) {
-        if (!aboutWin.classList.contains('inactive')) {
-          if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-            e.preventDefault();
-            var idx = (currentPhotoIndex - 1 + photos.length) % photos.length;
-            updateAboutGallery(idx);
-          } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-            e.preventDefault();
-            var idx = (currentPhotoIndex + 1) % photos.length;
-            updateAboutGallery(idx);
-          }
+        if (aboutWin.classList.contains('inactive')) return;
+        var gallery = e.target.closest && e.target.closest('#about-album-thumbs');
+        if (!gallery || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+
+        var buttons = [].slice.call(gallery.querySelectorAll('.about-thumb-btn:not([aria-hidden="true"])'));
+        if (!buttons.length) return;
+        e.preventDefault();
+
+        var activePosition = buttons.indexOf(document.activeElement);
+        if (activePosition < 0) {
+          activePosition = buttons.findIndex(function(btn) {
+            return parseInt(btn.getAttribute('data-photo-idx'), 10) === currentPhotoIndex;
+          });
         }
+        if (activePosition < 0) activePosition = 0;
+
+        var step = e.key === 'ArrowLeft' ? -1 : 1;
+        var nextButton = buttons[(activePosition + step + buttons.length) % buttons.length];
+        var nextIndex = parseInt(nextButton.getAttribute('data-photo-idx'), 10);
+        nextButton.focus({ preventScroll: true });
+        updateAboutGallery(nextIndex);
       });
     }
 
@@ -5040,7 +5297,7 @@
 
   // <base href="/"> makes a bare "#foo" resolve to "/#foo", which would leave
   // the route and reload the page. These are in-page jump links inside the
-  // Experience window and have no handler of their own, so scrolling is done
+  // Experience and About windows and have no handler of their own, so scrolling is done
   // here and the URL is left alone.
   document.addEventListener('click', function(e){
     var a = e.target.closest && e.target.closest('a[href^="#"]');
@@ -5050,6 +5307,7 @@
     var target = document.getElementById(id);
     if(!target) return;
     e.preventDefault();
+    if (target.id === 'about2-bio') target.focus({ preventScroll: true });
     target.scrollIntoView({
       block: 'start',
       behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
