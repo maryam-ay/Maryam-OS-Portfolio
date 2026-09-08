@@ -858,7 +858,12 @@
   // Windows that keep their authored size instead of launching full screen
   // picture-viewer is a 340px print on the desk, not an app — filling the
   // screen with it would bury the line you just clicked from.
-  var NO_AUTO_MAX={welcome:true,contact:true,'picture-viewer':true};
+  var NO_AUTO_MAX={welcome:true,contact:true,'picture-viewer':true,'folder-viewer':true};
+
+  // Windows that belong to About rather than standing on their own: they are
+  // only reachable from inside it, so they count as /about while open, close
+  // when you navigate away, and hand focus back to whatever opened them.
+  var ABOUT_SUB={'folder-viewer':true,'picture-viewer':true};
 
   // --- taskbar auto-hide while a window is maximized ---
   var taskbarEl=document.getElementById('taskbar');
@@ -940,6 +945,7 @@
   function mobileDestination(win){
     if(!win)return 'home';
     if(win.id==='viewer')return 'work';
+    if(ABOUT_SUB[win.id])return 'about';
     if(win.id==='work'||win.id==='builds'||win.id==='about')return win.id;
     return 'more';
   }
@@ -1151,10 +1157,18 @@
     SoundSystem.playClick();
     function finish(){
       win.classList.remove('open','min','genie-prep');
+      if(win.id === 'folder-viewer') {
+        document.querySelectorAll('#about .about2-folder.is-open').forEach(function(folder) {
+          folder.classList.remove('is-open');
+        });
+      }
       openOrder=openOrder.filter(function(x){return x!==win.id;});
       var last=openOrder[openOrder.length-1];setActive(last?document.getElementById(last):null);
       syncMaxed();
       syncRoute();
+      if (ABOUT_SUB[win.id] && win._origin && win._origin.getClientRects().length) {
+        win._origin.focus({ preventScroll: true });
+      }
     }
     if(!win.classList.contains('open')){finish();return;}
     if(isPhoneOS()){playPhoneWindow(win,false,finish);return;}
@@ -4196,69 +4210,67 @@
     }
   }
 
+  // Each interest is a folder on the desk, and opening one shows what is in it.
+  // FOLDERS is the single source of truth: the folder window's contents and the
+  // photo viewer's list are both derived from it.
+  //
+  // Every folder is empty on purpose — Maryam is filling these with her own
+  // photos. To add one, drop an entry into that folder's items:
+  //   { src: 'images/optimized/painting-01.webp', name: 'painting-01.jpg', alt: '…' }
+  // Nothing else needs touching: the window, the counts and the viewer all
+  // follow from here, and the empty state disappears on its own.
+  var FOLDERS = [
+    { key: 'painting',  items: [] },
+    { key: 'baking',    items: [] },
+    { key: 'cooking',   items: [] },
+    { key: 'anime',     items: [] },
+    { key: 'gardening', items: [] },
+    { key: 'webtoons',  items: [] },
+    { key: 'movies',    items: [] },
+    { key: 'books',     items: [] }
+  ];
+
   function initPhotoViewer() {
-    // Keep the viewer and carousel in sync when the placeholder images change.
-    var photos = [].slice.call(document.querySelectorAll('#about-album-thumbs .about-thumb-btn:not(.is-clone)')).map(function(button) {
-      var image = button.querySelector('img');
-      return { src: image.getAttribute('src'), alt: image.alt, cap: '[interest: ' + button.querySelector('strong').textContent + ']' };
+    // One flat list across every folder, so the viewer's prev/next walks the
+    // whole collection rather than stopping at a folder boundary.
+    var photos = [];
+    FOLDERS.forEach(function(folder) {
+      folder.items.forEach(function(item) {
+        item.index = photos.length;
+        photos.push({ src: item.src, alt: item.alt, cap: '[' + folder.key + ': ' + item.name + ']' });
+      });
     });
-    if (!photos.length) return;
+    // No early return on an empty list. The folders themselves are wired up
+    // below, and while they are all empty that wiring is the only thing here
+    // doing any work — bailing out would stop them opening at all.
     var currentPhotoIndex = 0;
 
-    function updatePhoto(index, bypassAbout) {
-      currentPhotoIndex = index;
+    function updatePhoto(index) {
       var p = photos[index];
+      if (!p) return;
+      currentPhotoIndex = index;
       var img = document.getElementById('viewer-img');
       var fallback = document.getElementById('viewer-fallback');
       var cap = document.getElementById('viewer-caption');
       var counter = document.getElementById('viewer-counter');
+      if (!img) return;
 
-      if (img) {
-        img.style.display = 'block';
-        fallback.style.display = 'none';
+      img.style.display = 'block';
+      fallback.style.display = 'none';
+      img.onerror = function() {
+        img.style.display = 'none';
+        fallback.style.display = 'flex';
+      };
 
-        img.onerror = function() {
-          img.style.display = 'none';
-          fallback.style.display = 'flex';
-        };
+      img.src = p.src;
+      img.alt = p.alt;
+      cap.textContent = p.cap;
+      counter.textContent = (index + 1) + ' / ' + photos.length;
 
-        img.src = p.src;
-        img.alt = p.alt;
-        cap.textContent = p.cap;
-        counter.textContent = (index + 1) + ' / ' + photos.length;
-
-        var pvWin = document.getElementById('picture-viewer');
-        if (pvWin && pvWin.classList.contains('open') && typeof Genie !== 'undefined' && Genie.invalidate) {
-          Genie.invalidate('picture-viewer');
-          Genie.warm(pvWin);
-        }
-      }
-
-      if (!bypassAbout) {
-        updateAboutGallery(index, true);
-      }
-    }
-
-    function updateAboutGallery(index, bypassPhoto) {
-      currentPhotoIndex = index;
-
-      // The repeated prints are the same photos, so keep their visual state
-      // together. These open a viewer; they are actions, not selectable options.
-      var thumbBtns = document.querySelectorAll('#about .about-thumb-btn');
-      thumbBtns.forEach(function(btn) {
-        var on = parseInt(btn.getAttribute('data-photo-idx'), 10) === index;
-        btn.classList.toggle('selected', on);
-        btn.removeAttribute('aria-selected');
-      });
-
-      var aboutWin = document.getElementById('about');
-      if (aboutWin && aboutWin.classList.contains('open') && typeof Genie !== 'undefined' && Genie.invalidate) {
-        Genie.invalidate('about');
-        Genie.warm(aboutWin);
-      }
-
-      if (!bypassPhoto) {
-        updatePhoto(index, true);
+      var pvWin = document.getElementById('picture-viewer');
+      if (pvWin && pvWin.classList.contains('open') && typeof Genie !== 'undefined' && Genie.invalidate) {
+        Genie.invalidate('picture-viewer');
+        Genie.warm(pvWin);
       }
     }
 
@@ -4267,321 +4279,122 @@
     if (prevBtn) {
       prevBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var idx = (currentPhotoIndex - 1 + photos.length) % photos.length;
-        updatePhoto(idx);
+        updatePhoto((currentPhotoIndex - 1 + photos.length) % photos.length);
       });
     }
     if (nextBtn) {
       nextBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var idx = (currentPhotoIndex + 1) % photos.length;
-        updatePhoto(idx);
+        updatePhoto((currentPhotoIndex + 1) % photos.length);
       });
     }
 
-    // Delegated, because the clones that make the loop seamless are built
-    // after this runs — and because adding a print to the markup should not
-    // also mean remembering to wire it up.
-    var photoLine = document.getElementById('about-album-thumbs');
-    if (photoLine) {
-      photoLine.addEventListener('click', function(e) {
-        var btn = e.target.closest && e.target.closest('.about-thumb-btn');
+    // ── opening a folder ────────────────────────────────────────────────
+    // One window serves all eight folders; its contents are rebuilt per open.
+    function openFolder(key, srcEl) {
+      var folder = FOLDERS.filter(function(f) { return f.key === key; })[0];
+      var wrap = document.getElementById('fv-items');
+      if (!folder || !wrap) return;
+
+      var title = document.getElementById('fv-title');
+      var path = document.getElementById('fv-path');
+      var empty = document.getElementById('fv-empty');
+      var count = document.getElementById('fv-count');
+      var note = document.getElementById('fv-note');
+
+      if (title) title.textContent = key;
+      if (path) path.textContent = 'maryam/interests/' + key;
+
+      wrap.textContent = '';
+      folder.items.forEach(function(item) {
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'fv-item';
+        button.setAttribute('data-photo-idx', item.index);
+
+        var image = document.createElement('img');
+        image.src = item.src;
+        image.alt = item.alt;
+        image.loading = 'lazy';
+        image.decoding = 'async';
+
+        var label = document.createElement('span');
+        label.textContent = item.name;
+
+        button.appendChild(image);
+        button.appendChild(label);
+        wrap.appendChild(button);
+      });
+
+      var total = folder.items.length;
+      if (empty) empty.hidden = total > 0;
+      if (count) count.textContent = total + (total === 1 ? ' item' : ' items');
+      // The empty panel already says "work in progress"; the status line
+      // would just be saying it twice.
+      if (note) note.textContent = '';
+
+      // the folder being looked into reads as open back on the ring
+      document.querySelectorAll('#about .about2-folder').forEach(function(el) {
+        el.classList.toggle('is-open', el.getAttribute('data-folder') === key);
+      });
+
+      // Contents changed, so a genie texture captured earlier is stale.
+      var fvWin = document.getElementById('folder-viewer');
+      if (fvWin && fvWin.classList.contains('open') && typeof Genie !== 'undefined' && Genie.invalidate) {
+        Genie.invalidate('folder-viewer');
+        Genie.warm(fvWin);
+      }
+      openWin('folder-viewer', srcEl);
+    }
+
+    var ring = document.querySelector('#about .about2-grid');
+    if (ring) {
+      ring.addEventListener('click', function(e) {
+        var btn = e.target.closest && e.target.closest('[data-folder]');
         if (!btn) return;
         e.stopPropagation();
-        var idx = parseInt(btn.getAttribute('data-photo-idx'), 10);
-        if (isNaN(idx)) return;
-        updateAboutGallery(idx);
-        // The line is the gallery now, not a picker for a panel beside it,
-        // so a click has to go somewhere: open the print full size.
-        openWin('picture-viewer', btn);
+        openFolder(btn.getAttribute('data-folder'), btn);
       });
-    }
 
-    // The photos travel together like a line being drawn gently past the
-    // window. Repeated sets make its hand-off seamless; only originals enter
-    // the keyboard order or accessibility tree.
-    function initPhotoLine() {
-      var line = document.getElementById('about-album-thumbs');
-      if (!line) return;
-      var track = line.querySelector('.about-line__track');
-      if (!track || track.getAttribute('data-cloned')) return;
-      var about = document.getElementById('about');
-      var section = line.closest('.about2-interests');
-      var originals = [].slice.call(track.querySelectorAll('.about-thumb-btn'));
-      if (!about || !section || !originals.length) return;
-      var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-      var pause = section.querySelector('#about-photo-pause');
-      var previous = section.querySelector('#about-photo-prev');
-      var next = section.querySelector('#about-photo-next');
-      function cloneSet() {
-        return originals.map(function(node) {
-          var clone = node.cloneNode(true);
-          clone.classList.add('is-clone');
-          clone.setAttribute('aria-hidden', 'true');
-          clone.setAttribute('tabindex', '-1');
-          clone.removeAttribute('id');
-          clone.querySelectorAll('[id]').forEach(function(child) { child.removeAttribute('id'); });
-          track.appendChild(clone);
-          return clone;
-        });
-      }
-      var cloneSets = [cloneSet()];
-      track.setAttribute('data-cloned', '1');
-      line.classList.add('is-enhanced');
-      line.style.touchAction = 'pan-y pinch-zoom';
-
-      var speed = 26;
-      var cycle = 0;
-      var offset = 0;
-      var frame = 0;
-      var lastTime = 0;
-      var tween = null;
-      var userPaused = false;
-      var hovered = false;
-      var intersecting = false;
-      var pointer = null;
-      var suppressClickUntil = 0;
-
-      function visible() {
-        return !document.hidden && about.classList.contains('open') &&
-          !about.classList.contains('min') && !about.classList.contains('inactive') && intersecting;
-      }
-
-      function autoPlaying() {
-        return cycle > 0 && visible() && !motionQuery.matches && !userPaused &&
-          !hovered && !pointer && !line.querySelector('.about-thumb-btn:focus-visible');
-      }
-
-      function wrap(value) { return cycle ? ((value % cycle) + cycle) % cycle : 0; }
-
-      function render(value) {
-        offset = wrap(value);
-        track.style.transform = 'translate3d(' + (-offset).toFixed(3) + 'px,0,0)';
-      }
-
-      function updateControl() {
-        section.classList.toggle('is-paused', !autoPlaying());
-        if (!pause) return;
-        var stopped = userPaused || motionQuery.matches;
-        pause.disabled = motionQuery.matches;
-        pause.setAttribute('aria-pressed', stopped ? 'true' : 'false');
-        pause.setAttribute('aria-label', motionQuery.matches ? 'Automatic scrolling off: reduced motion enabled' :
-          (userPaused ? 'Play automatic photo scrolling' : 'Pause automatic photo scrolling'));
-        var label = pause.querySelector('[data-photo-play-label]');
-        var icon = pause.querySelector('[data-photo-play-icon]');
-        if (label) label.textContent = motionQuery.matches ? 'motion off' : (userPaused ? 'play' : 'pause');
-        if (icon) icon.className = stopped ? 'ti ti-player-play' : 'ti ti-player-pause';
-      }
-
-      function tick(time) {
-        frame = 0;
-        if (tween) {
-          var progress = Math.min(1, (time - tween.time) / 320);
-          render(tween.start + tween.distance * (1 - Math.pow(1 - progress, 3)));
-          if (progress === 1) tween = null;
-        } else if (autoPlaying()) {
-          if (lastTime) render(offset + speed * Math.min(time - lastTime, 50) / 1000);
-        }
-        lastTime = time;
-        if (tween || autoPlaying()) frame = requestAnimationFrame(tick);
-        else lastTime = 0;
-      }
-
-      function sync() {
-        if (!visible()) tween = null;
-        updateControl();
-        if (tween || autoPlaying()) {
-          if (!frame) frame = requestAnimationFrame(tick);
-        } else {
-          cancelAnimationFrame(frame);
-          frame = 0;
-          lastTime = 0;
-        }
-      }
-
-      function measure() {
-        var width = cloneSets[0][0].offsetLeft - originals[0].offsetLeft;
-        if (width > 0 && line.clientWidth > 0) {
-          var fraction = cycle ? offset / cycle : 0;
-          cycle = width;
-          // Keep the visible width plus one whole cycle covered, including
-          // wide monitors and browser zoom-out. The extra margin covers the
-          // rotated print edges at the hand-off.
-          var copiesNeeded = Math.max(1, Math.ceil((line.clientWidth + 64) / cycle));
-          while (cloneSets.length < copiesNeeded) cloneSets.push(cloneSet());
-          while (cloneSets.length > copiesNeeded) {
-            cloneSets.pop().forEach(function(node) { node.remove(); });
-          }
-          tween = null;
-          render(fraction * cycle);
-          var focused = document.activeElement;
-          if (originals.indexOf(focused) !== -1 && focused.matches(':focus-visible')) reveal(focused);
-        }
-        sync();
-      }
-
-      function travel(destination) {
-        if (!cycle) return;
-        if (motionQuery.matches) {
-          tween = null;
-          render(destination);
-        } else {
-          tween = { start: offset, distance: destination - offset, time: performance.now() };
-        }
-        sync();
-      }
-
-      function step(direction) {
-        if (!cycle) return;
-        var starts = originals.map(function(node) { return node.offsetLeft - originals[0].offsetLeft; });
-        var destination;
-        if (direction > 0) {
-          destination = starts.find(function(value) { return value > offset + 2; });
-          if (destination === undefined) destination = cycle;
-        } else {
-          destination = starts.slice().reverse().find(function(value) { return value < offset - 2; });
-          if (destination === undefined) destination = starts[starts.length - 1] - cycle;
-        }
-        travel(destination);
-      }
-
-      // Native Tab can scroll an overflow:hidden ancestor before focusin.
-      // Clear that scroll and reveal the original, even when its clone is the
-      // copy currently passing the window. Up/down remain native page scroll.
-      function reveal(button) {
-        if (!cycle) return;
-        line.scrollLeft = 0;
-        var viewport = line.getBoundingClientRect();
-        var print = button.getBoundingClientRect();
-        var left = print.left - viewport.left + offset;
-        var right = print.right - viewport.left + offset;
-        var destination = offset;
-        if (left < offset + 20) destination = left - 20;
-        else if (right > offset + line.clientWidth - 20) destination = right - line.clientWidth + 20;
-        tween = null;
-        render(Math.max(0, Math.min(cycle - 1, destination)));
-      }
-
-      if (pause) pause.addEventListener('click', function() { userPaused = !userPaused; sync(); });
-      if (previous) previous.addEventListener('click', function() { step(-1); });
-      if (next) next.addEventListener('click', function() { step(1); });
-      line.addEventListener('pointerenter', function(e) {
-        if (e.pointerType !== 'touch') { hovered = true; sync(); }
-      });
-      line.addEventListener('pointerleave', function(e) {
-        if (e.pointerType !== 'touch') { hovered = false; sync(); }
-      });
-      section.addEventListener('focusin', function(e) {
-        var button = e.target.closest('.about-thumb-btn');
-        // Pointer focus must not leave the conveyor stopped after closing the
-        // viewer. Keyboard focus, however, keeps its print steady and visible.
-        if (button && !button.matches(':focus-visible')) {
-          if (button.classList.contains('is-clone')) button.blur();
-          sync();
-          return;
-        }
-        if (button && button.classList.contains('is-clone')) {
-          button = originals.find(function(node) { return node.dataset.photoIdx === button.dataset.photoIdx; });
-          if (button) button.focus({ preventScroll: true });
-        }
-        if (button) reveal(button);
-        sync();
-      });
-      section.addEventListener('focusout', function() { queueMicrotask(sync); });
-      line.addEventListener('scroll', function() { if (line.scrollLeft) line.scrollLeft = 0; }, { passive: true });
-      line.addEventListener('dragstart', function(e) { e.preventDefault(); });
-
-      // Determine the gesture before capture so a vertical touch still scrolls
-      // the About page. Horizontal dragging follows the hand without inertia.
-      line.addEventListener('pointerdown', function(e) {
-        if (!e.isPrimary || e.button !== 0) return;
-        if (about.classList.contains('inactive')) setActive(about);
-        tween = null;
-        pointer = { id: e.pointerId, x: e.clientX, y: e.clientY, offset: offset, dragging: false };
-        if (e.pointerType !== 'touch') e.preventDefault();
-        sync();
-      });
-      line.addEventListener('pointermove', function(e) {
-        if (!pointer || pointer.id !== e.pointerId) return;
-        if (pointer.vertical) return;
-        var dx = e.clientX - pointer.x;
-        var dy = e.clientY - pointer.y;
-        if (!pointer.dragging) {
-          if (Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)) {
-            pointer.vertical = true;
-            return;
-          }
-          if (Math.abs(dx) < 7) return;
-          pointer.dragging = true;
-          line.classList.add('is-dragging');
-          line.setPointerCapture(e.pointerId);
-        }
+      // Left/Right walks the ring, portrait included. Delegated, so a ninth
+      // folder added to the markup is navigable without touching this.
+      ring.addEventListener('keydown', function(e) {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        var buttons = [].slice.call(ring.querySelectorAll('[data-folder]'));
+        var at = buttons.indexOf(document.activeElement);
+        if (at < 0) return;
         e.preventDefault();
-        render(pointer.offset - dx);
-      });
-      function release(e) {
-        if (!pointer || pointer.id !== e.pointerId) return;
-        if (pointer.dragging) suppressClickUntil = performance.now() + 400;
-        pointer = null;
-        line.classList.remove('is-dragging');
-        if (line.hasPointerCapture(e.pointerId)) line.releasePointerCapture(e.pointerId);
-        sync();
-      }
-      window.addEventListener('pointerup', release);
-      window.addEventListener('pointercancel', release);
-      line.addEventListener('lostpointercapture', release);
-      line.addEventListener('click', function(e) {
-        if (performance.now() < suppressClickUntil) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-        }
-      }, true);
-
-      motionQuery.addEventListener('change', function() {
-        tween = null;
-        sync();
-      });
-      document.addEventListener('visibilitychange', sync);
-      new MutationObserver(function() {
-        hovered = line.matches(':hover');
-        measure();
-      }).observe(about, { attributes: true, attributeFilter: ['class'] });
-      new ResizeObserver(measure).observe(line);
-      new IntersectionObserver(function(entries) {
-        intersecting = entries[0].isIntersecting;
-        sync();
-      }).observe(line);
-      window.addEventListener('resize', measure);
-      measure();
-    }
-    initPhotoLine();
-
-    var aboutWin = document.getElementById('about');
-    if (aboutWin) {
-      aboutWin.addEventListener('keydown', function(e) {
-        if (aboutWin.classList.contains('inactive')) return;
-        var gallery = e.target.closest && e.target.closest('#about-album-thumbs');
-        if (!gallery || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
-
-        var buttons = [].slice.call(gallery.querySelectorAll('.about-thumb-btn:not([aria-hidden="true"])'));
-        if (!buttons.length) return;
-        e.preventDefault();
-
-        var activePosition = buttons.indexOf(document.activeElement);
-        if (activePosition < 0) {
-          activePosition = buttons.findIndex(function(btn) {
-            return parseInt(btn.getAttribute('data-photo-idx'), 10) === currentPhotoIndex;
-          });
-        }
-        if (activePosition < 0) activePosition = 0;
-
         var step = e.key === 'ArrowLeft' ? -1 : 1;
-        var nextButton = buttons[(activePosition + step + buttons.length) % buttons.length];
-        var nextIndex = parseInt(nextButton.getAttribute('data-photo-idx'), 10);
-        nextButton.focus({ preventScroll: true });
-        updateAboutGallery(nextIndex);
+        buttons[(at + step + buttons.length) % buttons.length].focus({ preventScroll: true });
       });
     }
+
+    // A print inside an open folder enlarges into the photo viewer.
+    var fvItems = document.getElementById('fv-items');
+    if (fvItems) {
+      fvItems.addEventListener('click', function(e) {
+        var button = e.target.closest && e.target.closest('.fv-item');
+        if (!button) return;
+        e.stopPropagation();
+        var idx = parseInt(button.getAttribute('data-photo-idx'), 10);
+        if (isNaN(idx)) return;
+        updatePhoto(idx);
+        openWin('picture-viewer', button);
+      });
+    }
+
+    // Counts come from the data, not the markup, so the ring cannot drift out
+    // of step with what a folder actually holds.
+    FOLDERS.forEach(function(folder) {
+      var btn = document.querySelector('#about .about2-folder[data-folder="' + folder.key + '"]');
+      if (!btn) return;
+      var slot = btn.querySelector('[data-folder-count]');
+      var total = folder.items.length;
+      if (slot) slot.textContent = total + (total === 1 ? ' item' : ' items');
+      btn.setAttribute('aria-label', total
+        ? 'Open the ' + folder.key + ' folder — ' + total + (total === 1 ? ' item' : ' items')
+        : 'Open the ' + folder.key + ' folder — work in progress');
+    });
 
     updatePhoto(0);
   }
@@ -5243,6 +5056,7 @@
     }
     for(var i = openOrder.length - 1; i >= 0; i--){
       var win = document.getElementById(openOrder[i]);
+      if(win && ABOUT_SUB[win.id] && win.classList.contains('open') && !win.classList.contains('min')) return '/about';
       if(win && win.classList.contains('open') && !win.classList.contains('min') && ROUTE_OF[win.id]){
         return ROUTE_OF[win.id];
       }
@@ -5278,6 +5092,7 @@
       if(viewerOpen && viewer.getAttribute('data-case-study') !== wantSlug) closeWin(viewer);
 
       windows().forEach(function(win){
+        if(ABOUT_SUB[win.id] && wantWin !== 'about' && win.classList.contains('open')) closeWin(win);
         if(ROUTE_OF[win.id] && win.id !== wantWin && win.classList.contains('open')) closeWin(win);
       });
 
@@ -5307,7 +5122,6 @@
     var target = document.getElementById(id);
     if(!target) return;
     e.preventDefault();
-    if (target.id === 'about2-bio') target.focus({ preventScroll: true });
     target.scrollIntoView({
       block: 'start',
       behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'

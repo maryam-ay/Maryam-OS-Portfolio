@@ -2933,102 +2933,250 @@
     <div class="wbody about2-shell">
       <main class="about2-scroll" aria-labelledby="about2-title">
         <header class="about2-header">
-          <p class="about2-kicker"><span aria-hidden="true"></span>a little more about me</p>
-          <h1 id="about2-title">life outside figma ♡</h1>
-          <div class="about2-intro-row">
-            <p class="about2-lede">a few things that keep running in the background.</p>
-            <a class="about2-story-jump" href="#about2-bio">my story below <i class="ti ti-arrow-down" aria-hidden="true"></i></a>
-          </div>
+          <h1 id="about2-title">life outside figma &#9825;</h1>
+          <p class="about2-lede">open a folder to get to know me.</p>
         </header>
 
-        <section class="about2-interests" aria-labelledby="about2-interests-title">
-          <div class="about2-section-head">
-            <h2 id="about2-interests-title" class="about2-album-label">08 things i&rsquo;m into</h2>
-            <div class="about2-album-controls" aria-label="Photo line controls">
-              <button id="about-photo-pause" type="button" aria-controls="about-album-thumbs" aria-label="Pause photo scrolling"><i class="ti ti-player-pause" data-photo-play-icon aria-hidden="true"></i><span data-photo-play-label>pause</span></button>
-              <span class="about2-control-divider" aria-hidden="true"></span>
-              <button id="about-photo-prev" type="button" aria-controls="about-album-thumbs" aria-label="Previous photo"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
-              <button id="about-photo-next" type="button" aria-controls="about-album-thumbs" aria-label="Next photo"><i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+        <!-- The portrait has its own column; facts share a compact footer.
+             Flexible image and folder rows keep all desktop copy visible. -->
+        <div class="about2-desk">
+            <figure class="about2-id">
+              <div class="about2-portrait-frame">
+                <img src="images/optimized/about-maryam-portrait-943.webp" alt="Maryam Yahaya" decoding="async" fetchpriority="high" onerror="this.hidden=true; this.parentElement.classList.add(&quot;is-missing&quot;);" />
+                <span class="about2-portrait-fallback" aria-hidden="true"><i class="ti ti-user-heart"></i>maryam</span>
+              </div>
+              <figcaption class="about2-id-plate">
+                <strong>maryam yahaya</strong>
+                <span>product designer &middot; abuja, nigeria</span>
+              </figcaption>
+            </figure>
+            <div class="about2-grid" role="group" aria-label="Maryam's interests">
+              <button class="about2-folder" type="button" data-folder="painting">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="M12 3a9 9 0 1 0 0 18h1.5a2.2 2.2 0 0 0 1.3-4c-.8-.6-.5-2 .6-2H18a3 3 0 0 0 3-3c0-5-4-9-9-9Z"/><circle cx="7" cy="10" r="1"/><circle cx="10" cy="6.5" r="1"/><circle cx="15" cy="7" r="1"/><circle cx="17.5" cy="11" r="1"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>painting</strong></span>
+              </button>
+              <button class="about2-folder" type="button" data-folder="baking">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="m5 12 2 9h10l2-9M8 13l1 5m7-5-1 5m-3-5v5M5 12a3 3 0 0 1-1-5 4 4 0 0 1 7-2 3 3 0 0 1 5 0 3.5 3.5 0 0 1 4 5c1 1-.2 2-1 2Z"/><path d="M11 3c0-1 1-2 2-2"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>baking</strong></span>
+              </button>
+              <button class="about2-folder" type="button" data-folder="cooking">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="M5 10h14v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3ZM3 10h18M9 7h6m-3 0V5M5 13H2v4h3m14-4h3v4h-3M7 3l1 2m9-2-1 2"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>cooking</strong></span>
+              </button>
+              <button class="about2-folder" type="button" data-folder="anime">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="m10 4 2.6 6.4L19 13l-6.4 2.6L10 22l-2.6-6.4L1 13l6.4-2.6ZM19 1l1.3 3.2L23.5 5.5l-3.2 1.3L19 10l-1.3-3.2-3.2-1.3 3.2-1.3Z"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>anime</strong></span>
+              </button>
+              <button class="about2-folder" type="button" data-folder="gardening">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="M5 15h14l-2 7H7ZM12 15V8M12 11C5 11 3 7 4 3c5 0 8 3 8 8Zm0-1c0-5 4-8 9-7 0 5-3 8-9 8"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>gardening</strong></span>
+              </button>
+              <button class="about2-folder" type="button" data-folder="webtoons">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="M5 3h14a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-8l-6 4v-4a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/><path d="M7 8h10M7 12h6"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>webtoons</strong></span>
+              </button>
+              <button class="about2-folder" type="button" data-folder="movies">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="M3 10h18v10H3ZM3 10 2 5l17-3 1 5ZM6 4l3 4m3-5 3 4m-5 6 6 3-6 3Z"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>movies</strong></span>
+              </button>
+              <button class="about2-folder" type="button" data-folder="books">
+                <span class="about2-folder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 112 88" aria-hidden="true" focusable="false">
+                    <path class="folder-shadow" d="M10 22V14q0-5 5-5h25l10 10h52q6 0 6 6v54q0 6-6 6H16q-6 0-6-6Z"/>
+                    <path class="folder-back" d="M7 21V12q0-5 5-5h25q3 0 5 3l7 8h52q5 0 5 5v53q0 6-6 6H13q-6 0-6-6Z"/>
+                    <path class="folder-tab-detail" d="M15 13h17"/>
+                    <g class="folder-papers">
+                      <rect class="folder-paper-back" x="20" y="23" width="75" height="52" rx="4" transform="rotate(-7 57 49)"/>
+                      <rect class="folder-paper" x="15" y="27" width="81" height="48" rx="4" transform="rotate(3 55 51)"/>
+                      <path class="folder-paper-line" d="M25 34h30m-30 6h50"/>
+                    </g>
+                    <g class="folder-front">
+                      <path class="folder-face" d="M7 37h34q4 0 7 3l4 4h52q5 0 4 5l-6 29q-1 5-6 5H14q-5 0-6-5L3 42q-1-5 4-5Z"/>
+                      <path class="folder-highlight" d="M9 40h30q4 0 7 3l4 4h52"/>
+                      <path class="folder-seam" d="M14 77h79"/>
+                      <g class="folder-badge" transform="translate(43 47) rotate(-5 17 16)">
+                        <rect class="folder-badge-shadow" x="1.5" y="2" width="33" height="30" rx="7"/>
+                        <rect class="folder-sticker" width="33" height="30" rx="7"/>
+                        <g class="folder-mark" transform="translate(6 4.5) scale(.88)"><path d="M12 6C9 3 5 3 2 4v16c4-1 7-1 10 2 3-3 6-3 10-2V4c-3-1-7-1-10 2Zm0 0v16M6 8h2m-2 4h2m8-4h2m-2 4h2"/></g>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span class="about2-folder-label"><strong>books</strong></span>
+              </button>
             </div>
-          </div>
-
-          <div class="about2-gallery" id="about-album-thumbs" role="group" aria-label="Maryam's interests">
-            <div class="about-line__track">
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="0" aria-label="Enlarge painting photo" style="--tilt:-3deg;--drop:3px;--photo-ratio:1;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-painting-720.webp" alt="Paint and brushes representing Maryam's interest in painting" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">01</small><strong>painting</strong><span aria-hidden="true">✿</span></span>
-            </button>
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="1" aria-label="Enlarge baking photo" style="--tilt:2deg;--drop:10px;--photo-ratio:1.08;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-baking-720.webp" alt="Macarons representing Maryam's interest in baking" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">02</small><strong>baking</strong><span aria-hidden="true">♡</span></span>
-            </button>
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="2" aria-label="Enlarge cooking photo" style="--tilt:-1.4deg;--drop:2px;--photo-ratio:.94;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-cooking-720.webp" alt="A meal representing Maryam's interest in cooking" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">03</small><strong>cooking</strong><span aria-hidden="true">✦</span></span>
-            </button>
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="3" aria-label="Enlarge anime photo" style="--tilt:2.6deg;--drop:9px;--photo-ratio:1.1;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-nollywood-720.webp" alt="Temporary film-scene placeholder for anime" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">04</small><strong>anime</strong><span aria-hidden="true">♡</span></span>
-            </button>
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="4" aria-label="Enlarge gardening photo" style="--tilt:-2.2deg;--drop:0px;--photo-ratio:1;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-scifi-720.webp" alt="Temporary futuristic-scene placeholder for gardening" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">05</small><strong>gardening</strong><span aria-hidden="true">✦</span></span>
-            </button>
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="5" aria-label="Enlarge webtoons photo" style="--tilt:1.5deg;--drop:7px;--photo-ratio:1.08;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-short-films-720.webp" alt="Temporary film-set placeholder for webtoons" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">06</small><strong>webtoons</strong><span aria-hidden="true">♡</span></span>
-            </button>
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="6" aria-label="Enlarge movies photo" style="--tilt:-2.4deg;--drop:10px;--photo-ratio:1;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-comedy-720.webp" alt="Temporary comedy-stage placeholder for movies" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">07</small><strong>movies</strong><span aria-hidden="true">✿</span></span>
-            </button>
-            <button class="about2-interest-card about-thumb-btn" type="button" data-photo-idx="7" aria-label="Enlarge books photo" style="--tilt:1.8deg;--drop:4px;--photo-ratio:1.08;">
-              <span class="about2-interest-frame"><img src="images/optimized/about-interest-painting-720.webp" alt="Temporary painting placeholder for books" loading="lazy" decoding="async" /></span>
-              <span class="about2-interest-copy"><small aria-hidden="true">08</small><strong>books</strong><span aria-hidden="true">♡</span></span>
-            </button>
-            </div>
-          </div>
-          <div class="about2-album-footer"><a class="about2-story-jump" href="#about2-bio">meet the person behind the photos <i class="ti ti-arrow-down" aria-hidden="true"></i></a><span>pick a print to take a closer look</span></div>
-        </section>
-
-        <div class="about2-main" id="about2-bio" role="region" aria-label="About Maryam" tabindex="-1">
-          <figure class="about2-profile-card">
-            <div class="about2-portrait-frame">
-              <img src="images/optimized/about-maryam-portrait-943.webp" alt="Maryam Yahaya" decoding="async" fetchpriority="high" onerror="this.hidden=true; this.parentElement.classList.add('is-missing');" />
-              <span class="about2-portrait-fallback" aria-hidden="true"><i class="ti ti-user-heart"></i>maryam</span>
-              <span class="about2-photo-note">currently building ✿</span>
-            </div>
-            <figcaption>
-              <strong>maryam yahaya</strong>
-              <span>product designer · abuja, nigeria</span>
-            </figcaption>
-          </figure>
-
-          <section class="about2-story" aria-labelledby="about2-readme">
-            <h2 id="about2-readme">✦ read_me.txt</h2>
-            <p>i moved into design in 2021 and have spent the years since working across fintech, health, saas and e-commerce, from early flows through to shipped mobile and web products.</p>
-            <p>the work i enjoy most usually has a lot going on behind the interface: different roles, messy information, rules, handoffs and edge cases. i like figuring out how it all should work, then making it straightforward for the person using it.</p>
-            <p>lately, i&rsquo;ve been using ai to prototype and build working versions of my own ideas. it has made me more interested in the space between designing and building, because i can take an idea much further than a mockup.</p>
-          </section>
-
-          <aside class="about2-facts" aria-label="Profile details">
-            <h2>✦ quick files</h2>
-            <dl>
-              <div><dt>experience.log</dt><dd>4+ years</dd></div>
-              <div><dt>sectors.folder</dt><dd>fintech, health, saas, e-commerce</dd></div>
-              <div><dt>now_building.exe</dt><dd>ai-assisted products</dd></div>
-              <div class="about2-availability"><dt><span aria-hidden="true"></span>availability.status</dt><dd>open to freelance &amp; full-time ♡</dd></div>
-            </dl>
-            <div class="about2-actions">
-              <a href="images/about/maryam_yahaya_resume.pdf" download="Maryam_Yahaya_Resume.pdf" class="about2-button about2-button-primary"><i class="ti ti-download" aria-hidden="true"></i>download resume</a>
-              <button type="button" data-open="contact" class="about2-button about2-button-secondary"><i class="ti ti-mail" aria-hidden="true"></i>contact me</button>
-            </div>
-          </aside>
+            <section class="about2-bio" aria-labelledby="about2-bio-title">
+              <h2 id="about2-bio-title">&#10022; about me</h2>
+              <div class="about2-bio-copy">
+                <p>i moved into design in 2021 and have spent the years since working across fintech, health, saas and e-commerce, from early flows through to shipped mobile and web products.</p>
+                <p>lately, i&rsquo;ve been using ai to prototype and build working versions of my own ideas. it has made me more interested in the space between designing and building, because i can take an idea much further than a mockup.</p>
+              </div>
+            </section>
+            <aside class="about2-others" aria-labelledby="about2-others-title">
+              <h2 id="about2-others-title">&#10022; quick files</h2>
+              <dl>
+                <div><dt>experience.log</dt><dd>4+ years</dd></div>
+                <div><dt>sectors.folder</dt><dd>fintech, health, saas, e-commerce</dd></div>
+                <div><dt>now_building.exe</dt><dd>ai-assisted products</dd></div>
+                <div class="about2-availability"><dt>availability.status</dt><dd>open to freelance &amp; full-time &#9825;</dd></div>
+              </dl>
+              <div class="about2-actions">
+                <a href="images/about/maryam_yahaya_resume.pdf" download="Maryam_Yahaya_Resume.pdf" class="about2-button about2-button-primary"><i class="ti ti-download" aria-hidden="true"></i>download resume</a>
+                <button type="button" data-open="contact" class="about2-button about2-button-secondary"><i class="ti ti-mail" aria-hidden="true"></i>contact me</button>
+              </div>
+            </aside>
         </div>
-
       </main>
     </div>
   </section>
+
 
   <!-- Inert local comparison. Template contents never enter the live page. -->
   <template id="about-legacy-template">
@@ -3948,7 +4096,9 @@
     <div class="wpad wbody" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
       <!-- Picture Frame with pink placeholder fallback -->
       <div class="pins" style="background:#fcdbe3; aspect-ratio:1.1; overflow:hidden; display:flex; align-items:center; justify-content:center; position:relative; border-radius:4px;">
-        <img id="viewer-img" src="images/optimized/about-interest-painting-720.webp" alt="photo" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;" />
+        <!-- No src: the folders are empty, so there is nothing to preload.
+             updatePhoto() fills this in when a photo is opened. -->
+        <img id="viewer-img" alt="" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;" />
         <div id="viewer-fallback" style="display:none; position:absolute; inset:0; background:#fcdbe3; align-items:center; justify-content:center; flex-direction:column; gap:8px;">
           <i class="ti ti-photo-off" style="font-size:32px; color:var(--rose);"></i>
           <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; color:var(--muted);">[photo unavailable]</span>
@@ -3957,7 +4107,6 @@
       
       <!-- Caption -->
       <div id="viewer-caption" style="font-family:'Playfair Display', serif; font-style:italic; font-weight:600; font-size:11.5px; color:var(--rose-dark); text-align:center; min-height:18px;">
-        [caption: me pretending i can paint]
       </div>
       
       <!-- Controls -->
@@ -3966,6 +4115,22 @@
         <span id="viewer-counter" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; color:var(--muted);">1 / 8</span>
         <button class="pout" id="viewer-next" style="padding:4px 12px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; background:var(--btn); font-weight:bold; cursor:pointer; border:1px solid var(--bev-lo);">next</button>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ FOLDER VIEWER ============
+       One window, reused by all eight interest folders — its contents are
+       filled from FOLDERS in src/os.js when a folder is opened. Eight
+       near-identical window sections would have rotted the moment Maryam
+       added a ninth interest. -->
+  <section class="window pout" id="folder-viewer" style="top:96px;left:190px;width:430px;height:auto;">
+    <div class="tbar"><span class="tt"><i class="ti ti-folder-open" aria-hidden="true"></i><span id="fv-title">folder</span></span>
+      <span class="tctl"><button class="pout mn" aria-label="Minimize"><i class="ti ti-minus"></i></button><button class="pout mx" aria-label="Maximize"><i class="ti ti-square"></i></button><button class="pout cl" aria-label="Close"><i class="ti ti-x"></i></button></span></div>
+    <div class="wpad wbody fv-body">
+      <div class="fv-path"><i class="ti ti-folder" aria-hidden="true"></i><span id="fv-path">maryam/interests</span></div>
+      <div class="fv-items" id="fv-items"></div>
+      <p class="fv-empty" id="fv-empty" hidden>work in progress &#10047;</p>
+      <div class="fv-status"><span id="fv-count">0 items</span><span id="fv-note"></span></div>
     </div>
   </section>
 

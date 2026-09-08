@@ -6850,9 +6850,7 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
 
 /* ============================================================================
    ABOUT / USER PROFILE
-
-   A moving line of generous photographic prints introduces Maryam's interests.
-   The profile follows the album; all colours inherit the OS theme.
+   One centred composition. The biography opens from the read me folder.
    ========================================================================== */
 #about .about2-shell {
   height: calc(100% - 31px);
@@ -6861,121 +6859,229 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   overflow: hidden;
   background: var(--paper);
 }
-
+/* The window is taller than the ring needs, so the whole block sits centred
+   instead of hanging off the top with dead space under it. "safe" keeps the
+   top reachable if the content ever does outgrow the window; browsers without
+   it drop the declaration and fall back to the old top alignment. */
+/* Structure only. The container, rows, alignment and padding are set once,
+   further down, alongside the desk they exist for. */
 #about .about2-scroll {
+  display: grid;
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 24px 26px 34px;
   scrollbar-width: thin;
   scrollbar-color: var(--bev-lo) transparent;
 }
-
-#about .about2-scroll::-webkit-scrollbar { width: 8px; }
-#about .about2-scroll::-webkit-scrollbar-track { background: transparent; }
-#about .about2-scroll::-webkit-scrollbar-thumb {
-  background: var(--bev-lo);
-  border-radius: 6px;
-}
-
 #about .about2-header {
-  max-width: 900px;
-  margin-bottom: 18px;
+  width: min(100%, 1180px);
+  max-width: none;
+  margin: 0 auto 20px;
+  text-align: left;
 }
-
-#about .about2-kicker {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin: 0 0 5px;
-  color: var(--rose);
-  font: 700 11px/1.35 var(--font-mono);
-  letter-spacing: .04em;
-  text-transform: lowercase;
-}
-
-#about .about2-kicker > span,
-#about .about2-availability dt > span {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  background: var(--rose);
-  box-shadow: 0 0 0 3px var(--tint);
-}
-
 #about .about2-header h1 {
   margin: 0 0 9px;
   color: var(--rose-dark);
-  font-family: "Playfair Display", serif;
-  font-size: 36px;
-  font-style: italic;
-  font-weight: 600;
+  font: italic 600 36px/1.1 "Playfair Display", Georgia, serif;
   letter-spacing: -.5px;
-  line-height: 1.05;
-  text-transform: lowercase;
 }
-
 #about .about2-lede {
-  max-width: 790px;
   margin: 0;
-  color: var(--ink);
-  font: 13px/1.6 Tahoma, Verdana, sans-serif;
+  color: var(--muted);
+  font: 12px/1.5 var(--font-mono);
 }
-
-#about .about2-intro-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 24px; }
-#about .about2-story-jump {
-  display: inline-flex;
+/* Layered stationery folders: a rose back, loose papers and a folded front.
+   Only the paper and flap move; the silhouette stays inside its icon box. */
+#about .about2-folder {
+  --folder-front: var(--btn);
+  --folder-back: var(--btn-on);
+  --folder-edge: var(--rose);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 9px;
-  min-height: 36px;
-  color: var(--rose-dark);
-  font: 700 11px/1.4 var(--font-mono);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-color: var(--bev-lo);
+  justify-content: center;
+  gap: 7px;
+  width: 96px;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 6px 4px 2px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  cursor: pointer;
 }
-#about .about2-story-jump:hover { text-decoration-color: currentColor; }
-#about .about2-story-jump:focus-visible { outline: 2px solid var(--rose); outline-offset: 4px; }
-#about .about2-story-jump .ti { flex: 0 0 auto; font-size: 16px; }
-#about #about2-bio { scroll-margin-top: 20px; }
-#about #about2-bio:focus-visible { outline: 2px solid var(--rose); outline-offset: 5px; }
-
-#about .about2-main {
-  display: grid;
-  grid-template-columns: minmax(190px, .72fr) minmax(310px, 1.35fr) minmax(220px, .78fr);
-  gap: 22px;
-  align-items: start;
+#about .about2-folder[data-folder="painting"],
+#about .about2-folder[data-folder="gardening"],
+#about .about2-folder[data-folder="movies"] { --folder-front: var(--btn-on); --folder-back: var(--rose); }
+#about .about2-folder[data-folder="baking"],
+#about .about2-folder[data-folder="books"] { --folder-front: var(--btn-hi); }
+#about .about2-folder-icon { display: block; width: 96px; max-width: 100%; line-height: 0; }
+#about .about2-folder-icon svg { display: block; width: 100%; height: auto; overflow: visible; }
+#about .about2-folder-icon path,
+#about .about2-folder-icon rect { stroke-linecap: round; stroke-linejoin: round; }
+#about .folder-shadow { fill: var(--soft-sh); transform: translateY(1px); }
+#about .folder-back { fill: var(--folder-back); stroke: var(--folder-edge); stroke-width: 1.2; }
+#about .folder-tab-detail { fill: none; stroke: var(--bev-hi); stroke-width: 1.2; opacity: .8; }
+#about .folder-paper-back { fill: var(--btn-hi); stroke: var(--bev-lo); stroke-width: 1; }
+#about .folder-paper { fill: var(--paper); stroke: var(--bev-lo); stroke-width: 1; }
+#about .folder-paper-line { fill: none; stroke: var(--btn-on); stroke-width: 1.5; }
+#about .folder-face { fill: var(--folder-front); stroke: var(--folder-edge); stroke-width: 1.25; }
+#about .folder-highlight { fill: none; stroke: var(--bev-hi); stroke-width: 1.1; opacity: .85; }
+#about .folder-seam { fill: none; stroke: var(--folder-edge); stroke-width: 1; opacity: .2; }
+#about .folder-badge-shadow { fill: var(--soft-sh); }
+#about .folder-sticker { fill: var(--paper); stroke: var(--bev-hi); stroke-width: 1; }
+#about .folder-mark { fill: none; stroke: var(--rose-dark); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+#about .folder-papers,
+#about .folder-front { transition: transform .18s var(--ease-spring); }
+#about .folder-front { transform-origin: 56px 83px; }
+#about .about2-folder:hover .folder-papers,
+#about .about2-folder:focus-visible .folder-papers,
+#about .about2-folder.is-open .folder-papers { transform: translateY(-5px); }
+#about .about2-folder:hover .folder-front,
+#about .about2-folder:focus-visible .folder-front,
+#about .about2-folder.is-open .folder-front { transform: scaleY(.94) skewX(-2deg); }
+#about .about2-folder.is-open .folder-face { stroke: var(--rose-dark); stroke-width: 1.8; }
+#about .about2-folder-label { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
+#about .about2-folder-label strong { font: 700 11.5px/1.3 var(--font-mono); color: var(--ink-soft); }
+#about .about2-folder-label small { font: 9px/1.3 var(--font-mono); color: var(--muted); }
+#about .about2-folder:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  #about .folder-papers,
+  #about .folder-front { transition: none; transform: none !important; }
 }
 
-#about .about2-profile-card {
-  position: relative;
-  min-width: 0;
-  margin: 0;
-  padding: 8px 8px 12px;
-  border: 1px solid var(--bev-lo);
-  border-radius: 8px;
-  background: var(--tint);
-  box-shadow: 4px 5px 0 var(--soft-sh);
+@media (max-width: 700px) {
+  #about .about2-scroll { padding: 22px 12px; }
+  #about .about2-header { margin-bottom: 22px; }
+  #about .about2-header h1 { font-size: 30px; }
 }
 
-#about .about2-portrait-frame {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
+@media (prefers-reduced-motion: reduce) {
+  #about .about2-folder { transition: none; }
+  #about .about2-folder:hover,
+  #about .about2-folder:focus-visible { transform: none; }
+}
+
+/* ── folder viewer ─────────────────────────────────────────────────────── */
+#folder-viewer .fv-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+#folder-viewer .fv-path {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
   border: 1px solid var(--bev-lo);
   border-radius: 5px;
+  background: var(--tint);
+  font: 10.5px/1.3 var(--font-mono);
+  color: var(--muted);
+}
+#folder-viewer .fv-path .ti { font-size: 13px; color: var(--rose); }
+#folder-viewer .fv-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 10px;
+}
+#folder-viewer .fv-items:empty { display: none; }
+#folder-viewer .fv-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--bev-lo);
+  border-radius: 5px;
+  background: var(--paper);
+  box-shadow: 2px 2px 0 var(--soft-sh);
+  cursor: pointer;
+  transition: box-shadow .14s var(--ease-out-soft);
+}
+#folder-viewer .fv-item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 3px;
   background: var(--desk-2);
 }
+#folder-viewer .fv-item span {
+  font: 9.5px/1.35 var(--font-mono);
+  color: var(--ink-soft);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+#folder-viewer .fv-item:hover { box-shadow: 3px 4px 0 var(--rose); }
+#folder-viewer .fv-item:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+#folder-viewer .fv-empty {
+  margin: 0;
+  padding: 26px 10px;
+  border: 1px dashed var(--bev-lo);
+  border-radius: 6px;
+  text-align: center;
+  font: italic 600 13px/1.45 'Playfair Display', Georgia, serif;
+  color: var(--muted);
+}
+#folder-viewer .fv-status {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--bev-lo);
+  font: 10px/1.35 var(--font-mono);
+  color: var(--muted);
+}
+#folder-viewer .fv-status span:last-child { color: var(--rose); text-align: right; }
+@media (prefers-reduced-motion: reduce) {
+  #folder-viewer .fv-item { transition: none; }
+}
 
+/* ── the about desk ───────────────────────────────────────────────────────
+   The portrait owns the left column. Natural-height text and facts reserve
+   their space first; the photo and folders use the remaining window height.
+   All surfaces inherit the shared paper, pink and wine tokens. */
+#about .about2-scroll {
+  container: about-layout / size;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  padding: 18px 26px 22px;
+}
+#about .about2-desk {
+  display: grid;
+  grid-template-columns: minmax(210px, .9fr) minmax(0, 2.6fr);
+  grid-template-rows: minmax(130px, 1fr) auto auto;
+  gap: 18px 26px;
+  width: min(100%, 1180px);
+  min-height: 0;
+  margin-inline: auto;
+}
+
+/* The image is framed on every side, with a separate, quiet caption. */
+#about .about2-id {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  width: 100%;
+  max-width: 300px;
+  min-height: 0;
+  margin: 0;
+  padding: 8px;
+  justify-self: center;
+  border: 1px solid var(--bev-lo);
+  border-radius: 9px;
+  background: var(--tint);
+  box-shadow: 3px 4px 0 var(--soft-sh), inset 1px 1px 0 var(--bev-hi);
+}
+/* The frame clips and positions; the image fills it. These sat with the
+   retired ring styles and went out with them. */
+#about .about2-portrait-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--desk-2);
+}
 #about .about2-portrait-frame img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 18%;
 }
-
 #about .about2-portrait-fallback {
   position: absolute;
   inset: 0;
@@ -6987,411 +7093,177 @@ body.dark .cs-block--goal .cs-stat .value { color: #fff; }
   background: var(--tint);
   font: 700 11px/1.3 var(--font-mono);
 }
-
 #about .about2-portrait-fallback .ti { font-size: 30px; }
 #about .about2-portrait-frame.is-missing .about2-portrait-fallback { display: grid; }
 
-#about .about2-photo-note {
-  position: absolute;
-  right: 9px;
-  bottom: 9px;
-  padding: 4px 7px;
-  border: 1px solid var(--rose-dark);
-  border-radius: 3px;
-  color: var(--paper);
-  background: var(--rose);
-  box-shadow: 2px 2px 0 var(--rose-dark);
-  font: 700 9px/1.2 var(--font-mono);
-  transform: rotate(-1.5deg);
-  text-transform: lowercase;
+#about .about2-id .about2-portrait-frame {
+  aspect-ratio: auto;
+  height: 100%;
+  min-height: 0;
+  border: 1px solid var(--bev-lo);
+  border-radius: 5px;
 }
-
-#about .about2-profile-card figcaption {
+#about .about2-id .about2-portrait-frame img {
+  min-height: 0;
+  object-fit: cover;
+  object-position: center 36%;
+}
+#about .about2-id-plate {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 10px 3px 0;
+  gap: 5px;
+  padding: 12px 4px 6px;
+  text-align: center;
+}
+#about .about2-id-plate strong {
+  font: italic 600 18px/1.15 "Playfair Display", Georgia, serif;
+  color: var(--rose-dark);
+}
+#about .about2-id-plate span { font: 10px/1.45 var(--font-mono); color: var(--ink-soft); }
+
+#about .about2-grid {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  min-height: 0;
+  container-type: size;
+  gap: 12px 16px;
+  align-items: center;
+}
+#about .about2-grid .about2-folder {
+  width: 100%;
+  max-width: 160px;
+  min-height: 0;
+  justify-self: center;
+  padding: 6px 4px 2px;
+  gap: 7px;
+}
+/* At 112:88, each icon uses half the grid height after labels and gaps.
+   The cap makes the drawings readable without growing the desktop page. */
+#about .about2-grid .about2-folder-icon {
+  width: 100%;
+  max-width: clamp(44px, calc(63.6cqh - 44px), 128px);
 }
 
-#about .about2-profile-card figcaption strong {
-  color: var(--ink);
-  font: 700 13px/1.25 Tahoma, Verdana, sans-serif;
-  text-transform: lowercase;
+#about .about2-bio {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--bev-lo);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 2px 3px 0 var(--soft-sh);
 }
-
-#about .about2-profile-card figcaption span {
-  color: var(--rose);
-  font: 700 10px/1.35 var(--font-mono);
-  text-transform: lowercase;
-}
-
-#about .about2-story,
-#about .about2-facts { min-width: 0; }
-
-#about .about2-story h2,
-#about .about2-facts h2,
-#about .about2-section-head h2 {
-  margin: 0 0 11px;
-  color: var(--rose);
-  font: 700 12px/1.3 var(--font-mono);
-  letter-spacing: .02em;
-  text-transform: lowercase;
-}
-
-#about .about2-story p {
-  max-width: 62ch;
+#about .about2-bio h2,
+#about .about2-others h2 {
   margin: 0 0 12px;
-  color: var(--ink-soft);
-  font: 13.5px/1.68 Tahoma, Verdana, sans-serif;
+  color: var(--rose);
+  font: 700 11px/1.3 var(--font-mono);
+  letter-spacing: .4px;
 }
+#about .about2-bio-copy {
+  columns: 2;
+  column-gap: 26px;
+  column-rule: 1px solid var(--bev-lo);
+}
+#about .about2-bio p {
+  margin: 0 0 11px;
+  color: var(--ink);
+  font: 13.5px/1.6 Tahoma, Verdana, sans-serif;
+  break-inside: avoid;
+}
+#about .about2-bio p:last-child { margin-bottom: 0; }
 
-#about .about2-story p:first-of-type { color: var(--ink); }
-#about .about2-story p:last-child { margin-bottom: 0; }
-
-#about .about2-facts {
-  overflow: hidden;
+/* Facts and actions share a shallow footer rather than squeezing the photo. */
+#about .about2-others {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 24px;
+  min-width: 0;
+  padding: 14px 18px 16px;
   border: 1px solid var(--bev-lo);
   border-radius: 8px;
   background: var(--tint);
-  box-shadow: 3px 4px 0 var(--soft-sh);
+  box-shadow: 2px 3px 0 var(--soft-sh), inset 1px 1px 0 var(--bev-hi);
 }
-
-#about .about2-facts h2 {
-  margin: 0;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--bev-lo);
-  background: var(--btn);
-}
-
-#about .about2-facts dl { margin: 0; }
-#about .about2-facts dl > div { padding: 9px 12px; }
-#about .about2-facts dl > div + div { border-top: 1px dashed var(--bev-lo); }
-
-#about .about2-facts dt {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0 0 3px;
-  color: var(--muted);
-  font: 400 9.5px/1.3 var(--font-mono);
-  text-transform: lowercase;
-}
-
-#about .about2-facts dd {
-  margin: 0;
-  color: var(--ink);
-  font: 700 11px/1.4 Tahoma, Verdana, sans-serif;
-}
-
-#about .about2-availability dt,
-#about .about2-availability dd { color: var(--rose-dark); }
-
-#about .about2-actions {
+#about .about2-others h2 { grid-column: 1 / -1; margin: 0; }
+#about .about2-others dl {
   display: grid;
-  gap: 7px;
-  padding: 11px 12px 13px;
-  border-top: 1px solid var(--bev-lo);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
 }
-
-#about .about2-button {
-  min-height: 32px;
+#about .about2-others dl > div { min-width: 0; }
+#about .about2-others dt { color: var(--muted); font: 9.5px/1.35 var(--font-mono); }
+#about .about2-others dd { margin: 4px 0 0; color: var(--ink); font: 600 11.5px/1.4 Tahoma, Verdana, sans-serif; }
+#about .about2-others .about2-availability dd { color: var(--rose-dark); }
+#about .about2-others .about2-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; }
+#about .about2-others .about2-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 7px 10px;
-  border: 1px solid;
+  min-height: 34px;
+  padding: 9px 12px;
+  border: 1px solid var(--bev-lo);
   border-radius: 5px;
   box-shadow: 2px 2px 0 var(--soft-sh);
   font: 700 10px/1.2 var(--font-mono);
-  text-align: center;
   text-decoration: none;
-  text-transform: lowercase;
-  transition: transform .16s var(--ease-snap), box-shadow .16s var(--ease-out-soft), background-color .16s var(--ease-out-soft);
+  cursor: pointer;
+  transition: transform .16s var(--ease-snap);
+}
+#about .about2-others .about2-button-primary { background: var(--rose); color: var(--paper); border-color: var(--rose-dark); }
+#about .about2-others .about2-button-secondary { background: var(--btn); color: var(--ink); }
+#about .about2-others .about2-button:hover { transform: translateY(-2px); }
+#about .about2-others .about2-button:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+
+@container about-layout (min-width: 881px) and (max-height: 610px) {
+  #about .about2-desk { gap: 12px 22px; }
+  #about .about2-bio { padding: 14px 16px; }
+  #about .about2-bio p { font-size: 13px; line-height: 1.5; }
+  #about .about2-id-plate { padding-top: 9px; gap: 4px; }
+  #about .about2-others { padding: 12px 16px; gap: 8px 18px; }
+  #about .about2-others dl { gap: 12px; }
 }
 
-#about .about2-button-primary {
-  color: var(--paper);
-  background: var(--rose);
-  border-color: var(--rose-dark);
-}
-
-#about .about2-button-secondary {
-  color: var(--ink-soft);
-  background: var(--btn);
-  border-color: var(--bev-lo);
-}
-
-#about .about2-button:hover,
-#about .about2-button:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 3px 4px 0 var(--soft-sh);
-}
-
-#about .about2-button-primary:hover,
-#about .about2-button-primary:focus-visible { background: var(--rose-dark); }
-#about .about2-button-secondary:hover,
-#about .about2-button-secondary:focus-visible { background: var(--btn-hi); }
-
-#about .about2-interests {
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--bev-lo);
-}
-
-#about .about2-section-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 0;
-}
-
-#about .about2-section-head h2 { margin-bottom: 3px; }
-#about .about2-section-head .about2-album-label {
-  margin: 0;
-  color: var(--muted);
-  font: 400 11px/1.4 var(--font-mono);
-  letter-spacing: .01em;
-}
-
-#about .about2-album-controls {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-#about .about2-album-controls button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-width: 32px;
-  min-height: 32px;
-  padding: 7px;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  background: transparent;
-  color: var(--ink-soft);
-  font: 11px/1 var(--font-mono);
-}
-#about .about2-album-controls button:hover { background: var(--tint); border-color: var(--bev-lo); }
-#about .about2-album-controls button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
-#about .about2-album-controls button:disabled { color: var(--muted); }
-#about .about2-album-controls .ti { font-size: 15px; }
-#about .about2-control-divider { width: 1px; height: 13px; margin: 0 4px; background: var(--bev-lo); }
-
-#about .about2-section-head p,
-#about .about2-section-head > span,
-#about .about2-background-tabs {
-  margin: 0;
-  color: var(--muted);
-  font: 10.5px/1.45 var(--font-mono);
-  text-transform: lowercase;
-}
-
-#about .about2-section-head > span { text-align: right; }
-
-#about .about2-gallery {
-  position: relative;
-  width: calc(100% + 52px);
-  margin-inline: -26px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-padding-inline: 26px;
-  scrollbar-color: var(--bev-lo) transparent;
-  scrollbar-width: thin;
-}
-#about .about2-gallery.is-enhanced { overflow: hidden; touch-action: pan-y pinch-zoom; user-select: none; }
-#about .about2-gallery .about-line__track {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 32px;
-  width: max-content;
-  padding: 36px 26px 24px;
-}
-#about .about2-gallery.is-enhanced .about-line__track { will-change: transform; }
-
-#about .about2-gallery::before {
-  content: "";
-  position: absolute;
-  top: 24px;
-  right: 0;
-  left: 0;
-  height: 1px;
-  background: color-mix(in srgb, var(--ink) 23%, var(--paper));
-  box-shadow: 0 1px 0 var(--paper);
-  pointer-events: none;
-}
-
-#about .about2-interest-card {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 244px;
-  width: 244px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-top: var(--drop, 0px);
-  padding: 12px 12px 0;
-  border: 1px solid color-mix(in srgb, var(--ink) 12%, var(--paper));
-  border-radius: 2px;
-  color: var(--ink);
-  background: var(--paper);
-  box-shadow: 1px 2px 1px color-mix(in srgb, var(--ink) 10%, transparent),
-              3px 8px 12px -7px color-mix(in srgb, var(--ink) 28%, transparent);
-  text-align: left;
-  transform: rotate(var(--tilt, 0deg));
-  transform-origin: top center;
-  transition: transform .18s var(--ease-snap);
-}
-
-#about .about2-interest-card::before {
-  content: "";
-  position: absolute;
-  top: calc(-19px - var(--drop, 0px));
-  left: 50%;
-  width: 9px;
-  height: calc(25px + var(--drop, 0px));
-  border: 1px solid color-mix(in srgb, var(--rose-dark) 55%, var(--paper));
-  border-radius: 2px 2px 1px 1px;
-  background: var(--btn-on);
-  box-shadow: inset 2px 0 0 color-mix(in srgb, var(--paper) 60%, transparent), 1px 1px 1px var(--soft-sh);
-  transform: translateX(-50%);
-}
-
-#about .about2-interest-card:hover,
-#about .about2-interest-card:focus-visible {
-  transform: translateY(-4px) rotate(calc(var(--tilt, 0deg) * .55));
-}
-#about .about2-interest-card:focus-visible { outline: 2px solid var(--rose); outline-offset: 5px; }
-#about .about2-gallery.is-dragging .about2-interest-card { transition: none; }
-
-#about .about2-interest-frame {
-  display: block;
-  aspect-ratio: var(--photo-ratio, 1);
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
-  border-radius: 0;
-  background: var(--desk-2);
-}
-
-#about .about2-interest-frame img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  -webkit-user-drag: none;
-}
-
-#about .about2-interest-copy {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) 22px;
-  align-items: center;
-  gap: 7px;
-  min-height: 62px;
-  padding: 10px 0 15px;
-}
-
-#about .about2-interest-copy strong {
-  color: var(--ink);
-  font: italic 500 19px/1.3 "Playfair Display", serif;
-  text-align: center;
-  text-transform: lowercase;
-}
-
-#about .about2-interest-copy small {
-  color: var(--muted);
-  font: 400 10px/1.35 var(--font-mono);
-}
-#about .about2-interest-copy > span { color: var(--rose); font-size: 18px; text-align: right; }
-
-#about .about2-album-footer { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
-#about .about2-album-footer > span { flex: 0 0 auto; color: var(--muted); font: 10.5px/1.45 var(--font-mono); }
-#about .about2-background-tabs { margin: 0; }
-#about .about2-background-tabs span { color: var(--rose); font-weight: 700; }
-
-@media (max-width: 980px) {
-  #about .about2-main { grid-template-columns: minmax(190px, .68fr) minmax(320px, 1.32fr); }
-  #about .about2-facts {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 148px minmax(0, 1fr) 210px;
-    align-items: stretch;
+/* The same content stacks naturally when a window is too narrow for prose
+   beside the portrait. The photo keeps its proportions at these widths. */
+@container about-layout (max-width: 880px) {
+  #about .about2-desk {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    height: max-content;
+    gap: 22px;
   }
-  #about .about2-facts h2 {
-    display: flex;
-    align-items: center;
-    border-right: 1px solid var(--bev-lo);
-    border-bottom: 0;
-  }
-  #about .about2-facts dl {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  #about .about2-facts dl > div + div { border-top: 0; }
-  #about .about2-facts dl > div:nth-child(even) { border-left: 1px dashed var(--bev-lo); }
-  #about .about2-facts dl > div:nth-child(n + 3) { border-top: 1px dashed var(--bev-lo); }
-  #about .about2-actions { border-top: 0; border-left: 1px solid var(--bev-lo); }
+  #about .about2-id,
+  #about .about2-grid,
+  #about .about2-bio,
+  #about .about2-others { grid-column: 1; grid-row: auto; }
+  #about .about2-id { grid-template-rows: auto auto; max-width: 270px; }
+  #about .about2-id .about2-portrait-frame { aspect-ratio: 4 / 5; height: auto; }
+  #about .about2-grid { container-type: normal; grid-template-rows: auto auto; }
+  #about .about2-grid .about2-folder-icon { max-width: 68px; }
+  #about .about2-bio-copy { columns: 1; column-rule: 0; }
+  #about .about2-others { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  #about .about2-others dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
+@container about-layout (max-width: 520px) {
+  #about .about2-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+  #about .about2-bio,
+  #about .about2-others { padding: 16px; }
+  #about .about2-others .about2-button { min-height: 46px; flex: 1 1 auto; }
+}
 @media (max-width: 700px) {
-  #about .about2-scroll { padding: 20px 16px 40px; }
-  #about .about2-header { margin-bottom: 8px; }
-  #about .about2-header h1 { font-size: 33px; }
-  #about .about2-lede { font-size: 14px; }
-  #about .about2-story-jump { min-height: 44px; }
-  #about .about2-main { grid-template-columns: 1fr; gap: 20px; }
-  #about .about2-profile-card {
-    display: grid;
-    grid-template-columns: 118px minmax(0, 1fr);
-    align-items: center;
-    gap: 12px;
-  }
-  #about .about2-profile-card figcaption { padding: 0 6px 0 0; }
-  #about .about2-story p { max-width: none; font-size: 13.5px; }
-  #about .about2-facts { display: block; }
-  #about .about2-facts h2 { border-right: 0; border-bottom: 1px solid var(--bev-lo); }
-  #about .about2-facts dl { display: block; }
-  #about .about2-facts dl > div + div,
-  #about .about2-facts dl > div:nth-child(even),
-  #about .about2-facts dl > div:nth-child(n + 3) { border-top: 1px dashed var(--bev-lo); border-left: 0; }
-  #about .about2-actions { border-top: 1px solid var(--bev-lo); border-left: 0; }
-  #about .about2-section-head { align-items: center; }
-  #about .about2-section-head > span { display: none; }
-  #about .about2-gallery {
-    width: calc(100% + 32px);
-    margin-inline: -16px;
-    scrollbar-width: none;
-  }
-  #about .about2-gallery::-webkit-scrollbar { display: none; }
-  #about .about2-gallery .about-line__track { gap: 24px; padding: 32px 18px 24px; }
-  #about .about2-gallery::before { top: 20px; }
-  #about .about2-interest-card { flex-basis: 218px; width: 218px; }
-  #about .about2-album-controls button { min-width: 40px; min-height: 40px; }
-  #about .about2-album-controls { gap: 2px; }
-  #about .about2-album-footer { display: block; }
-  #about .about2-album-footer > span { display: none; }
-  #about .about2-interests { margin-bottom: 16px; padding-bottom: 8px; }
+  #about .about2-scroll { padding: 20px 14px; }
 }
-
-@media (max-width: 390px) {
-  #about .about2-profile-card { grid-template-columns: 104px minmax(0, 1fr); }
-  #about .about2-photo-note { display: none; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  #about .about2-button,
-  #about .about2-interest-card { transition: none; }
-  #about .about2-button:hover,
-  #about .about2-button:focus-visible,
-  #about .about2-interest-card:hover,
-  #about .about2-interest-card:focus-visible,
-  #about .about2-interest-card.selected,
-  #about .about2-interest-card:nth-child(even):hover,
-  #about .about2-interest-card:nth-child(even):focus-visible { transform: none; }
-  #about .about2-gallery.is-enhanced .about-line__track { will-change: auto; }
+  #about .about2-others .about2-button { transition: none; }
+  #about .about2-others .about2-button:hover { transform: none; }
 }
