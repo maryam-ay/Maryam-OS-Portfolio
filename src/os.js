@@ -1,3 +1,7 @@
+/* Served under /os on maryamakanbi.com: keep the address bar prefixed so refreshes stay on the old portfolio. */
+var OS_BASE = (location.pathname === '/os' || location.pathname.indexOf('/os/') === 0) ? '/os' : '';
+function osStrip(p){ if(OS_BASE && (p === OS_BASE || p.indexOf(OS_BASE + '/') === 0)){ p = p.slice(OS_BASE.length); } return p || '/'; }
+function osPath(p){ return OS_BASE ? (OS_BASE + (p === '/' ? '/' : p)) : p; }
 (function(){
   "use strict";
   var desktop=document.getElementById('desktop');
@@ -5069,9 +5073,9 @@
     // line runs, so the table is checked for existence and not just content.
     if(routing || !ROUTE_OF || !window.history || !history.pushState) return;
     var next = currentRoute();
-    if(next === location.pathname) return;
+    if(next === osStrip(location.pathname)) return;
     try {
-      history[replace ? 'replaceState' : 'pushState']({ route: next }, '', next);
+      history[replace ? 'replaceState' : 'pushState']({ route: next }, '', osPath(next));
     } catch(_){}
   }
 
@@ -5128,15 +5132,13 @@
     });
   });
 
-  window.addEventListener('popstate', function(){ applyRoute(location.pathname); });
+  window.addEventListener('popstate', function(){ applyRoute(osStrip(location.pathname)); });
 
   // The desktop opens Hi There for itself just above; let that settle, record
   // where we are, and only then act on a deep link.
   (function initRouting(){
     if(!window.history || !history.replaceState) return;
     try { history.replaceState({ route: location.pathname }, '', location.pathname); } catch(_){}
-    if(location.pathname !== '/' && location.pathname !== '/index-os.html'){
-      applyRoute(location.pathname);
-    }
+    var __p = osStrip(location.pathname); if(__p !== '/' && __p !== '/index-os.html'){ applyRoute(__p); }
   })();
 })();
