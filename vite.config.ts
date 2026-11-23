@@ -6,6 +6,8 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
+    // Served from maryamakanbi.com/os, so built asset URLs must start with /os/.
+    base: '/os/',
     build: {
       rollupOptions: {
         // The portfolio is index-os.html, not index.html. Without this Vite
